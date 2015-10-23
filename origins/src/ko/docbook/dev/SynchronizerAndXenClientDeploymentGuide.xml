@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+  <!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+  <!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+  <!ENTITY % local PUBLIC "local" "../shared/local.ent">
+  %local;
+]>
+<book lang="en" id="user_guide"><?dbhtml dir="out/html/SynchronizerAndXenClientDeployment"?>
+ <bookinfo id="bookinfo_titlestuff" role="die">
+  <title>&COMPANY_NAME_SHORT;<trademark class="registered" role="die" /> Synchronizer<trademark class="trade" role="die" /> and XenClient<trademark class="trade" role="die" /> Deployment Guide &PRODUCT_VERSION;</title>
+
+  <pubdate><?dbtim estamp format="d B Y"?></pubdate>
+  
+  &legal;
+  <releaseinfo>This document serves as a guide for system administrators planning a &BACKEND; and &PB; deployment.</releaseinfo>
+ </bookinfo>
+	<chapter><title>Concepts</title>
+
+	</chapter>
+<index/>
+&colophon;
+</book>	
+
+ 

@@ -1,0 +1,8 @@
+
+  <section xmlns:tp="http://telepathy.freedesktop.org/wiki/DbusSpec#extensions-v0"><title>
+				Interface <phrase role="die">com.citrix.xenclient.guest</phrase></title><para>Interface optionally implemented by the guest VM agent.</para><section><title>Methods:</title><section><title>
+				Method <phrase role="die">request_shutdown</phrase></title><para>Request a clean guest shutdown.</para><para>This method has no arguments.</para></section><section><title>
+				Method <phrase role="die">request_sleep</phrase></title><para>Request the s3 state.</para><para>This method has no arguments.</para></section><section><title>
+				Method <phrase role="die">request_hibernate</phrase></title><para>Request the s4 state.</para><para>This method has no arguments.</para></section><section><title>
+				Method <phrase role="die">request_reboot</phrase></title><para>Request a clean guest reboot.</para><para>This method has no arguments.</para></section></section><section><title>Signals:</title><section><title><phrase role="die">agent_started</phrase></title><para>Sent by the guest agent after it starts.</para><para>This signal has no arguments.</para></section><section><title><phrase role="die">agent_uninstalled</phrase></title><para>Sent by the guest agent during the uninstall process.</para><para>This signal has no arguments.</para></section><section><title><phrase role="die">xorg_running</phrase></title><para>Sent by the guest agent when the x server is detected.</para><para>This signal has no arguments.</para></section></section></section>
+

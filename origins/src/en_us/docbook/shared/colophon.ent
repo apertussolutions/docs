@@ -1,0 +1,40 @@
+<colophon>
+<bridgehead role="colophon-indented">&COMPANY_NAME_SHORT; Worldwide</bridgehead>
+<bridgehead role="colophon-indented-mini">Worldwide headquarters</bridgehead>
+<para role="colophon-indented-condensed">Citrix Systems, Inc.</para>
+<para role="colophon-indented-condensed">851 West Cypress Creek Road</para>
+<para role="colophon-indented-condensed">Fort Lauderdale, FL 33309</para>
+<para role="colophon-indented-condensed">USA</para>
+<para role="colophon-indented-condensed">T +1 800 393 1888</para>
+<para role="colophon-indented-condensed">T +1 954 267 3000</para>
+<bridgehead role="colophon-indented-mini">Regional headquarters</bridgehead>
+<bridgehead role="colophon-indented-mini">Americas</bridgehead>
+<para role="colophon-indented-condensed">Citrix Silicon Valley</para>
+<para role="colophon-indented-condensed">4988 Great America Parkway</para>
+<para role="colophon-indented-condensed">Santa Clara, CA 95054</para>
+<para role="colophon-indented-condensed">USA</para>
+<para role="colophon-indented-condensed">T +1 408 790 8000</para>
+<bridgehead role="colophon-indented-mini">Europe</bridgehead>
+<para role="colophon-indented-condensed">Citrix Systems International GmbH</para>
+<para role="colophon-indented-condensed">Rheinweg 9</para>
+<para role="colophon-indented-condensed">8200 Schaffhausen</para>
+<para role="colophon-indented-condensed">Switzerland</para>
+<para role="colophon-indented-condensed">T +41 52 635 7700</para>
+<bridgehead role="colophon-indented-mini">Asia Pacific</bridgehead>
+<para role="colophon-indented-condensed">Citrix Systems Hong Kong Ltd.</para>
+<para role="colophon-indented-condensed">Suite 3201, 32nd Floor</para>
+<para role="colophon-indented-condensed">One International Finance Centre</para>
+<para role="colophon-indented-condensed">1 Harbour View Street</para>
+<para role="colophon-indented-condensed">Central</para>
+<para role="colophon-indented-condensed">Hong Kong</para>
+<para role="colophon-indented-condensed">T +852 2100 5000</para>
+<bridgehead role="colophon-indented-mini">Citrix Online division</bridgehead>
+<para role="colophon-indented-condensed">5385 Hollister Avenue</para>
+<para role="colophon-indented-condensed">Santa Barbara, CA 93111</para>
+<para role="colophon-indented-condensed">USA</para>
+<para role="colophon-indented-condensed">T +1 805 690 6400</para>
+<bridgehead role="colophon-indented-mini"><ulink url="http://www.citrix.com"/></bridgehead>
+<para role="role-hack-im-going-to-docbook-hell">About Citrix</para>
+<para>Citrix (NASDAQ:CTXS) is the cloud company that enables mobile workstyles - empowering people to work and collaborate from anywhere, securely accessing apps and data on any of the latest devices, as easily as they would in their own office. Citrix solutions help IT and service providers build clouds, leveraging virtualization and networking technologies to deliver high-performance, elastic and cost-effective cloud services. With market-leading solutions for mobility, desktop virtualization, cloud networking, cloud platforms, collaboration and data sharing, Citrix helps organizations of all sizes achieve the speed and agility necessary to succeed in a mobile and dynamic world. Citrix products are in use at more than 260,000 organizations and by over 100 million users globally. Annual revenue in 2012 was $2.59 billion. Learn more at www.citrix.com.</para>
+<para role="fine-print"><trademark class="copyright" role="die"></trademark>2011 Citrix Systems, Inc. All rights reserved. Citrix<trademark class="registered" role="die"></trademark>, Citrix XenClient<trademark class="trademark" role="die"></trademark>, Citrix XenServer<trademark class="trademark" role="die"></trademark> are trademarks of Citrix Systems, Inc. and/or one or more of its subsidiaries, and may be registered in the United States Patent and Trademark Office and in other countries. Microsoft<trademark class="registered" role="die"></trademark> and Windows<trademark class="registered" role="die"></trademark> are registered trademarks of Microsoft Corporation in the United States and/or other countries. UNIX<trademark class="registered" role="die"></trademark> is a registered trademark of The Open Group in the United States and other countries. All other trademarks and registered trademarks are property of their respective owners.</para>
+</colophon>

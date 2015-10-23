@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+  <!ENTITY % local SYSTEM "../local.ent"> 
+  %local;
+]>
+<book lang="en">
+	<bookinfo id="bookinfo_titlestuff">
+		<title>Administration Guide</title>
+		<subtitle>&COMPANY_NAME_SHORT; &PRODUCT_BRAND; &PRODUCT_VERSION;</subtitle>
+		<pubdate><?dbtimestamp format="d B Y"?></pubdate>
+
+		<copyright>
+			<year>2009</year>
+			<holder>&COMPANY_NAME_SHORT; Systems, Inc.	</holder>
+		</copyright>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/XenClient.png"/>
+			</imageobject>
+		</mediaobject>	
+	</bookinfo>
+	
+<chapter id="xc_admin"><title>&PB; Administration</title>
+<para>This chapter contains administration procedures. For an explanation of &PB; concepts, see <olink targetdoc="concepts" targetptr="concepts_guide" />.</para>
+<section id="general_operation"><title>General &PB; Operation</title>
+
+</section>
+<section><title>Virtual Machines</title>
+
+</section>
+
+<section id="networking"><title>Networking</title>
+<para>&PB; uses the open-source <ulink url="http://projects.gnome.org/NetworkManager/">NetworkManager</ulink> to provide network management functionality in &BC;, which allows you to connect to other computers and to the internet. See <ulink url="http://www.redhat.com/magazine/003jan05/features/networkmanager/">the documentation</ulink> of NetworkManager for more information about setting up networking using NetworkManager.</para>
+<note><para>Whatever networks you setup in &BC; will be made available to all VMs, including the Wireless network which is shared between all VMs using Network Address Translation (NAT).</para></note>
+<procedure>
+<title>Configuring a wired network connection</title>
+<step><para>Click on the Network Manager icon and select <guilabel>Auto Ethernet</guilabel>.</para></step>
+</procedure>
+<procedure><title>Configuring a wireless connections</title>
+<step><para>Click the <guilabel>Network Manager</guilabel> icon.</para></step>
+<step><para>Choose your preferred wireless network from the list and enter your security credentials.</para></step>
+<step><para>In order to use wireless networks you will be ask to enter your own preferred security profile password. This profile password will protect all the wireless network credentials that you enter on &PB; from unauthorized access, and you will need to re-enter this password to connect to secure networks on subsequent reboots. You can optionally leave the password fields blank in which case the wireless credentials will not be protected.</para></step>
+</procedure>
+
+
+
+
+</section>
+<section>
+<title>Enabling Trusted Boot</title>
+<procedure><title>To setup trusted boot using the Intel Trusted Platform Module (TPM) and Intel Trusted eXecution Technology (TXT), on an HP 6390p:</title>
+<step><para>Install the correct firmware for the 6390p:</para>
+
+<substeps>
+<step><para>On a Windows machine, point your favourite webrowser at <ulink url="http://h20000.www2.hp.com/bizsupport/TechSupport/SoftwareDescription.jsp?lang=en&amp;cc=us&amp;prodTypeId=321957&amp;prodSeriesId=3688868&amp;prodNameId=3688870&amp;swEnvOID=2096&amp;swLang=13&amp;mode=2&amp;taskId=135&amp;swItem=ob-73149-1">the BIOS update</ulink>.</para></step>
+<step><para>Click <guilabel>Download</guilabel>.</para></step>
+<step><para>When the executable has downloaded, run it, accepting the default settings.</para></step>
+<step><para>Navigate to <filename>C:\SWSetup\sp44150</filename>.</para></step>
+<step><para>Run <filename>sp44150u.exe</filename> to create a bootable USB drive.</para></step>
+<step><para>Accept the defaults and click <guilabel>Start</guilabel>.
+</para></step>
+<step><para>Remove the USB drive or CD from the Windows machine and put it in a USB port on the target laptop.</para></step>
+<step><para>Reboot the machine.</para></step>
+<step><para>Press <keycap>Esc</keycap> and then <keycap>F9</keycap>.</para></step>
+<step><para>In the <guilabel>Boot Options</guilabel> menu, select to boot from <guilabel>USB Hard Drive</guilabel> or CD.</para></step>
+<step><para>Select <keycap>Update</keycap> and press <keycap>Enter</keycap>.</para></step>
+<step><para>Press <keycap>F10</keycap> to confirm.</para></step>
+<step><para>Press any key on the keyboard twice to confirm.</para></step>
+<step><para>Select <guilabel>Exit</guilabel> and press <keycap>Enter</keycap>.</para></step>
+<step><para>Press <keycap>F10</keycap>.</para></step>
+<step><para>Do not remove the USB stick or CD and wait for the machine to power down.</para></step>
+<step><para>Power up the machine and wait for the BIOS to update.</para></step>
+<step><para>When prompted, press <keycap>Esc</keycap> and then <keycap>F10</keycap> to enter the BIOS Setup.</para></step>
+<step><para>At this stage it is safe to remove the USB stick.</para></step>
+<step><para>Select <guilabel>File > Restore Defaults</guilabel>.</para></step>
+<step><para>Click <guilabel>Yes</guilabel>.</para></step>
+
+</substeps>
+</step>
+<step>The next stage involves correctly setting up the new BIOS:
+<substeps>
+<step><para>Select <guilabel>System Configuration > Device Configuration</guilabel>.
+</para></step>
+<step><para>Enable <guilabel>Virtualization Technology</guilabel>.
+</para></step>
+<step><para>Ensure that <guilabel>SATA Device Mode</guilabel> is set to <literal>AHCI</literal>.
+</para></step>
+<step><para>Save your settings and reboot your machine.</para></step>
+
+</substeps>
+</step>
+
+
+<step><para>While the machine is rebooting, press <keycap>Esc</keycap> and then <keycap>F10</keycap> to enter BIOS setup.
+</para></step>
+<step><para>Select <guilabel>Security > Setup BIOS Administrator Password</guilabel>.
+</para></step>
+<step><para>Enter a password twice to confirm it.
+</para></step>
+<step><para>Click <guilabel>Security > TPM Embedded Security</guilabel>.
+</para></step>
+<step><para>Enable <guilabel>Embedded Security Device State</guilabel>.</para></step>
+<step><para>Enable <guilabel>OS Management of TPM</guilabel>.</para></step>
+<step><para>Press <keycap>Esc</keycap> twice and select <guilabel>Yes</guilabel> to save your changes changes.</para></step>
+<step><para>Press <keycap>F1</keycap> to accept TPM activation.</para></step>
+<step><para>The <guilabel>HP Sparekey</guilabel> screen is displayed.</para></step>
+<step><para>Click <guilabel>Do Not Show This Again</guilabel>.</para></step>
+<step><para>Shutdown the machine completely.</para></step>
+
+<step><para>Start &PB;, click on the <guilabel>Console</guilabel> button and <command>ssh</command> to the control domain:
+<screen>ssh dom0</screen>
+</para></step>
+<step><para>Run the following command to enable the <literal>Trousers</literal> daemon:</para>
+<screen>tcsd</screen>
+</step>
+<step><para>If this is the first time you are using the TPM, take ownership of it by running the following command:</para>
+<screen>tpm_takeownership -z</screen> 
+</step>
+<step><para>Change directory to <filename>/usr/share/xenclient</filename>:</para>
+<screen>cd /usr/share/xenclient</screen></step>
+<step><para>The next step is to provision the TPM for use with TXT. Run the command:</para>
+<screen>./configure_tboot <replaceable>tpm_owner_password></replaceable></screen></step>
+<step><para>Run the <command>sync</command>command:</para>
+<screen>sync</screen></step>
+
+<step><para>Reboot to enable TXT in the BIOS Setup program.</para></step>
+<step><para>Press <keycap>Esc</keycap> and then <keycap>F10</keycap> to enter BIOS Setup.</para></step>
+<step><para>Enter the BIOS Administrator password you set up earlier.</para></step>
+<step><para>Select <guilabel>System Configuration > Device Configuration</guilabel>.</para></step>
+<step><para>Enable <guilabel>TXT Technology</guilabel>.</para></step>
+<step><para>Press <keycap>Esc</keycap> twice and select <guilabel>Yes</guilabel> to save your changes changes.</para></step>
+<step><para>Restart the system so that SMX mode is correctly enabled.</para></step>
+<step><para>Boot into &PB; using the <guilabel>XenClient</guilabel> GRUB entry. The system enters into SMX mode and boots using TXT. </para>
+ </step>
+</procedure>
+</section>
+</chapter>
+<chapter id="transmitter"><title>&BACKEND; Administration</title>
+
+
+
+
+
+
+
+</chapter>
+<chapter><title>Troubleshooting</title>
+
+
+
+
+
+
+
+
+</chapter>
+
+</book>
+

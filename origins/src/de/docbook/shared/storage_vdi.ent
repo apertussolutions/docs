@@ -1,0 +1,5 @@
+
+
+  <section xmlns:tp="http://telepathy.freedesktop.org/wiki/DbusSpec#extensions-v0"><title>
+				Interface <phrase role="die">com.citrix.xenclient.storage.vdi</phrase></title><para>Virtual disk interface.</para><section><title>Properties:</title><informaltable frame="none"><tgroup cols="4"><colspec colwidth="2in"/><colspec colwidth="0.5in"/><colspec colwidth="1in"/><colspec colwidth="3in"/><thead><row><entry>Name</entry><entry>Type</entry><entry>Access</entry><entry>Description</entry></row></thead><tbody><row><entry><phrase role="die">type</phrase></entry><entry>s</entry><entry>read</entry><entry>Type of VDI, either disk or cdrom.</entry></row><row><entry><phrase role="die">phys-path</phrase></entry><entry>s</entry><entry>read</entry><entry>Physical path to the resource.</entry></row><row><entry><phrase role="die">phys-type</phrase></entry><entry>s</entry><entry>read</entry><entry>Type of physical resource: vhd, file etc</entry></row></tbody></tgroup></informaltable></section></section>
+

@@ -1,0 +1,97 @@
+<!--
+<section>
+<title>Generalizing an image</title>
+<para>The generalization stage involves running a set of preparation
+scripts on a VM to generalize the image for use by other users.
+This process includes:</para>
+<itemizedlist>
+<listitem><para>Deleting any private, user-specific settings, for example, the username and password.</para></listitem>
+<listitem><para>If required, separating the private user data volume.</para></listitem>
+<listitem><para>Creating a new user volume VHD and formatting it as NTFS.</para></listitem>
+<listitem><para>Copying files over from the VM image, preserving Access Control Lists (ACLs) appropriately.</para></listitem>
+<listitem><para>Installing an NTFS reparse point on Windows volumes to map the new volume onto the system disk.</para></listitem>
+<listitem><para>Collapsing the image. In this step all unnecessary files are deleted from the VM system (for example, the Windows page file), and all blocks that are allocated in the underlying VHD file which are not referenced by the file system are freed. This ensures that the smallest possible VHD file is sent over the network.</para></listitem>
+</itemizedlist>
+</section>
+-->
+
+
+
+
+
+<!--<section><title>Power Management features</title>
+<para>The following table lists the supported power management features by laptop model.</para>
+<section>
+<title>Suspend and Resume VMs</title>
+<procedure><title>Resuming a VM from S3</title>
+<step><para>Establish an SSH connection to the host.</para></step>
+<step><para>Run the following command:</para>
+<screen>xenvm-cmd <replaceable>uuid</replaceable> trigger params=s3resum</screen></step>
+</procedure>
+
+<procedure><title>Suspending a VM to S3</title>
+<step><para>Establish an SSH connection to the host.</para></step>
+<step><para>Run the following command:</para>
+<screen>/usr/share/xenclient/enter-s3.sh</screen></step>
+</procedure>
+
+<procedure><title>Suspending a primary VM</title>
+<step><para>Establish an SSH connection to the host.</para></step>
+<step><para>Run the following command:</para>
+<screen>/usr/share/xenclient/enter-s3.sh</screen></step>
+</procedure>
+<procedure><title>Resuming a primary VM</title>
+<step><para>Establish an SSH connection to the host.</para></step>
+<step><para>Run the following command:</para>
+<screen>xenvm /config/xenmgr/vms/pvm &amp;</screen></step>
+</procedure>
+
+<procedure><title>Suspending a secondary VM</title>
+<step><para>Establish an SSH connection to the host.</para></step>
+<step><para>Run the following command:</para>
+<screen>xenvm-cmd <replaceable>uuid</replaceable> suspend file=/storage/<replaceable>save_file</replaceable> live=false</screen></step>
+</procedure>
+
+<procedure><title>Resuming a secondary VM</title>
+<step><para>Establish an SSH connection to the host.</para></step>
+<step><para>Run the following command:</para>
+<screen>xenvm-cmd <replaceable>uuid</replaceable> restore file=/storage/<replaceable>save_file</replaceable> delete=true</screen></step>
+</procedure>
+</section>
+
+</section>-->
+
+
+<!--<section><title>Configuring VMs</title>
+
+<procedure id="designating_primary_vm"><title>Designating a primary VM</title>
+<step><para>tbd</para></step>
+</procedure>
+-->
+<!--
+<procedure id="configuring_a_usb_device_for_a_vm"><title>Configuring a VM to use a USB device</title>
+<step><para>Find the ID of the USB device(s) by running, in a local shell:
+</para><screen>lspci | grep -i usb</screen>
+<para>This command should output something like the following:</para>
+<screen>00:1a.0 USB Controller: Intel ... Controller #4 (rev 02)
+00:1a.1 USB Controller: Intel ... Controller #5 (rev 02)
+00:1a.7 USB Controller: Intel ... Controller #2 (rev 02)
+00:1d.0 USB Controller: Intel ... Controller #1 (rev 02)
+00:1d.1 USB Controller: Intel ... Controller #2 (rev 02)</screen>
+</step>
+<step><para>The PCI ID of the USB device in this example is the first past - <literal>00:1a.0</literal>, <literal>00:1a.1</literal> and so on. Navigate to the configuration directory at <filename>/config/xenmgr/vms/</filename>. Edit the configuration file of the VM to include a new line like the following:</para><screen>pci = 0,bind,0000:<replaceable>00:1a.0</replaceable> for each USB device that you want to use in your VM.</screen>
+<para></para></step>
+</procedure>
+
+<procedure id="configuring_a_wireless_device_for_a_vm"><title>Configuring a VM to use a wireless device</title>
+<step><para>Find the ID of the wireless device by running, in a local shell:
+</para><screen>lspci | grep -i wireless</screen>
+<para>This command should output something like the following:</para>
+<screen>02:00.0 Network controller: Intel Corporation Wireless WiFi Link 5100</screen>
+</step>
+<step><para>The PCI ID of the wireless device in this example is the first past - <literal>02:00.0</literal>. Navigate to the configuration directory at <filename>/config/xenmgr/vms/</filename>. Edit the configuration file of the VM to include a new line like the following:</para><screen>pci = 0,bind,0000:<replaceable>02:00.0</replaceable>.</screen>
+<para></para></step>
+</procedure>
+
+</section>
+-->

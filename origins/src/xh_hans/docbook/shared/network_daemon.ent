@@ -1,0 +1,7 @@
+
+  
+  <section xmlns:tp="http://telepathy.freedesktop.org/wiki/DbusSpec#extensions-v0"><title>
+				Interface <phrase role="die">com.citrix.xenclient.networkdaemon</phrase></title><section><title>Methods:</title><section><title>
+				Method <phrase role="die">add_vif</phrase></title><para>Creates the corresponding VIF.</para><para>The arguments are:</para><informaltable frame="none"><tgroup cols="4"><colspec colwidth="0.5in"/><colspec colwidth="2in"/><colspec colwidth="1.5in"/><colspec colwidth="2.5in"/><thead><row><entry>Type</entry><entry>Name</entry><entry>Direction</entry><entry>Description</entry></row></thead><tbody><row><entry>u</entry><entry><phrase role="die">domid</phrase></entry><entry>in</entry><entry/></row><row><entry>u</entry><entry><phrase role="die">backend_domid</phrase></entry><entry>in</entry><entry/></row><row><entry>s</entry><entry><phrase role="die">mac</phrase></entry><entry>in</entry><entry/></row></tbody></tgroup></informaltable></section></section></section>
+
+

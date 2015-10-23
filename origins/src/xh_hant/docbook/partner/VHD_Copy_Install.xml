@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % local SYSTEM "../local.ent">
+%local;
+]>
+
+<article lang="en">
+	<articleinfo id="titlestuff">
+		<title>&PRODUCT_BRAND; Manual VHD Installation [Citrix Confidential]</title>
+		<subtitle>Release &PRODUCT_VERSION;</subtitle>
+		<pubdate>Published <?dbtimestamp format="B Y"?>
+		</pubdate>
+	<productnumber>Version &PRODUCT_VERSION;</productnumber>
+	<edition>&DOC_EDITION_NUMBER;</edition>
+		<copyright>
+			<year>2008</year>
+			<holder>Citrix Systems, Inc.</holder>
+		</copyright>
+	</articleinfo>
+
+        <para>This document explains how to use VHD files provided by &COMPANY_NAME_SHORT; to install VMs on &PB;.</para>
+<procedure><title>Installing VMs provided in VHD format</title>
+
+<step><para>Download the provided VHD and configuration files from <ulink url="ftp.vmd.citrix.com" />.</para></step>
+<step><para>Reboot &PB;. From the GRUB bootloader menu, select <guilabel>Maintenance mode</guilabel>. Select a console and log in, using the username <literal>root</literal> and no password.</para></step>
+<step><para>Determine the IP address of the &PB; host by running <command>ifconfig</command>.</para></step>
+<step>
+<para>Using <command>scp</command>, copy the following VM configuration files over your network to <filename>/storage</filename> on the &PB; host:
+</para>
+<itemizedlist>
+<listitem><para><filename>appserver1.vhd</filename></para></listitem>
+<listitem><para><filename>corporate1.vhd</filename></para></listitem>
+<listitem><para><filename>vista.vhd</filename></para></listitem>
+</itemizedlist>
+<warning><para>The Windows disk image is not to be redistributed outside of the partner programme.</para></warning>
+</step>
+<step><para>Use The &PB; web-based UI to create a new VM. Note the UUID of the new VM.</para>
+<note><para>Please allow some time for the UI to load.</para></note>
+</step>
+<step><para>Reboot into Maintenance Mode.</para></step>
+<step><para>Find the VHD file that has a UUID that matches the UUID of the VM you have just created. This VHD file will be approximately 30Kb.</para></step>
+<step><para>Replace the VHD file with the VHD file of the operating system you want to install on your new VM, ensuring that the UUID name of the file is preserved. for example:</para>
+<screen>mv /disk/appserver1.vhd /disk/<replaceable>vm_uuid</replaceable>.vhd</screen></step>
+<step><para>Reboot. Your new VM can now be started using the UI.</para></step>
+
+</procedure>
+
+</article>

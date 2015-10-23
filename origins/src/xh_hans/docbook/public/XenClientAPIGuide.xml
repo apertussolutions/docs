@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+  <!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+  <!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+
+  <!ENTITY api_host PUBLIC "api_host" "../shared/api_host.ent">
+  <!ENTITY api_vm PUBLIC "api_vm" "../shared/api_vm.ent">
+  <!ENTITY api_product PUBLIC "api_product" "../shared/api_product.ent">
+  
+  
+  <!ENTITY % local PUBLIC "local" "../shared/local.ent">
+  %local;
+]><book id="user_guide" lang="en"><?dbhtml dir="SynchronizerSetupAndUsageGuide"?>
+ <bookinfo id="bookinfo_titlestuff" role="die">
+  <title>&COMPANY_NAME_SHORT;<trademark class="registered" role="die"/> &PB;<trademark class="trade" role="die"/> &PRODUCT_VERSION; API Guide</title>
+
+  <pubdate><?dbtimestamp format="d B Y"?></pubdate>
+  
+  &legal;
+  <releaseinfo>This document serves as a guide to the &PB; &PRODUCT_VERSION; public API.</releaseinfo>  
+ </bookinfo>
+	<chapter><title>API</title>
+
+&api_host;
+&api_vm;
+&api_product;
+</chapter>
+</book>

@@ -1,0 +1,12 @@
+		<step><para>Choose the location of your installation media:</para>
+		<itemizedlist>
+		<listitem><para>For CD or DVD installation, select <guilabel>CD-ROM</guilabel>.</para></listitem>
+		<listitem><para>For installation from a location on the network, select <guilabel>Network</guilabel>. You will be prompted to choose the protocol (FTP or HTTP) to use to transfer the installation files and the location of the directory containing the <filename>installer.iso</filename> file on the network.</para></listitem>
+		<listitem><para>For installation from a USB device, select <guilabel>USB</guilabel>. &PB; will search for an attached USB device that contains the <filename>installer.iso</filename> file.</para></listitem>
+		<listitem><para>For installation from an iSCSI LUN, select <guilabel>iSCSI</guilabel>. You will be prompted to choose whether to use <guilabel>DHCP</guilabel> for networking or a <guilabel>Static</guilabel> IP, and any configuration required. You are then prompted for the location of the iSCSI LUN and a username and password if authentication is required. If you booted the device using iSCSI, the values already entered on the system will be used.</para></listitem>
+						
+		</itemizedlist>
+		
+		<para>In all cases the <filename>installer.iso</filename> file from the &PB; installation CD must be present in the chosen location. For iSCSI or USB installation media, the iso file must be written directly to the USB device or iSCSI LUN. The following uses <command>dd</command> to achieve this for a mounted USB drive:</para>
+		<screen>dd if=installer.iso of=/dev/sdb</screen>
+		</step>

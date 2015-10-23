@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+<!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+<!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+<!ENTITY % local PUBLIC "local" "../shared/local.ent">
+
+  %local;
+]><article lang="en" id="XTSecurityAdvisoryFixes"><?dbhtml dir="XTSecurityAdvisoryFixes"?>
+	<articleinfo id="bookinfo_titlestuff" role="die">
+		<title>&COMPANY_NAME_SHORT;<trademark class="registered"/> &PB;<trademark class="trade"/> &PRODUCT_VERSION; Security Advisory Fixes</title>
+		<pubdate><?dbtimestamp format="d B Y"?></pubdate>
+		<releaseinfo>High-assurance isolation &amp; security for virtual environments</releaseinfo>  
+		&legal;
+	</articleinfo>
+<?hard-pagebreak?>
+<section><title>Xen Security Advisory Fixes</title>
+
+<itemizedlist>
+<listitem><para><emphasis role="bold">CVE-2013-2076 / XSA-52</emphasis> - Information leak on XSAVE/XRSTOR capable AMD CPUs. See <ulink url="http://lists.xen.org/archives/html/xen-announce/2013-06/msg00002.html" />.</para></listitem>
+<listitem><para><emphasis role="bold">CVE-2013-2077 / XSA-53</emphasis> - Hypervisor crash due to missing exception recovery on XRSTOR. See <ulink url="http://lists.xen.org/archives/html/xen-announce/2013-06/msg00001.html" />.</para></listitem>
+<listitem><para><emphasis role="bold">CVE-2013-2078 / XSA-54</emphasis> - Hypervisor crash due to missing exception recovery on XSETBV. See <ulink url="http://lists.xen.org/archives/html/xen-announce/2013-06/msg00001.html" />.</para></listitem>
+</itemizedlist>
+
+</section>
+</article>

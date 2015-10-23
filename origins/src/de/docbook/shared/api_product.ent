@@ -1,0 +1,4 @@
+
+  <section xmlns:tp="http://telepathy.freedesktop.org/wiki/DbusSpec#extensions-v0"><title>
+				Interface <phrase role="die">com.citrix.xenclient.api.product</phrase></title><section><title>Properties:</title><informaltable frame="none"><tgroup cols="4"><colspec colwidth="2in"/><colspec colwidth="0.5in"/><colspec colwidth="1in"/><colspec colwidth="3in"/><thead><row><entry>Name</entry><entry>Type</entry><entry>Access</entry><entry>Description</entry></row></thead><tbody><row><entry><phrase role="die">version</phrase></entry><entry>s</entry><entry>read</entry><entry/></row><row><entry><phrase role="die">build</phrase></entry><entry>a{ss}</entry><entry>read</entry><entry>Build number, date and associated information.</entry></row><row><entry><phrase role="die">tools_version</phrase></entry><entry>s</entry><entry>read</entry><entry/></row></tbody></tgroup></informaltable></section></section>
+

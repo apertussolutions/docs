@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+  <!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+  <!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+  <!ENTITY % local PUBLIC "local" "../shared/local.ent">
+  %local;
+]>
+<book lang="en" id="user_guide"><?dbhtml dir="XenClientBeginnersGuide"?>
+
+ <bookinfo id="bookinfo_titlestuff" role="die">
+  <title>&COMPANY_NAME_SHORT;<trademark class="registered" role="die"/> &PB;<trademark class="trade" role="die" /> &PRODUCT_VERSION; Getting Started Guide</title>
+
+  <pubdate><?dbtimestamp format="d B Y"?></pubdate>
+  
+  &legal;
+  <releaseinfo>This document is a guide for new users of a &COMPANY_NAME_SHORT;<trademark class="registered" role="die"/> &PB;<trademark class="trade" role="die"/> computer.</releaseinfo>
+
+ </bookinfo>  
+ 
+	<chapter><title>Welcome to &PB;</title>
+	
+	<para>&PB; is software that is installed on a device before any operating system. When &PB; is installed, it allows you to install multiple operating systems onto the device, and divides up the computing resources of the device (such as the disk, CPUs, RAM) between the operating systems so that more than one operating system can be running at any one time. This allows you to switch between operating systems in real-time. This can be useful, for example, if you want to use the same laptop at home and at work. The operating system you work in can be a separate one to the one you use at home, configured to allow you secure access to the company networks and files. Your personal operating system can also run on your laptop at the same time, so, for example, you can switch to your personal operating system and start iTunes to listen to your music, and then switch back to your work operating system and work, while listening to music from your personal collection.</para>
+
+<!--	<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata align="center" fileref="images/baremetal_layers.png" />
+</imageobject>
+</mediaobject>
+</informalfigure>
+-->
+	<para>To understand how this works, it might be useful to consider the following diagram. It shows that &PB; is installed first on a device, and then acts as a sort of container for operating systems that are installed on it.</para>
+	
+	
+		<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata align="center" fileref="images/xenclient_layers.png" />
+</imageobject>
+</mediaobject>
+</informalfigure>
+	
+<para>Because of this new approach of installing an operating system 'inside' some other software, your computing experience will be slightly different to what you might be used to. Usually, when you start your Windows computer, Windows starts. When you start your &PB; computer, the first thing you will see is this:</para>
+	<!-- XC Splash screen -->
+<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata align="center" fileref="images/boot_splash.png" />
+</imageobject>
+</mediaobject>
+</informalfigure>
+<para>This shows that the &PB; software is loading. The &PB; software allows you to install and use one or many operating systems on the same computer, and switch between them instantly, with no need to reboot your machine. So, for example, you can install two separate instances of a Windows 7 operating system, and have them both running at the same time, a bit like having two computers in one. In &PB; terminology, each operating system instance is called a Virtual Machine, or VM for short.</para>
+	<note><para>This guide assumes that you already have the &PB; software installed on your computer. If you don't, please visit <ulink url="www.citrix.com" /> to download the &PB; software and follow the installation instructions.</para></note>
+
+	<para>When the &PB; software finished loading, what you see depends on whether you brought your &PB; computer from a hardware manufacturer like Dell, HP or Lenovo, or whether you have been given a &PB; computer at work. If this is a work computer, your system administrator will probably have set your &PB; computer up for you and installed some VMs, and you might see something like the image below. Don't worry if what you see on your screen looks slightly different though. What you see depends on how your computer is configured, if some VMs have been installed on it, and other factors. This is just one example, and we will discuss a few other possibilities of what you could see in the next few pages.</para>
+	<!-- IOVM with work and home VMs -->
+<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata align="center" fileref="images/begin_work_first_boot.png" />
+</imageobject>
+</mediaobject>
+</informalfigure>
+<para>In this example, you can see two icons, each of which represents a VM. To the left there is a machine called <guilabel>jhenson_office</guilabel>, which is a VM setup for being used on the corporate network in the office. The VM probably comes with the software you need to do your job pre-installed. The VM on the right is called <guilabel>jhenson_home</guilabel>, which is a personal VM for use at home, on the road, and so on.</para>
+<?hard-pagebreak?>
+	<para>If you bought your &PB; computer from a hardware manufacturer, and it came with Windows 7 and Windows XP installed, the screen might look something like this:</para>
+	
+	<!-- IOVM with Win 7 + XP -->
+<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata align="center" fileref="images/begin_oem_first_boot.png" />
+</imageobject>
+</mediaobject>
+</informalfigure>
+<para>You might have bought a computer with this configuration if, for example, you still want to use some software that runs on windows XP and not Windows 7, but also want to enjoy the Windows 7 Aero desktop experience.</para>
+
+<?hard-pagebreak?>
+	<para>Possibly there might be nothing installed except the &PB; software. In this case, you'll see something like:</para>
+
+	<!--  -->
+<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata align="center" fileref="images/begin_oem_first_boot_no_vms.png" />
+</imageobject>
+</mediaobject>
+</informalfigure>
+<para>In this case there are no VMs installed on your &PB; computer. The <guilabel>Download from &BACKEND;</guilabel> button refers to &BACKEND;, which is a &COMPANY_NAME_SHORT; product that you can use to download VMs from onto your computer. For more information about &BACKEND; please see  the <citetitle>Citrix Synchronizer 1.0 Administrator Guide</citetitle>.</para>
+<para>You will need to install a VM or download one from &BACKEND; in this situation. To install a VM you will need a Windows installation disk. Use the following process to install a VM:</para>
+<procedure><title>To install a VM</title>
+<step><para>Click <guilabel>Create from Install Disk</guilabel>.</para></step>
+<step><para>The <guilabel>Create from Install Disk</guilabel> wizard is displayed. Follow the steps of the wizard.</para></step>
+<step><para>Before completing the steps of the wizard, insert your Windows installation media into the optical disk drive in your computer, or an external optical disk drive if your computer does not have an internal one.</para></step>
+<step><para>On the last page of the wizard, make sure that <guilabel>Start VM &amp; Install OS</guilabel> is selected. Click <guilabel>Finish</guilabel>.</para></step>
+<step><para>The VM will then proceed to boot into the Windows installation process. You can install Windows just like you would on any other computer.</para></step>
+</procedure>
+
+<para>For information about installing a VM, please see the <citetitle>Citrix XenClient 1.0 Advanced User and Administrator Guide</citetitle>.</para>
+
+
+
+	<section><title>Using &PB;</title>
+	<para>Once the software has loaded and you see something like the images above, you are in &BC;. In &BC; you can start your computers (VMs), turn them off, put them to sleep and so on. You can also install new computers (VMs). In fact, there is a lot of stuff you can do in &BC;, including setting the &BC; wallpaper, and even managing how much of your laptop or computer (physical machine's) computing power you want each of your VMs to be able to use. If you want to learn more about how much you can do with &BC;, please see the <citetitle>Citrix XenClient 1.0 Advanced User and Administrator Guide</citetitle>.</para>
+
+	<para>The next thing you probably want to do is to start a VM. You can do this using &BC;. First, hover your mouse over the picture of the VM that you want to start. Then click on the <guilabel>Start</guilabel> button that appears:</para>
+	
+<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata align="center" fileref="images/start_vm.png" />
+</imageobject>
+</mediaobject>
+</informalfigure>
+	
+	<!-- Start button highlighted  -->
+	<para>Your VM will start, just like it normally would if you started a computer that does not have the &PB; software installed. When the VM has finished starting up, you can use it just like you would any normal computer. To switch from a running VM back to &BC;, simply press and hold down the <keycap>Ctrl</keycap> key on your keyboard, and then press the <keycap>0</keycap> (zero or nought) key. You can switch back to a running VM at any time too. Usually the VMs as shown in &BC; from left to right can be switched to using <keycap>Ctrl + 1</keycap>, <keycap>Ctrl + 2</keycap> and so on.</para>
+	
+	
+	
+	<note><para>Depending on how your &PB; has been set up, a VM might automatically start when you turn on your computer. If this happens, wait for the VM to turn on, log in if you have to, and then press <keycap>Ctrl + 0</keycap>. This will return you to &BC;, from where you will be able to start other VMs if you want to.</para></note>
+	<?hard-pagebreak?>
+	<para>If you prefer to use your mouse to switch between VMs, and to &BC;, you can do that too. In &BC;, simply click on the image of a running VM to switch to it. When  you are in a VM, you can use the VM Switcher bar. The Switcher bar is located at the top of the VM screen in the middle:</para>
+
+	<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata align="center" fileref="images/switcher_hidden.png" />
+</imageobject>
+</mediaobject>
+</informalfigure>
+
+<para>Click on the Switcher bar once to open it. Here you can see the VMs that are running on your computer:</para>
+<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata align="center" fileref="images/switcher_shown.png" width="50%" />
+</imageobject>
+</mediaobject>
+</informalfigure>
+	<para>To switch to a different VM, simply click on the image of the VM in the Switcher bar. To return to &BC; instead, click <guilabel>Home</guilabel>.</para>
+	
+	</section>
+	
+	<section>
+	<title>Using USB devices</title>
+	<para>Because a &PB; computer normally has more than one VM installed on it, and because most USB devices are not designed to be used by more than one computer at a time, USB devices, (for example, external hard drives, phones connected to a computer for charging) can work a bit differently to how you might expect. The simplest way to use a USB device with a VM is to switch to that VM and then plug in the USB device. If the USB device was attached to your computer when the computer started, you might have to unplug the USB device and then plug it in again to get it to work with the VM you want it to.</para>
+	<para>In a work environment, you also might not be able to use some kinds of USB device if your systems administrator has configured your machine in that way.</para>
+	</section>
+<section><title>Learning more about &PB;</title>
+<para>We at &COMPANY_NAME_SHORT; hope that you enjoy using &PB; at home and at work, and that this guide has helped you to get started using &PB;. For more information about &PB;, speak to your system administrator, read <citetitle>Citrix XenClient 1.0 Advanced User and Administrator Guide</citetitle>, or visit <ulink url="www.citrix.com" />.</para>
+</section>
+
+	</chapter>
+
+&colophon;
+
+</book>	

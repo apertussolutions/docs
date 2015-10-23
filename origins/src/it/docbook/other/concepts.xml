@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+  <!ENTITY % local SYSTEM "../local.ent"> 
+  %local;
+]>
+<book lang="en" id="concepts_guide">
+	<bookinfo id="bookinfo_titlestuff">
+		<title>Concepts Guide</title>
+		<subtitle>&COMPANY_NAME_SHORT; &PRODUCT_BRAND; &PRODUCT_VERSION;</subtitle>
+		<pubdate>
+			<?dbtimestamp format="d B Y"?>
+		</pubdate>
+		<copyright>
+			<year>2008</year>
+			<holder>&COMPANY_NAME_SHORT; Systems, Inc.</holder>
+		</copyright>
+	<mediaobject>
+	  <imageobject>
+		<imagedata fileref="images/XenClient.png"/>
+		</imageobject>
+
+	</mediaobject>	
+	</bookinfo>
+
+	<chapter><title>Introduction</title>
+	
+
+
+
+</chapter>
+<chapter><title>&BACKEND;</title>
+
+</chapter>
+	<chapter id="dazzle_portica"><title>&DAZZLE; and &PORTICA;</title>
+<!-- <para>&DAZZLE; is &COMPANY_NAME_SHORT;'s application delivery service. A system administrator can assign applications to be made available to users or groups of users. The user can then access the &DAZZLE; store and decide which applications to use. Applications can be delivered to users in one of two ways. They can be <literal>streamed</literal> from the &DAZZLE; store when the user is online or downloaded from &DAZZLE; and installed locally so that they can be used offline. In the <literal>streamed</literal> case a shortcut is placed on the user desktop which when double-clicked causes an ICA session to be started, causing the application to appear on the user desktop.</para> -->
+
+	</chapter>
+<!--	<chapter><title>Service VM</title>
+<para>This chapter left intentionally blank.</para>
+	</chapter>
+<chapter><title>Backup</title>
+<para>This chapter left intentionally blank.</para>
+	</chapter>
+	
+	<chapter><title>USB devices</title>
+<para>This chapter left intentionally blank.</para>
+	</chapter>
+	<chapter><title>Bluetooth</title>
+<para>This chapter left intentionally blank.</para>
+	</chapter>
+		<chapter><title>Audio</title>
+<para>This chapter left intentionally blank.</para>
+	</chapter>
+			<chapter><title>Graphics</title>
+<para>This chapter left intentionally blank.</para>
+	</chapter>
+	<chapter><title>Sleep, hibernate, shutdown and resume</title>
+<para>This chapter left intentionally blank.</para>
+	</chapter>
+<chapter><title>Wireless networking</title>
+<para>This chapter left intentionally blank.</para>
+	</chapter>
+
+	<chapter><title>User authentication</title>
+<para>This chapter left intentionally blank.</para>
+	</chapter>
+		
+			<chapter><title>Alerts</title>
+<para>This chapter left intentionally blank.</para>
+	</chapter>
+	<chapter><title>Logging</title>
+<para>This chapter left intentionally blank.</para>
+	</chapter> -->
+</book>
+

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % local SYSTEM "../local.ent">
+  <!ENTITY colophon SYSTEM "../../../../shared/xml/colophon.ent">
+  <!ENTITY legal SYSTEM "../../../../shared/xml/legal.ent">
+%local;
+]>
+
+<book lang="en"><?dbhtml dir="XenClientReleaseNotes"?>
+ <bookinfo id="bookinfo_titlestuff" role="die">
+  <title>&COMPANY_NAME_SHORT;<trademark class="registered"/> &PB;<trademark class="trade"/> TPM Setup Guide</title>
+  <pubdate><?dbtimestamp format="d B Y"?></pubdate>
+  &legal;
+ 
+ </bookinfo>
+ 
+ <chapter id="overview_manual">
+  <title>Enabling TPM</title>
+<note><para>This procedure has only been tested on an HP 2530p using BIOS version F.10</para></note>
+
+<orderedlist>
+<listitem><para>Enable TPM in the BIOS.</para></listitem>
+<listitem><para>Exit the BIOS.</para></listitem>
+<listitem><para>Enable TXT in the BIOS, setting the BIOS password to what will be the TPM owner password.</para></listitem> 
+<listitem><para>Exit the BIOS.</para></listitem>
+<listitem><para>Install XenClient interactively.</para></listitem>
+<listitem><para>On the dom0 command line, run:</para>
+<screen>tmp-setup</screen>
+<para>If the TPM is not owned, you are prompted to enter the TPM owner password (twice).</para>
+<para>On success, the message <literal>TPM setup successful - please reboot!</literal> is displayed.</para>
+</listitem>
+
+  <listitem><para>Optionally, enable a <literal>squashfs</literal> filesystem:</para>
+		<para>On the dom0 CLI, run:</para>
+		<screen>tpm-setup-squashfs</screen>
+		<para>This creates a <literal>squashfs</literal> filesystem copy of the current <literal>rootfs</literal>. The smaller filesystem will verify and boot faster. The squashfs filesystem is installed in a new logical volume <literal>root.s</literal> which is used by XenClient on boot if it exists.</para>
+		<note><para>You may need to <command>ssh</command> into <literal>dom0</literal> to run <filename>tmp-setup-squashfs</filename> as it can exit the local terminal. You can get the dom0 IP address by right-clicking on Network Manager and choosing <guilabel>Connection Information</guilabel>.</para></note></listitem>
+ 
+   <listitem><para>Restart the host</para></listitem>
+   </orderedlist>
+<para>Measurement happens during the first boot after configuration. TPM setup is completed and the SMBIOS password configured by the interactive installation process is deleted. </para>
+  <para>To test, on the dom0 CLI, run:</para>
+<screen>cryptsetup luksDump /dev/xenclient/config</screen>
+<para>Note that keyslot 0 is not active, keyslot 1 is active and keyslot 7 is active (root password)</para>
+ <para>Next, run:</para>
+<screen>cat $(find /sys/ -name pcrs)</screen> 
+<para>This command displays the PCRs.</para>
+  <para>As a final test:</para>
+         <orderedlist><listitem><para>Reboot the host, and press <keycap>Esc</keycap> to enter the GRUB prompt.</para></listitem>
+         <listitem><para>Edit the kernel command line, to attempt to change something harmless, for example, remove <literal>autostart</literal> from the <literal>vmlinuz</literal> command line.</para></listitem>
+          <listitem><para>Note the message <literal>system is compromized</literal> is displayed,  instead of the usual boot sequence.</para></listitem>
+		  </orderedlist>
+
+
+</chapter>
+</book>

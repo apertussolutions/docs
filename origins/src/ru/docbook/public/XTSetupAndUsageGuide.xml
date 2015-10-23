@@ -1,0 +1,2076 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+  <!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+  <!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+  <!ENTITY view_details PUBLIC "view_details" "../shared/view_details.ent">
+  
+  <!ENTITY choose_installation_medium PUBLIC "view_details" "../shared/choose_installation_medium.ent">
+  <!ENTITY % local PUBLIC "local" "../shared/local.ent">
+  %local;
+
+]><book id="XTSetupAndUsageGuide" lang="ru">
+  <bookinfo id="bookinfo_titlestuff" role="die">
+    <title>
+      <trademark class="registered" role="die">
+      </trademark>
+      Установка и Руководство по использованию
+    </title>
+    <pubdate>
+    </pubdate>
+    <releaseinfo>
+    </releaseinfo>
+  </bookinfo>
+  <chapter>
+    <title>
+      Обзор и настройки системы
+    </title>
+    <para>
+      Citrix
+      обеспечивает виртуальные настольные с повышенной изоляции взаимно доверять виртуальных машин (VM). Он улучшает В. М. изоляции, сохраняя в отрасли опыт пользователя XenClient на оборудовании COTS столе.
+      поддерживает настройку политики изоляции для различных корпоративных мобильных и настольных случаев использования.
+      расширяет возможности XenClient со следующими характеристиками:
+    </para>
+    <itemizedlist>
+      <listitem>
+        <para>
+          Несколько GPU и бесшовных поддержку мыши, что позволяет работать с несколькими
+          Виртуальных машин на отдельных мониторах.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Измеренные безопасный загрузить систему с использованием технологии Intel TXT.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Зашифрованные диски VM.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          SE Linux и XSM (Xen Модули безопасности) политик.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Сетевой драйвер Virtual Machine (NDVM), которая обеспечивает изолированные службы сети для виртуальных машин.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          В. М. сброса-на-загрузки для возвращения ВМ в исходное состояние при каждой перезагрузке.
+        </para>
+      </listitem>
+    </itemizedlist>
+    <para>
+      лицензируется, а распространяется и устанавливается отдельно от XenClient.
+    </para>
+    <section>
+      <title>
+        Упаковка
+      </title>
+      <para>
+        
+        Программа состоит из следующих пакетов:
+      </para>
+      <orderedlist>
+        <listitem>
+          <para>
+            Установки ISO (
+            )
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Открытого источника ISO, который содержит открытый исходный код, используемый по
+            .
+          </para>
+        </listitem>
+      </orderedlist>
+    </section>
+    <section>
+      <title>
+        Совместимость оборудования
+      </title>
+      <para>
+        поддерживает следующие системы и устройства:
+      </para>
+      <section>
+        <title>
+          Настольные системы
+        </title>
+        <itemizedlist>
+          <listitem>
+            <para>
+              Dell 980 мини-башня
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Dell 980 малого форм-фактора (SFF)
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              HP 8100 Mini-Tower
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              HP 8100 малого форм-фактора (SFF)
+            </para>
+          </listitem>
+        </itemizedlist>
+      </section>
+      <section>
+        <title>
+          Дополнительные устройства
+        </title>
+        <itemizedlist>
+          <listitem>
+            <para>
+              ATI HD 4550 PCI Express видеокарты
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              PCI Express Network Interface Card (NIC), например, Broadcom NetExtreme II 5722
+            </para>
+          </listitem>
+        </itemizedlist>
+      </section>
+      <section>
+        <title>
+          Intel TXT и Intel AMT
+        </title>
+        <para>
+          Для
+          варианты использования, которые требуют Intel Trusted Execution Technology (TXT), но не Intel Active Management Technology (AMT), доступны следующие опции из производителей систем и поддерживаются
+          :
+        </para>
+        <orderedlist>
+          <listitem>
+            <para>
+              Пожалуйста, свяжитесь с вашим системным производителем приобрести без VPRO SKU вариант поддерживается рабочем столе и процессор Intel, поддерживающий TXT и VT-D.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Пожалуйста, приобрести и установить сторонние PCI Express карты сетевого интерфейса (NIC) в поддерживаемом рабочем столе. Использование системной BIOS, чтобы отключить на борту, интегрированный сетевой Intel. AMT должен быть включен в BIOS.
+            </para>
+          </listitem>
+        </orderedlist>
+      </section>
+    </section>
+    <section>
+      <title>
+        Устройство Подготовка к
+        Установка
+      </title>
+      <procedure>
+        <title>
+          Подготовка к установке
+          на всех устройствах
+        </title>
+        <step>
+          <para>
+            В большинстве случаев установить самый последний BIOS доступны производителем системы. В некоторых случаях последние BIOS может быть несовместим с
+            . Смотрите
+            <citetitle>
+              Citrix XenClient XT
+              Выпуску
+            </citetitle>
+            для деталей.
+          </para>
+        </step>
+        <step>
+          <para>
+            Включить следующие Intel VPro функции в системе BIOS:
+          </para>
+          <substeps>
+            <step>
+              <para>
+                VT-х
+              </para>
+            </step>
+            <step>
+              <para>
+                VT-D
+              </para>
+            </step>
+            <step>
+              <para>
+                TPM
+              </para>
+            </step>
+            <step>
+              <para>
+                TXT
+              </para>
+            </step>
+          </substeps>
+        </step>
+      </procedure>
+      <procedure>
+        <title>
+          Подготовка к установке
+          на Dell или HP Desktop с Nvidia или ATI Видеокарта
+        </title>
+        <step>
+          <para>
+            Установите видеокарту в слот PCI Express 4.
+          </para>
+        </step>
+        <step>
+          <para>
+            В меню настройки видео BIOS:
+          </para>
+          <substeps>
+            <step>
+              <para>
+                Включить видео интегрированный адаптер Intel
+              </para>
+            </step>
+            <step>
+              <para>
+                Укажите основной видеоадаптер как Intel
+              </para>
+            </step>
+          </substeps>
+        </step>
+      </procedure>
+      <procedure>
+        <title>
+          Подготовка к установке
+          на Dell 980
+        </title>
+        <step>
+          <para>
+            Отключить неиспользуемые устройства в BIOS уменьшить конфликты прерываний:
+          </para>
+          <substeps>
+            <step>
+              <para>
+                Набор
+                <guilabel>
+                  Конфигурация системы&gt; Serial Port # 2
+                </guilabel>
+                к
+                <guilabel>
+                  Инвалид
+                </guilabel>
+                .
+              </para>
+            </step>
+            <step>
+              <para>
+                Набор
+                <guilabel>
+                  Конфигурация системы&gt; параллельным
+                </guilabel>
+                к
+                <guilabel>
+                  Инвалид
+                </guilabel>
+                .
+              </para>
+            </step>
+            <step>
+              <para>
+                Набор
+                <guilabel>
+                  Диски&gt; SATA-2
+                </guilabel>
+                к
+                <guilabel>
+                  Инвалид
+                </guilabel>
+                .
+              </para>
+            </step>
+            <step>
+              <para>
+                Набор
+                <guilabel>
+                  Диски&gt; SATA-3
+                </guilabel>
+                к
+                <guilabel>
+                  Инвалид
+                </guilabel>
+                .
+              </para>
+            </step>
+            <step>
+              <para>
+                Набор
+                <guilabel>
+                  Накопители&gt; Внешний SATA
+                </guilabel>
+                к
+                <guilabel>
+                  Инвалид
+                </guilabel>
+                .
+              </para>
+            </step>
+            <step>
+              <para>
+                Набор
+                <guilabel>
+                  Разные устройства&gt; WiFI NIC Слот
+                </guilabel>
+                к
+                <guilabel>
+                  Инвалид
+                </guilabel>
+                .
+              </para>
+            </step>
+            <step>
+              <para>
+                Набор
+                <guilabel>
+                  Разные устройства&gt; Optiplex НА чтения
+                </guilabel>
+                к
+                <guilabel>
+                  Инвалид
+                </guilabel>
+                .
+              </para>
+            </step>
+          </substeps>
+        </step>
+      </procedure>
+    </section>
+    <section>
+      <title>
+        Инструкции по установке
+      </title>
+      <para>
+        После обновления и настроить BIOS,
+        рекомендует следующую процедуру для подготовки вашего
+        устройство:
+      </para>
+      <orderedlist>
+        <listitem>
+          <para>
+            Устанавливать
+            на целевом устройстве с помощью установочного компакт-диска. Для получения дополнительной информации об установке
+            См.
+            <olink targetdoc="XenClientAdvancedUserGuide" targetptr="quick_install">
+            </olink>
+            .
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Создание виртуальной машины. Посмотреть
+            <olink targetdoc="XenClientAdvancedUserGuide" targetptr="installing_vms">
+            </olink>
+            Для получения дополнительной информации.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Включить VHD шифрования для виртуальных машин. Посмотреть
+            <olink targetdoc="XTSetupAndUsageGuide" targetptr="enable_vhd_encryption">
+            </olink>
+            Для получения дополнительной информации.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Установка операционной системы на виртуальную машину. Посмотреть
+            <olink targetdoc="XenClientAdvancedUserGuide" targetptr="install_os">
+            </olink>
+            Для получения дополнительной информации.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Установить
+            на виртуальной машине. Посмотреть
+            <olink targetdoc="XTSetupAndUsageGuide" targetptr="install_pv_tools">
+            </olink>
+            Для получения дополнительной информации.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Установите любые другие виртуальные машины в той же манере.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Выполнять любые дополнительные В.М. и конфигурации платформы требуется. Посмотреть
+            <olink targetdoc="XTSetupAndUsageGuide" targetptr="vm_configuration">
+            </olink>
+            и
+            <olink targetdoc="txt_setup" targetptr="platform_configuration">
+            </olink>
+            Для получения дополнительной информации.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Включить TXT измеряется запуск управления доменом. Посмотреть
+            <olink targetdoc="XTSetupAndUsageGuide" targetptr="enable_txt">
+            </olink>
+            Для получения дополнительной информации.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Включить исполнения SE Linux и XSM политики. Посмотреть
+            <olink targetdoc="XTSetupAndUsageGuide" targetptr="enable_selinux">
+            </olink>
+            Для получения дополнительной информации.
+          </para>
+        </listitem>
+      </orderedlist>
+      <xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="installing_xc" xmlns:xi="http://www.w3.org/2001/XInclude">
+      </xi:include>
+      <section id="enable_vhd_encryption">
+        <title>
+          Установка виртуальной машины с зашифрованными VHD
+        </title>
+        <procedure>
+          <title>
+            Включение шифрования VHD
+          </title>
+          <step>
+            <para>
+              Создание виртуальной машины в
+              Пользовательский интерфейс, но не запускайте его. Для этого установите флажок
+              <guilabel>
+                Создание виртуальной машины Установка ОС и позже
+              </guilabel>
+              на последнем экране мастера создания виртуальной машины.
+            </para>
+          </step>
+          <step>
+            <para>
+              Пресс
+              <keycap>
+                Ctrl + Shift + T
+              </keycap>
+              получить окно консоли.
+            </para>
+          </step>
+          <step>
+            <para>
+              Войти в область управления (dom0).
+            </para>
+          </step>
+          <step>
+            <para>
+              Выполните следующую команду, чтобы создать ключ с именем после диске UUID в ключевых каталог криптографии платформы и настроить шифрование для VHD.
+            </para>
+            <screen>
+              key_dir = `XEC получить платформы крипто-ключ-директории` MkDir-р $ {} key_dir vm_vhd_path = `XEC-ут-н
+              <replaceable>
+                vm_name
+              </replaceable>
+              - Диск 1 получить физико-пути `=` vm_vhd_uuid базовое имя $ {} vm_vhd_path VHD `key_file = $ {key_dir} / $ {} vm_vhd_uuid, AES-XTS-равнина, 256.key дд, если = / Dev / urandom о =. $ {} key_file BS = 1 кол-во = 32 VHD-Util ключ-н $ {} vm_vhd_path-к $ {} key_file-х годов
+            </screen>
+          </step>
+          <step>
+            <para>
+              Запустить ВМ и установить операционную систему с оптических носителей привод.
+            </para>
+          </step>
+        </procedure>
+      </section>
+      <section id="install_pv_tools">
+        <title>
+          Установка
+          Инструменты
+        </title>
+        <para>
+          Потому что
+          использует домен сетевой драйвер, нет подключения к сети доступны до
+          (Которые включают в себя сетевой драйвер PV) были установлены в VM.
+          установки требуется Microsoft. NET, который не включен в Windows XP. По этой причине
+          устанавливаются в два этапа: базовый паравиртуализированных драйверов первым, за ним остальные инструменты.
+        </para>
+        <procedure>
+          <title>
+            Для установки
+          </title>
+          <step>
+            <para>
+              Соединяться
+              устройства к проводной сети с доступом в Интернет (чтобы позволить. NET скачать).
+            </para>
+          </step>
+          <step>
+            <para>
+              Использование
+              Для установки Windows XP VM от физических носителей поставщика.
+            </para>
+          </step>
+          <step>
+            <para>
+              В Windows XP VM, исследовать (не автозапуск) Инструменты CD.
+            </para>
+          </step>
+          <step>
+            <para>
+              Включите отображение скрытых файлов.
+            </para>
+          </step>
+          <step>
+            <para>
+              Перейдите в скрытый каталог пакетов.
+            </para>
+          </step>
+          <step>
+            <para>
+              Работать
+              <filename>
+                xensetup.exe
+              </filename>
+              Для установки паравиртуализированных драйверы ввода / вывода.
+            </para>
+          </step>
+          <step>
+            <para>
+              Перезагрузите виртуальную машину и следуйте инструкциям по установке фотоэлектрических устройств.
+            </para>
+          </step>
+          <step>
+            <para>
+              Подтверждение подключения к сети из виртуальной машины вне сервера IP-адрес.
+            </para>
+          </step>
+          <step>
+            <para>
+              В Windows XP VM, исследовать (не автозапуск) Инструменты CD.
+            </para>
+          </step>
+          <step>
+            <para>
+              Устанавливать
+              Инструменты, это будет автоматически загружать. NET.
+            </para>
+          </step>
+          <step>
+            <para>
+              Перезагрузите виртуальную машину.
+            </para>
+          </step>
+        </procedure>
+      </section>
+    </section>
+    <section id="enable_txt">
+      <title>
+        Включение TXT Измеренные Запуск для управления доменом
+      </title>
+      <para>
+        Более подробную информацию о
+        TXT implemenation см.
+        <xref linkend="txt_trusted_boot">
+        </xref>
+        .
+      </para>
+      <procedure>
+        <title>
+          Включение TXT
+        </title>
+        <step>
+          <para>
+            Обновление системы BIOS до последней версии с OEM.
+          </para>
+        </step>
+        <step>
+          <para>
+            Включить TPM и TXT в системе BIOS, сохранить изменения, перезагрузиться, запрашиваемой BIOS.
+          </para>
+        </step>
+        <step>
+          <para>
+            Жесткий выключения питания.
+          </para>
+        </step>
+        <step>
+          <para>
+            Загрузка
+            .
+          </para>
+        </step>
+        <step>
+          <para>
+            Выполните следующие команды после загрузки:
+          </para>
+          <screen>
+            кр-установки перезагрузка
+          </screen>
+        </step>
+        <step>
+          <para>
+            На первой загрузке после запуска
+            <command>
+              кр-установки
+            </command>
+            , Файловая система управления доменом, осматривались и результаты хранятся в TPM. После загрузки, необходимо перезагрузиться немедленно, либо с помощью
+            <guilabel>
+              Власть
+            </guilabel>
+            меню, или, запустив
+            <command>
+              перезагружать
+            </command>
+            Команда в окне консоли управления доменом.
+          </para>
+        </step>
+      </procedure>
+      <para>
+        На последующих загрузках, любые изменения в файловой системе управления доменом или параметров загрузки приведет запроса пароля для авторизации опечатывания.
+      </para>
+    </section>
+    <section id="enable_selinux">
+      <title>
+        Включение Исполнение SE Linux и XSM политики для управления доменом
+      </title>
+      <para>
+        По умолчанию SE Linux и XSM (Xen Модули безопасности) политики в области управления не применяется.
+      </para>
+      <procedure>
+        <title>
+          Включение Исполнение SE Linux и XSM политики
+        </title>
+        <step>
+          <para>
+          </para>
+        </step>
+        <step>
+          <para>
+            Выполните следующую команду:
+          </para>
+          <screen>
+            SED-я &quot;с / SELINUX =.* / SELINUX = обеспечения /&quot; / и т.д. / SELinux / конфигурации
+          </screen>
+        </step>
+        <step>
+          <para>
+            Перезагрузка.
+          </para>
+        </step>
+      </procedure>
+      <para>
+        Есть 3 возможных значений для SELinux:
+      </para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            <literal>
+              инвалид
+            </literal>
+            , Который отключает SE Linux в ядре.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <literal>
+              разрешающий
+            </literal>
+            , Что позволяет операций, но создает журнал операций, которые может быть отказано, если SE Linux была установлена ​​на
+            <literal>
+              обеспечение
+            </literal>
+            .
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <literal>
+              обеспечение
+            </literal>
+            , Что позволяет все функции SE Linux.
+          </para>
+        </listitem>
+      </itemizedlist>
+      <para>
+        Многие области управления операциями командной строки не будет возможным, когда SE Linux политика проводится в жизнь. Чтобы отключить органов при последующих сапогах, редактирования GRUB команду до загрузки, как описано в
+        <xref linkend="edit_grub_command">
+        </xref>
+        .
+      </para>
+      <procedure id="edit_grub_command">
+        <title>
+          Редактирование Grub команду, чтобы отключить SE Linux политик
+        </title>
+        <step>
+          <para>
+            Редактировать
+            <filename>
+              grub.cfg
+            </filename>
+            файл, чтобы редактирование командной строки GRUB, выполнив следующую команду:
+          </para>
+          <screen>
+            SED &#39;1 я \ набор edit_and_shell = 1 &#39;/ загрузки / системы / GRUB / grub.cfg
+          </screen>
+        </step>
+        <step>
+          <para>
+            Перезагрузка
+            устройства.
+          </para>
+        </step>
+        <step>
+          <para>
+            Пресс
+            <keycap>
+              Esc
+            </keycap>
+            сразу же после
+            заставка появляется.
+          </para>
+        </step>
+        <step>
+          <para>
+            Пресс
+            <keycap>
+              электронной
+            </keycap>
+            для редактирования GRUB команду.
+          </para>
+        </step>
+        <step>
+          <para>
+            Изменение экземпляров
+            <literal>
+              обеспечение
+            </literal>
+            и
+            <literal>
+              flask_enforcing
+            </literal>
+            от 1 до 0.
+          </para>
+        </step>
+        <step>
+          <para>
+            Пресс
+            <keycap>
+              Ctrl + X
+            </keycap>
+            для загрузки сразу же редактировать конфигурацию GRUB.
+          </para>
+        </step>
+      </procedure>
+    </section>
+  </chapter>
+  <chapter id="vm_configuration">
+    <title>
+      В. М. Конфигурация
+    </title>
+    <section>
+      <title>
+        Настройка
+        В. М. С Nvidia или ATI GPU
+      </title>
+      <procedure>
+        <title>
+          Включение
+          на VM с прямым доступом к GPU Аппаратная Видео
+        </title>
+        <step>
+          <para>
+            Установить все обновления программного обеспечения VM, убедитесь, что
+            установлены, и подтвердить рабочие подключения к сети.
+          </para>
+        </step>
+        <step>
+          <para>
+            Завершение работы виртуальной машины.
+          </para>
+        </step>
+        <step>
+          <para>
+          </para>
+        </step>
+        <step>
+          <para>
+            Нажмите
+            <guilabel>
+              Аппаратные средства
+            </guilabel>
+            вкладке.
+          </para>
+        </step>
+        <step>
+          <para>
+            С
+            <guilabel>
+              Поддержка 3D-графика
+            </guilabel>
+            раскрывающемся списке выберите GPU вы хотите назначить В. М. и нажмите
+            <guilabel>
+              Экономить
+            </guilabel>
+            .
+          </para>
+        </step>
+        <step>
+          <para>
+            Начало VM. Не следует использовать автоматизированные установки драйвера для Windows функциональность для вновь выявленных GPU.
+          </para>
+        </step>
+        <step>
+          <para>
+            Если графический процессор ATI GPU, отключите его перед установкой драйвера:
+          </para>
+          <substeps>
+            <step>
+              <para>
+                Open Device Manager.
+              </para>
+            </step>
+            <step>
+              <para>
+                В поле Показывать Адаптеры, идентифицировать устройство ATI.
+              </para>
+            </step>
+            <step>
+              <para>
+                Щелкните правой кнопкой на устройстве ATI и выберите Отключить.
+              </para>
+            </step>
+            <step>
+              <para>
+                Перезагрузите виртуальную машину.
+              </para>
+            </step>
+          </substeps>
+        </step>
+        <step>
+          <para>
+            Скачать и установить Windows XP, драйвера Nvidia Quadro 259,12 или более поздней версии (Nvidia GPU) или драйвера Catalyst 10,9 или более поздней версии (ATI GPU).
+          </para>
+        </step>
+        <step>
+          <para>
+            Делать
+            <emphasis>
+              не
+            </emphasis>
+            перезагрузки, когда будет предложено Nvidia или ATI драйвера.
+          </para>
+        </step>
+        <step>
+          <para>
+            Откройте Windows XP диспетчер устройств.
+          </para>
+        </step>
+        <step>
+          <para>
+            Выбирать
+            <guilabel>
+              Видеоадаптеры&gt; Citrix Xen Display Driver
+            </guilabel>
+            .
+          </para>
+        </step>
+        <step>
+          <para>
+            Щелкните правой кнопкой на устройстве и выберите
+            <guilabel>
+              Отключить
+            </guilabel>
+            .
+          </para>
+        </step>
+        <step>
+          <para>
+            Убедитесь, что устройство должно быть отключено.
+          </para>
+        </step>
+        <step>
+          <para>
+            Принять запрос на перезапуск устройства.
+          </para>
+        </step>
+        <step>
+          <para>
+            После перезагрузки В. М., В. М. экране загрузки будет отображаться на дисплее Intel, но на рабочем столе (после загрузки) будет показан на Nvidia или ATI просмотров.
+          </para>
+        </step>
+      </procedure>
+    </section>
+    <section>
+      <title>
+        Включение аудио Назначение устройства к одному В.М.
+      </title>
+      <para>
+        Эта функция используется только для одной виртуальной машины, которая должна быть первой VM началось после загрузки. Эта команда позволяет VT-D от сквозной аудио устройство к одной виртуальной машины. Необходимо перезагрузить В. М. дважды, перед установкой аудио драйвера.
+      </para>
+      <para>
+        После посвятить аудио устройство к одному В.М., пожалуйста, удалите аудио эмуляции от остальных виртуальных машин.
+      </para>
+      <procedure>
+        <title>
+          Чтобы назначить аудиоустройства к В. М.
+        </title>
+        <step>
+          <para>
+          </para>
+        </step>
+        <step>
+          <para>
+            Добавить правило, чтобы дать этому устройству VM:
+          </para>
+          <screen>
+            XEC-ут-н
+            <replaceable>
+              vm_name
+            </replaceable>
+            добавить-PT-правило 0x0403 любой любой
+          </screen>
+        </step>
+        <step>
+          <para>
+            Убедитесь, что устройство, которое будет присвоено В. М. является правильным:
+          </para>
+          <screen>
+            XEC-ут-н
+            <replaceable>
+              vm_name
+            </replaceable>
+            Список-PT-PCI-устройств
+          </screen>
+        </step>
+      </procedure>
+      <procedure>
+        <title>
+          Извлечение аудио Эмуляция из VM
+        </title>
+        <step>
+          <para>
+          </para>
+        </step>
+        <step>
+          <para>
+            Выполните следующую команду:
+          </para>
+          <screen>
+            XEC-ут-н
+            <replaceable>
+              vm_name
+            </replaceable>
+            установка дБ ключ конфигурации / звук &quot;&quot;
+          </screen>
+        </step>
+      </procedure>
+    </section>
+    <section>
+      <title>
+        Настройка Оптический Запись дисковых
+      </title>
+      <procedure>
+        <title>
+          Чтобы отключить Запись на оптический диск для VM
+        </title>
+        <step>
+          <para>
+          </para>
+        </step>
+        <step>
+          <para>
+            Выполните следующую команду:
+          </para>
+          <screen>
+            XEC-ут-н
+            <replaceable>
+              vm_name
+            </replaceable>
+            установка DB-ключевых направлений политики / CD-REC ложной
+          </screen>
+        </step>
+      </procedure>
+    </section>
+    <section>
+      <title>
+        Включение контроллера USB Присвоение Один В.М.
+      </title>
+      <procedure>
+        <title>
+          Чтобы назначить контроллер USB к одному В.М.
+        </title>
+        <step>
+          <para>
+          </para>
+        </step>
+        <step>
+          <para>
+            Выполните следующую команду, чтобы обнаружить идентификатор устройства из контроллеров USB:
+          </para>
+          <screen>
+            lspci-п | GREP &#39;\ [0c03 \]&#39;
+          </screen>
+          <para>
+            Вывод команды выглядит следующим образом:
+          </para>
+          <screen>
+            00:1 а0 USB Controller [0c03]: корпорация Intel 5 серии Series/3400 \ Чипсет USB2 Расширенный хост-контроллера [8086:3 b3c] (REV 05) 00:1 d.0 USB Controller [0c03]: корпорация Intel 5 Series/3400 Серия \ Чипсет USB2 Расширенный хост-контроллера [8086:3 b34] (REV 05)
+          </screen>
+          <para>
+            В квадратных скобках в конце линии описывают идентификатор производителя и идентификатор устройства в формате
+            <literal>
+              [Vendor_id: device_id]
+            </literal>
+            . Например первая строка описывает пример вывода контроллера USB-устройство с поставщиком идентификатор 8086 и устройство Идентификатор 3b3c.
+          </para>
+        </step>
+        <step>
+          <para>
+            Выполните следующую команду:
+          </para>
+          <screen>
+            XEC-ут-н
+            <replaceable>
+              vm_name
+            </replaceable>
+            добавить-PT-правило 0x0c03 0x
+            <replaceable>
+              usb_vendor_id
+            </replaceable>
+            0x
+            <replaceable>
+              usb_device_id
+            </replaceable>
+          </screen>
+        </step>
+        <step>
+          <para>
+            Начало VM.
+          </para>
+        </step>
+        <step>
+          <para>
+            Открыть диспетчер устройств и убедитесь, что нет никаких проблем с сообщалось
+            <literal>
+              Контроллеры универсальной последовательной шины
+            </literal>
+            .
+          </para>
+        </step>
+        <step>
+          <para>
+            Пресс
+            <keycap>
+              Ctrl +0
+            </keycap>
+            , чтобы вернуться к
+            .
+          </para>
+        </step>
+        <step>
+          <para>
+            Подключите устройство USB к одному из USB-порта назначен VM.
+          </para>
+        </step>
+        <step>
+          <para>
+            В окне консоли управления доменом, запустите
+            <command>
+              lsusb
+            </command>
+            команды. Убедитесь, что устройство
+            <emphasis>
+              не
+            </emphasis>
+            , перечисленные в результатах команды. Если устройство
+            <emphasis>
+              является
+            </emphasis>
+            в списке, проверьте, если устройство USB подключен к порту USB с указанным идентификатором шины USB.
+          </para>
+        </step>
+        <step>
+          <para>
+            Вернитесь в гостевой VM. Устройство USB должно присутствовать.
+          </para>
+        </step>
+      </procedure>
+      <para>
+        На некоторых моделях поддерживаемых аппаратных устройств USB могут одни и те же шины USB. В этом случае все USB-устройства на указанном автобус будет передан на VM.
+      </para>
+    </section>
+    <section>
+      <title>
+        Предотвращение Физические Назначение компакт-диска на конкретные В.М.
+      </title>
+      <para>
+      </para>
+      <para>
+        Выполните следующую команду:
+      </para>
+      <screen>
+        XEC-ут-н
+        <replaceable>
+          vm_name
+        </replaceable>
+        установка DB-ключевых направлений политики / CD-доступа ложной
+      </screen>
+    </section>
+    <section>
+      <title>
+        Предотвращение использования печати Основные экрана внутри Конкретные В.М.
+      </title>
+      <para>
+      </para>
+      <para>
+        Выполните следующую команду:
+      </para>
+      <screen>
+        XEC-ут-н
+        <replaceable>
+          vm_name
+        </replaceable>
+        установка дБ ключ политики / печати экрана запрещено истинной
+      </screen>
+    </section>
+    <section>
+      <title>
+        Предупреждение Редактирование В. М. Недвижимость в
+      </title>
+      <para>
+      </para>
+      <para>
+        Выполните следующую команду:
+      </para>
+      <screen>
+        XEC-ут-н
+        <replaceable>
+          vm_name
+        </replaceable>
+        установка дБ ключ политики / изменение-ут-настройки ложной
+      </screen>
+    </section>
+    <section>
+      <title>
+        Разрешение Редактирование В. М. Недвижимость в
+      </title>
+      <para>
+      </para>
+      <para>
+        Выполните следующую команду:
+      </para>
+      <screen>
+        XEC-ут-н
+        <replaceable>
+          vm_name
+        </replaceable>
+        установка дБ ключ политики / изменение-ут-настройки истинной
+      </screen>
+    </section>
+  </chapter>
+  <chapter id="platform_configuration">
+    <title>
+      Платформа Конфигурация
+    </title>
+    <section>
+      <title>
+        Включение управления доступом к сети домена
+      </title>
+      <para>
+        В
+        EIP сетевого драйвера Virtual Machine (NDVM) обеспечивает возможность подключения к другим виртуальным машинам, и по умолчанию контроль домен не имеет доступа к сети.
+      </para>
+      <procedure>
+        <title>
+          Для обеспечения контроля доступа к сети домена
+        </title>
+        <step>
+          <para>
+          </para>
+        </step>
+        <step>
+          <para>
+            Выполните следующие команды:
+          </para>
+          <screen>
+            XEC набора позволяют SSH-истинная перезагрузка
+          </screen>
+        </step>
+      </procedure>
+      <procedure>
+        <title>
+          Чтобы отключить блокирование доступа к сети домена
+        </title>
+        <step>
+          <para>
+          </para>
+        </step>
+        <step>
+          <para>
+            Выполните следующие команды:
+          </para>
+          <screen>
+            XEC набора позволяют SSH-ложные перезагрузки
+          </screen>
+        </step>
+      </procedure>
+    </section>
+    <section>
+      <title>
+        Включение Пользователь В. М. Reset-On-Boot
+      </title>
+      <note>
+        <para>
+          Пожалуйста, убедитесь, что вы установили
+          в В. М. и выполнить все настройки виртуального компьютера перед включением сброс-на-загрузки.
+        </para>
+      </note>
+      <para>
+      </para>
+      <para>
+        Выполните следующие команды:
+      </para>
+      <screen>
+        XEC-ут-н
+        <replaceable>
+          vm_name
+        </replaceable>
+        - Диск 1 комплект снимок сценария vm_uuid = `XEC-ут-н
+        <replaceable>
+          vm_name
+        </replaceable>
+        получить UUID `рубин / USR / Lib / бэкэнда / Ruby / instance_customizations_cache.rb-U $ {vm_uuid} \ создать
+      </screen>
+      <note>
+        <para>
+          Некоторые клавиши Windows, реестра, в частности, связанные с Active Directory (AD), поддерживаются и не сбрасывается.
+        </para>
+      </note>
+    </section>
+    <section>
+      <title>
+        Включение мыши Переключение между двумя мониторами виртуальных машин
+      </title>
+      <para>
+        Для реализации альтернативных физических макетов двумя дисплеями, изменение В. М. номер слота (0, 1, 2, и т.д.) и край (левый, правый) определений. В. М. номер слота (N) является
+        <keycap>
+          Ctrl +
+          <replaceable>
+            N
+          </replaceable>
+        </keycap>
+        клавиатуры последовательность используется для переключения входных контексте, что VM. Синтаксис команды
+        <command>
+          XEC-ут-н
+          <replaceable>
+            vm_name
+          </replaceable>
+          набор бесшовных-мыши [влево | вправо]
+          <replaceable>
+            slot_number
+          </replaceable>
+        </command>
+        . Например, чтобы установить ВМ с переключателем клавишу 2, чтобы перейти к переключиться на ВМ с переключателем ключ 3, когда мышь помещается поверх правой границы экрана, выполните команду:
+      </para>
+      <screen>
+        XEC-ут-н
+        <replaceable>
+          name_of_vm_with_switcher_key_2
+        </replaceable>
+        набор бесшовных мыши правый 3
+      </screen>
+      <para>
+        Следующая конфигурация пример реализует переключение раскладки дисплея с:
+      </para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            4 Non-HDX виртуальных машин (в том числе UIVM) на левом мониторе
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            1 HDX В. М. (например, используя Nvidia GPU) на правом мониторе
+          </para>
+        </listitem>
+      </itemizedlist>
+      <para>
+        Пресс
+        <keycap>
+          Ctrl + Shift + T
+        </keycap>
+        в
+        получить консоль управления доменом окна.
+      </para>
+      <screen>
+        DB-запись / коммутаторы / самостоятельного включения инвалидов &quot;&quot; XEC-ут-н
+        <replaceable>
+          vm1_name
+        </replaceable>
+        набор бесшовных мыши левый пред. XEC-ут-н
+        <replaceable>
+          vm0_name
+        </replaceable>
+        набор бесшовных-мышь-право 1 XEC-ут-н
+        <replaceable>
+          vm2_name
+        </replaceable>
+        набор бесшовных-мышь-право 1 XEC-ут-н
+        <replaceable>
+          vm3_name
+        </replaceable>
+        набор бесшовных-мышь-право 1 XEC-ут-н
+        <replaceable>
+          vm4_name
+        </replaceable>
+        набор бесшовных-мышь-право 1
+      </screen>
+      <para>
+        Для удаления границы переключателя, например, для
+        <replaceable>
+          vm2_name
+        </replaceable>
+        , Установить
+        <literal>
+          бесшовные-мышь-право
+        </literal>
+        собственности в пустую строку:
+      </para>
+      <screen>
+        XEC-ут-н
+        <replaceable>
+          vm2_name
+        </replaceable>
+        набор бесшовных-мышь-правой &quot;&quot;
+      </screen>
+      <para>
+        Для просмотра текущего состояния границы переключатель для VM, запустите команду, используя
+        <literal>
+          получать
+        </literal>
+        вместо
+        <literal>
+          набор
+        </literal>
+        :
+      </para>
+      <screen>
+        XEC-ут-н
+        <replaceable>
+          vm0_name
+        </replaceable>
+        получить бесшовные-мышь-право
+      </screen>
+      <para>
+        Эта команда выводит ключевой переключатель из VM, что правая граница
+        <replaceable>
+          vm0_name
+        </replaceable>
+        переключается.
+      </para>
+    </section>
+    <section>
+      <title>
+        Изменение Бесшовные Общие Приложения Цвет границы
+      </title>
+      <para>
+        В
+        В.М., есть цветной рамкой вокруг окна приложения, которые являются общими для
+        VM. Этот цвет может быть изменен для каждой публикации VM. После
+        инструменты были установлены и проверены на работе, в следующем разделе реестра правки изменит цвет границы:
+      </para>
+      <orderedlist>
+        <listitem>
+          <para>
+            Откройте редактор реестра Windows в виртуальной машине совместного применения.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Создать ключ
+            <literal>
+              HKLM \ Software \ Citrix \ PortICA \ Пограничный
+            </literal>
+            .
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Создайте следующие значения DWORD:
+          </para>
+          <orderedlist>
+            <listitem>
+              <para>
+                Синий (по умолчанию 0)
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Зеленый (по умолчанию FF)
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Красный (по умолчанию 0)
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Ширина (по умолчанию 4)
+              </para>
+            </listitem>
+          </orderedlist>
+        </listitem>
+        <listitem>
+          <para>
+            Изменить RGB значения и ширина в соответствии с вашими желаемого результата.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Перезагрузите виртуальную машину.
+          </para>
+        </listitem>
+      </orderedlist>
+    </section>
+  </chapter>
+  <chapter>
+    <title>
+      Конфигурация сети
+    </title>
+    <section>
+      <title>
+        Служба VM Пример
+      </title>
+      <procedure>
+        <title>
+          Чтобы создать VM службы
+        </title>
+        <step>
+          <para>
+            Копия
+            <filename>
+              vpnvm-rootfs.i686.ext3.gz
+            </filename>
+            (Предоставленный
+            представителя) в
+            <filename>
+              / Хранения / vpnvm
+            </filename>
+            каталог и распаковать его, например:
+          </para>
+          <screen>
+            MkDir / хранения / vpnvm кд / хранения / vpnvm распаковать vpnvm-rootfs.i686.ext3.gz
+          </screen>
+        </step>
+        <step>
+          <para>
+            Переименовать файловой системы:
+          </para>
+          <screen>
+            М. В. vpnvm-rootfs.i686.ext3 vpnvm.ext3
+          </screen>
+        </step>
+        <step>
+          <para>
+            Скопируйте файл
+            <filename>
+              сервис-vpnvm
+            </filename>
+            в
+            <filename>
+              / Usr/share/xenmgr-1.0/templates/kent
+            </filename>
+            каталог и перезагрузка
+            устройства.
+          </para>
+        </step>
+      </procedure>
+      <section>
+        <title>
+          Создание дополнительных виртуальных машин службы
+        </title>
+        <procedure>
+          <title>
+            Создание второго VPNVM
+          </title>
+          <step>
+            <para>
+              Выполните следующую команду, чтобы закрыть существующие VPNVM:
+            </para>
+            <screen>
+              Xen-ут-н
+              <replaceable>
+                vpnvm_name
+              </replaceable>
+              выключение
+            </screen>
+          </step>
+          <step>
+            <para>
+              Сделайте копию существующей папки VPNVM и переименовать файл раздела:
+            </para>
+            <screen>
+              ф-т / хранения / vpnvm / storage/vpn2vm среднего / storage/vpn2vm/vpnvm.ext3 / storage/vpn2vm/vpn2vm.ext3
+            </screen>
+          </step>
+          <step>
+            <para>
+              Копирование VPNVM шаблонов и замены ключевых ценностей, чтобы сделать настройку и имя нового VPNVM уникальным.
+            </para>
+            <screen>
+              CP / usr/share/xenmgr-1.0/templates/kent/service-vpnvm \ / usr/share/xenmgr-1.0/templates/kent/service-vpn2vm SED-я &#39;s/vpn/vpn2/g&#39; / USR / доли / xenmgr-1.0/templates/kent/service-vpn2vm SED-я &#39;с /
+              <replaceable>
+                existing_vpnvm_uuid
+              </replaceable>
+              /
+              <replaceable>
+                any_unused_uuid
+              </replaceable>
+              / &#39;\ / Usr/share/xenmgr-1.0/templates/kent/service-vpn2vm
+            </screen>
+          </step>
+          <step>
+            <para>
+              Следовать
+              <olink targetdoc="VPNVM_setup" targetptr="attach_vm_to_vpnvm">
+              </olink>
+              .
+            </para>
+          </step>
+        </procedure>
+      </section>
+      <section id="attach_to_VPNVM">
+        <title>
+          Прикрепление пользователя ВМ сетевой службы В. М.
+        </title>
+        <para>
+          Используйте следующую процедуру, чтобы приложить VM к сети VPNVM.
+        </para>
+        <procedure id="attach_vm_to_vpnvm">
+          <title>
+            Для присоединения к В. М. Сети VPNVM
+          </title>
+          <note>
+            <para>
+              Пожалуйста, убедитесь, что
+              устанавливаются на VM, который должен прилагаться к сети VPNVM.
+            </para>
+          </note>
+          <step>
+            <para>
+            </para>
+          </step>
+          <step>
+            <para>
+              Выполните следующую команду:
+            </para>
+            <screen>
+              XEC-VM
+            </screen>
+            <para>
+              Эта команда печатает UUID, всех установленных виртуальных машин. Обратите внимание, UUID соответствующих VM.
+            </para>
+          </step>
+          <step>
+            <para>
+              Выполните следующие команды:
+            </para>
+            <screen>
+              XEC-ут-у
+              <replaceable>
+                user_vm_uuid
+              </replaceable>
+              набор легкой зависимости истинной дБ при записи / VM /
+              <replaceable>
+                user_vm_uuid
+              </replaceable>
+              / Config/nic/0/backend-uuid
+              <replaceable>
+                vpnvm_vm_uuid
+              </replaceable>
+            </screen>
+          </step>
+        </procedure>
+      </section>
+      <section>
+        <title>
+          Сетевые интерфейсы
+        </title>
+        <para>
+          Вы можете SSH любому VPNVM использованием
+          <command>
+            sshv4v
+            <replaceable>
+              vm_name
+            </replaceable>
+          </command>
+          Для просмотра корневой файловой системы или внести в него изменения. По умолчанию система VPNVM файл доступен только для чтения, так что вам нужно запустить команду
+          <command>
+            горе-о перемонтировать, RW /
+          </command>
+          чтобы иметь возможность вносить никаких изменений.
+        </para>
+        <para>
+          Когда VPNVM запуска следующую последовательность событий:
+        </para>
+        <orderedlist>
+          <listitem>
+            <para>
+              VPNVM получает интерфейс ру сети,
+              <literal>
+                eth0
+              </literal>
+              , Чьи бэкэнда Network Driver домена В.М. (NDVM).
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <literal>
+                eth0
+              </literal>
+              автоматически добавляется новый мост сеть под названием
+              <literal>
+                brbridged
+              </literal>
+              .
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Когда виртуальная машина запущена, она получает ру сетевой интерфейс, чьи бэкэнда VPNVM.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              В соответствии с Udev правило расположены в
+              <filename>
+                / И т.д. / Udev / rules.d / Xen-серверной
+              </filename>
+              , Бэкэнд автоматически добавляется
+              <literal>
+                brbridged
+              </literal>
+              .
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Когда В. М. выполняет запрос сети Интернет, пакеты направляются следующим образом: В. М. &lt;-&gt; VPNVM &lt;-&gt; NDVM &lt;-&gt; Интернет.
+            </para>
+          </listitem>
+        </orderedlist>
+        <para>
+          Намерение состоит в том, чтобы изменить VPNVM использовать какой-то фильтрации, таких как VPN, вместо того чтобы использовать манекен моста.
+        </para>
+        <note>
+          <para>
+            Ядро VPNVM был изменен, чтобы заставить пакеты, которые передаются в виде копии, который требуется, когда пакеты проходят через более одного моста. Когда манекен мост заменили VPN эта модификация не требуется.
+          </para>
+        </note>
+      </section>
+    </section>
+    <section>
+      <title>
+        В. М. Настройка брандмауэра
+      </title>
+      <para>
+        Вы можете настроить правила брандмауэра использованием
+        <command>
+          viptables
+        </command>
+        команду, чтобы создать правила о том, что связь между позволили виртуальных машин. Каждый правил указывает, следует ли принять или отклонить связь, происходящих из VM на порт связан на следующий VM на другой порт. Например:
+      </para>
+      <screen>
+        viptables-д-1-е 2-й REJECT
+      </screen>
+      <para>
+        создает новое правило, которое запрещает связи между ВМ с областью ID 1 и В. М. с областью ID 2.
+        <command>
+          viptables
+        </command>
+        Команда использует следующий синтаксис:
+      </para>
+      <screen>
+        viptables - помочь Использование: viptables команда [править] Команды: - добавлять, править Append - вставка-I &lt;n&gt; Вставить правило перед правилом &lt;n&gt; - список-L список правил - удалить-D [&lt;п &gt;] Удалить &lt;n&gt; правило или следующее правило - флеш-F Флеш правил - помочь-х вариантов Помощь Правило: - дом-в-г &lt;n&gt; Клиент domid - дом-из-е &lt;n&gt; сервера domid - порт-в-р &lt;n&gt; клиента порт - порт из-д &lt;n&gt; Порт сервера - прыжок-J {ACCEPT |​​ REJECT} Что делать
+      </screen>
+      <note>
+        <itemizedlist>
+          <listitem>
+            <para>
+              Работающий
+              <command>
+                viptables-L
+              </command>
+              печатает текущий набор
+              <command>
+                viptable
+              </command>
+              правила буфер сообщений Xen. Для просмотра этого буфера, выполните команду
+              <command>
+                xenops dmesg
+              </command>
+              .
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <command>
+                viptables
+              </command>
+              могут быть запущены только в области управления (dom0) в качестве
+              <literal>
+                корень
+              </literal>
+              .
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <command>
+                viptables
+              </command>
+              правила не сохраняется на устройстве перезагрузки.
+            </para>
+          </listitem>
+        </itemizedlist>
+      </note>
+    </section>
+  </chapter>
+  <xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="using_bc" xmlns:xi="http://www.w3.org/2001/XInclude">
+  </xi:include>
+  <xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="resource_allocation" xmlns:xi="http://www.w3.org/2001/XInclude">
+  </xi:include>
+  <chapter>
+    <title>
+      Другие административные задачи
+    </title>
+    <section>
+      <title>
+        Доступ к базе данных управления
+      </title>
+      <para>
+        Вы можете получить доступ к базе данных управления домена, используя
+        <command>
+          DB-*- dom0
+        </command>
+        Команды в VPNVM. Это может быть полезно для создания постоянных данных, например VPN сертификаты, в безопасном месте в области управления. Для того, чтобы делать запросы к базе данных, вы должны добавить соответствующие правила в
+        <filename>
+          / И т.д. / RPC-proxy.rules
+        </filename>
+        в файловой системе управления доменом. Например, чтобы позволить доступ на чтение из ВМ с UUID
+        <literal>
+          00000000-0000-0000-0000-000000000003
+        </literal>
+        :
+      </para>
+      <screen>
+        эхо &quot;позволяет дом-UUID 00000000-0000-0000-0000-000000000003 \ назначение org.freedesktop.DBus интерфейс \ org.freedesktop.DBus&quot;&gt;&gt; / и т.д. / RPC-proxy.rules эхо &quot;позволяет дом-UUID 00000000-0000 - 0000-0000-000000000003 \ назначение com.citrix.xenclient.db \ интерфейс com.citrix.xenclient.db читать &quot;&gt;&gt; / и т.д. / RPC-proxy.rules эхо&quot; позволяет дом-UUID 00000000-0000-0000-0000-000000000003 \ назначение com.citrix.xenclient.db \ интерфейс com.citrix.xenclient.db read_binary &quot;&gt;&gt; / и т.д. / RPC-proxy.rules
+      </screen>
+      <para>
+        Чтобы разрешить доступ на запись, замените
+        <literal>
+          читать
+        </literal>
+        с
+        <literal>
+          запись
+        </literal>
+        и
+        <literal>
+          read_binary
+        </literal>
+        с
+        <literal>
+          write_binary
+        </literal>
+        в предыдущем примере.
+      </para>
+    </section>
+  </chapter>
+  <xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="troubleshooting" xmlns:xi="http://www.w3.org/2001/XInclude">
+  </xi:include>
+  <appendix>
+    <title>
+      Выполнение Notes
+    </title>
+    <section id="txt_trusted_boot">
+      <title>
+        TXT Trusted процесса загрузки
+      </title>
+      <para>
+        использует технологии Intel TXT для аппаратных, динамичный корнем доверия (DRTM) измерения и проверки
+        запуск среды. TXT вызывается до
+        загрузки, приостановить, перезагрузки и выключения. TXT используется с открытым исходным кодом (tboot) и с закрытым исходным кодом (SINIT) чипсета специальное программное обеспечение, которое разрабатывается и поддерживается Intel. Успешное функционирование TXT, также зависит от поддержки процессора, качество OEM-производителей BIOS, реализации и Trusted Platform Module (TPM) прошивки.
+      </para>
+      <section>
+        <title>
+          TXT начального процесса установки
+        </title>
+        <para>
+          Следующая диаграмма показывает первоначальную настройку TXT процесса.
+        </para>
+        <informalfigure>
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center" fileref="images/trusted_boot_process_setup.png" width="75%">
+              </imagedata>
+            </imageobject>
+          </mediaobject>
+        </informalfigure>
+      </section>
+      <section>
+        <title>
+          Trusted процесса загрузки: Проверка при загрузке
+        </title>
+        <para>
+          Следующая диаграмма показывает процесс проверки, который происходит на устройстве время загрузки.
+        </para>
+        <informalfigure>
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center" fileref="images/trusted_boot_process_verify_on_boot.png" width="75%">
+              </imagedata>
+            </imageobject>
+          </mediaobject>
+        </informalfigure>
+      </section>
+      <section>
+        <title>
+          Выполнение Notes
+        </title>
+        <para>
+          Следующие компоненты TXT измеряются и проверяются на загрузке:
+        </para>
+        <itemizedlist>
+          <listitem>
+            <para>
+              Управление домена (домена 0) - sha1sum корневой файловой системы
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Пользовательский интерфейс службы В.М. - sha1sum корневой файловой системы
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Network Driver службы В.М. - sha1sum корневой файловой системы
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Командная строка из загрузчика grub2
+            </para>
+          </listitem>
+        </itemizedlist>
+        <section>
+          <title>
+            Измерения с tboot
+          </title>
+          <variablelist>
+            <varlistentry>
+              <term>
+                ПЦР 15
+              </term>
+              <listitem>
+                <para role="die">
+                  Используется для хранения файловой системы dom0 хэш (сделано в initramfs)
+                </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>
+                ПЦР 17
+              </term>
+              <listitem>
+                <para role="die">
+                  Используется TBOOT (документация
+                  <filename>
+                    TXT_Architecture_31516804_2008.pdf
+                  </filename>
+                  , Раздел 1.9.1)
+                </para>
+                <itemizedlist>
+                  <listitem>
+                    <para role="die">
+                      SHA-1 хэш BIOS ACM: SinitMleData.BiosAcmID (20 байт)
+                    </para>
+                  </listitem>
+                  <listitem>
+                    <para role="die">
+                      STM отказа в индикатор: SinitMleData.MsegValid (8 байт)
+                    </para>
+                  </listitem>
+                  <listitem>
+                    <para role="die">
+                      SHA-1 хэш STM (или все 0s, если отказаться): SinitMleData.StmHash (20 байт)
+                    </para>
+                  </listitem>
+                  <listitem>
+                    <para role="die">
+                      LCP управления области использовали политики (ПД или PO): SinitMleData.PolicyControl (4 байта)
+                    </para>
+                  </listitem>
+                  <listitem>
+                    <para role="die">
+                      SHA-1 хэш использовали политики (или все 0s, если решение не быть расширен): SinitMleData.LcpPolicyHash (20 байт)
+                    </para>
+                  </listitem>
+                  <listitem>
+                    <para role="die">
+                      MLE подобранные возможности (или все 0s, если решение не быть расширен): OsSinitData.Capabilities (4 байта)
+                    </para>
+                  </listitem>
+                </itemizedlist>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>
+                ПЦР 18
+              </term>
+              <listitem>
+                <para>
+                  Используется TBOOT, подпись tboot.gz (документация
+                  <filename role="die">
+                    TXT_Architecture_31516804_2008.pdf
+                  </filename>
+                  , Раздел 1.9.2)
+                </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>
+                ПЦР 19
+              </term>
+              <listitem>
+                <para>
+                  Используется TBOOT, подпись других модулей мультизагрузочного и загрузочные опции командной строки (Xen, dom0 ядро, initramfs, SELinux политика).
+                </para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </section>
+        <section>
+          <title>
+            Измерение с initramfs
+          </title>
+          <itemizedlist>
+            <listitem>
+              <para>
+                Вычислить sha1sum из корневого раздела.
+              </para>
+            </listitem>
+            <listitem>
+              <para role="die">
+                Расширение ПЦР-15 с использованием вычисляется sha1sum: Эхо $ с | tpm_extendpcr_sa-р 15
+              </para>
+            </listitem>
+          </itemizedlist>
+        </section>
+        <section>
+          <title>
+            Цитата
+          </title>
+          <itemizedlist>
+            <listitem>
+              <para>
+                Использование
+                <command>
+                  TPM_Quote2
+                </command>
+                , чтобы получить TPM цитату на просил ПЦР и с помощью прилагаемого данное время.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Выход подписи и блока данных, который был подписан.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Блок данных содержит список ПЦР, местности и дайджест ПЦР ценностей.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Цитата файл также включает ПЦР ценностей, но те не подписаны и не может быть проверено, не путем вычисления дайджеста.
+              </para>
+            </listitem>
+          </itemizedlist>
+        </section>
+        <section>
+          <title>
+            Проверить
+          </title>
+          <itemizedlist>
+            <listitem>
+              <para>
+                Использование OpenSSL
+                <command>
+                  rsa_verify
+                </command>
+                проверить подпись блока данных.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Сравните данное время, если они предоставлены.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Выходной список ПЦР и местности.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Кроме того, выход случайное число, если поставки не входят.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Выходной дайджест значения PCR.
+              </para>
+            </listitem>
+          </itemizedlist>
+        </section>
+      </section>
+      <section>
+        <title>
+          Пароль Обработка
+        </title>
+        <para>
+          Изменения, внесенные в раздел конфигурации заставить систему для запроса фразу установлены в процессе установки модуля TPM. Выполните следующую команду, чтобы изменить эту фразу, если требуется:
+        </para>
+        <screen>
+          OpenSSL RSA-des3 в / загрузки / система / установка / данных / восстановления частно-key.conf \-Passin стандартного ввода-выход / загрузки / система / установка / данных / восстановления частно-key.conf \-passout стандартного ввода
+        </screen>
+        <para>
+          Введите старый пароль, и пресса
+          <keycap>
+            Вводить
+          </keycap>
+          . Затем введите новые фразы и нажмите
+          <keycap>
+            Вводить
+          </keycap>
+          . Следующие выходные данные записываются в консоли:
+        </para>
+        <screen>
+          письменно RSA ключ
+        </screen>
+      </section>
+    </section>
+  </appendix>
+  <xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="pxe_install" xmlns:xi="http://www.w3.org/2001/XInclude">
+  </xi:include>
+  <xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="licenses" xmlns:xi="http://www.w3.org/2001/XInclude">
+  </xi:include>
+  <index>
+  </index>
+</book>

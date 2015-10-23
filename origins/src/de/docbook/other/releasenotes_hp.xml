@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % local SYSTEM "../local.ent">
+%local;
+]>
+
+<article lang="en">
+	<articleinfo id="titlestuff">
+		<title>&PRODUCT_BRAND; Release Notes</title>
+		<subtitle>Release &PRODUCT_VERSION;</subtitle>
+
+		<pubdate>Published <?dbtimestamp format="d B Y"?>
+		</pubdate>
+		<productnumber>Version &PRODUCT_VERSION;</productnumber>
+		<edition>&DOC_EDITION_NUMBER;</edition>
+		<copyright>
+			<year>2008</year>
+
+			<holder>Citrix Systems, Inc.</holder>
+		</copyright>
+
+
+
+	</articleinfo>
+
+	<section id="overview_manual">
+		<title>About this document</title>
+		<para>This document provides important information about the &PRODUCT_BRAND;<trademark class="trade"/> &PRODUCT_VERSION; Release.</para>
+<section id="new_in_this_release">
+<title>New in this release</title>
+<itemizedlist>
+<listitem><para>The Service VM, an instant-on VM with a graphical user interface that starts when booting into &PB;</para></listitem>
+<listitem><para>DVD playback</para></listitem>
+<listitem><para>DVD / CD writing (beta)</para></listitem>
+<listitem><para>Sound</para></listitem>
+<listitem><para>USB passthrough</para></listitem>
+<listitem><para>VM creation wizard</para></listitem>
+</itemizedlist>
+<para></para>
+</section>
+		<section id="installation">
+			<title>Installation</title>
+			<para>System requirements, preparation, installation, and initial configuration are described in the <citetitle>&PRODUCT_BRAND; Installation Guide</citetitle>.</para>
+		</section>
+		<section id="known_issues">
+			<title>Known Issues</title>
+			<para>This section details known issues with this release and any workarounds that can be applied. Please report any other issues to your Citrix support representative.</para>
+<informaltable frame='none' width="100%">
+<tgroup cols='5'>
+<colspec colwidth='0.75in'/>
+<colspec colwidth='1.25in'/>
+<colspec colwidth='3in'/>
+<colspec colwidth='1in'/>
+<colspec colwidth='1.5in'/>
+
+<thead>
+<row>
+<entry><para>Priority</para></entry>
+<entry><para>Issue</para></entry>
+<entry><para>Description</para></entry>
+<entry><para>Frequency of Occurrence</para></entry>
+<entry><para>Fix Version</para></entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry><para>Medium</para></entry>
+<entry><para>TL-Alpha3-001</para></entry>
+<entry><para><bridgehead>SATA legacy IDE mode</bridgehead>
+<emphasis role="bold">Issue:</emphasis> Using SATA legacy IDE mode can issues accessing the emulated IDE devices in the VMs.</para>
+<para><emphasis role="bold">Workaround:</emphasis> The SATA configuration for the system should be setup in BIOS to use AHCI mode (the details of how to do this are system specific). This should be done
+prior to any of the installation steps below.</para></entry>
+<entry><para>Low</para></entry>
+<entry><para>Technical Preview</para></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable> 			
+			<formalpara>
+				<title>AMT</title>
+				<para>The use of AMT with &PB; can cause hangs and other problems when it is enabled on certain systems. To avoid these problems it is recommended that AMT (and the ME) be disabled. This is usually done using the MEBex setup which can be accessed by pressing <keycap>CTRL+p</keycap> during system power on. To disable AMT and the ME, enter the MEBex setup:</para>
+			</formalpara>
+			<orderedlist>
+				<listitem>
+					<para>Log in using the AMT password (the default is <literal>admin</literal> if it has not been set)</para>
+				</listitem>
+				<listitem>
+					<para>Select <guilabel>Intel ME Configuration</guilabel> and <literal>Y</literal> to enter</para>
+				</listitem>
+				<listitem>
+					<para>Select <guilabel>Intel ME State Control</guilabel>
+					</para>
+				</listitem>
+				<listitem>
+					<para>Select <guilabel>Disabled</guilabel> then press the <keycap>esc</keycap> key.</para>
+				</listitem>
+				<listitem>
+					<para>The system will restart with AMT and the ME disabled.</para>
+				</listitem>
+			</orderedlist>
+			<formalpara>
+				<title>
+					<literal>eth0</literal> loses IP address</title>
+				<para>If you lose connectivity over the <literal>eth0</literal> interface, use <command>udhcpc</command> to repair the interface.</para>
+			</formalpara>
+			<screen>udhcpc -i eth0</screen>
+			
+			<formalpara>
+				<title>Windows XP cannot be use as the Primary VM</title>
+				<para>There is currently no workaround available.</para>
+			</formalpara>
+			
+			<formalpara>
+				<title>Secondary VMs cannot be run without a running primary VM</title>
+				<para>There is currently no workaround available.</para>
+			</formalpara>
+			<formalpara>
+				<title>Some built-in laptop speakers may not produce sound</title>
+				<para>Use external speakers or headphones.</para>
+			</formalpara>
+<!--			<formalpara>
+				<title>PVM occasionally fails to start</title>
+				<para>This is a known issue where the SATA controller ceases to operate when a PVM boots. Further attempts to boot may succeed. &COMPANY_NAME_SHORT; is actively debugging this issue.</para>
+			</formalpara>
+			-->
+			
+			<!--
+			<formalpara>
+				<title>Booting from optical disk</title>
+				<para>On rare occasions the optical disk cannot be read as a boot disk, which causes a VM to hang. To work around this issue:</para>
+			</formalpara>
+			<orderedlist> 
+				<listitem>
+					<para>Insert the optical disk.</para>
+				</listitem>
+				<listitem>
+					<para>Wait until the drive completely spins up.</para>
+				</listitem>
+				<listitem>
+					<para>Start the VM.</para>
+				</listitem>
+				<listitem>
+					<para>Follow the instructions for installing the operation system.</para>
+				</listitem>
+			</orderedlist>
+-->
+			<formalpara>
+				<title>Switching optical disks</title>
+				<para>If you eject an optical disk and put in a new one Windows might not recognize that the disk has been changed. To work around this, right-click on the optical disk in Windows Explorer and select <guilabel>eject</guilabel> until the new disk is recognized.</para>
+			</formalpara>
+
+		</section>
+	</section>
+
+</article>

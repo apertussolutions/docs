@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+  <!ENTITY % local SYSTEM "../local.ent"> 
+   %local;
+]>
+<book lang="en" id="installation_guide">
+  <bookinfo id="bookinfo_titlestuff">
+    <title>Quickstart Guide</title>
+	<subtitle>&COMPANY_NAME_SHORT; &PRODUCT_BRAND; &PRODUCT_VERSION;</subtitle>
+    <pubdate><?dbtimestamp format="d B Y"?></pubdate>
+
+    <copyright>
+      <year><?dbtimestamp format="Y"?></year>
+    </copyright>
+		<mediaobject>
+	  <imageobject>
+		<imagedata fileref="images/XenClient.png"/>
+		</imageobject>
+
+	</mediaobject>	
+  </bookinfo>
+<!-- 
+<chapter><title>Introducing &PRODUCT_BRAND;</title>
+
+		<para>Thank you for choosing &PRODUCT_BRAND;<trademark class="trade"/> from &COMPANY_NAME_LEGAL;</para>
+<para>&PB; is a type 1, bare metal hypervisor that uses native hardware support for virtualization to enable near bare-metal performance. 3D graphics and multimedia performance is not compromised. The hypervisor component of the &PB; platform is a thin layer, just a few megabytes in size.</para>
+
+<para>&PB; allows users to have a personal desktop image that is totally separated and completely isolated from a locked down corporate desktop image running on the same machine. The personal desktop gives the user the ability to install their own applications, while the corporate desktop image remains securely isolated and locked down, which results in a lower cost of operation and IT being able to provide higher service levels to their customers.</para>
+<para>&BACKEND; provides VM imaging services to &PB;. It allows users to pull imaged VMs on to their &PB;-enabled machines, and also to sync their VMs back to &BACKEND;.</para>
+<para>&DAZZLE; technology allows users to access applications running in other VMs in the VM that they are currently using.</para>
+<note><para>Please refer to the <citetitle>&PB; Concepts guide</citetitle> if you are unfamiliar with &PB; virtualization concepts and terms.</para></note>
+
+	</chapter>
+-->	
+		<chapter id="sys_requirements">
+		
+
+</chapter>
+
+<chapter><title>Installation Procedure</title>
+<para>To install &PB; and take advantage of the &BACKEND; VM provisioning functionality and the &DAZZLE; application provisioning services, perform the following steps.</para>
+<procedure><title>Installing &PB; and related technologies</title>
+<step><para>Install and setup &BACKEND;. See <xref linkend="install_transmitter" /> for information about how to do this.</para></step>
+<step><para>Ensure that the hardware has the correct BIOS settings. To do this:</para>
+
+
+
+</step>
+<step><para>Install the &PB; software on one of the supported laptops. See <xref linkend="installation" /> for information on how to do this. </para></step>
+<step><para>In &BC;, create a VMs with &HDX_FIRST; enabled. For information about how to do this, see <olink targetdoc="administration" targetptr="create_from_cd" />.</para>
+<!-- <warning><para>The Vista installer gains exclusive control of the graphics hardware during installation until such time as the installation is completed and the &COMPANY_NAME_SHORT; tools are 
+installed. Therefore it is inadvisable to attempt to switch back to the service VM until the &COMPANY_NAME_SHORT; tools have been installed.</para></warning> -->
+</step>
+
+<step><para>In &BC; create a second VM that does not have &HDX; enabled. For information about how to do this, see <olink targetdoc="administration" targetptr="xc_admin" /> for information about how to do this.</para></step>
+
+<step><para>Install &DAZZLE;. See <xref linkend="install_dazzle" /> for information about how to do this.</para></step>
+</procedure>
+
+</chapter>
+	<chapter id="installation">
+	<title>Installing &PB;</title>
+ 	 	<section><title>Installing &PB; using the installer CD</title>
+
+<para>Before beginning the installation process, please ensure that the following BIOS settings are in place:</para>
+
+
+
+	
+	</section>
+<!--<section><title>Installing &PB; using PXE boot</title>
+	<para>This section explains what is required  to enable PXE booting of &PB; installations.</para>
+	<para>To create a PXE environment, you need:</para>
+<itemizedlist>
+<listitem><para>a TFTP server to enable PXE booting</para></listitem>
+<listitem><para>a DHCP server to provide IP addresses to the systems that are going to PXE-boot</para></listitem>
+<listitem><para>an NFS, FTP, or HTTP server to house the installation files</para></listitem>
+</itemizedlist>
+<para>These can all co-exist on the same server, or be distributed on different servers on the network. Additionally, each system that you want to PXE boot and install &PB; on needs a PXE boot-enabled Ethernet card.</para>
+<para>The exact procedure for setting up PXE boot depends on the BIOS you are using. Please see the documentation of your operating system for more information.</para>
+	
+
+
+
+</section> -->
+
+	</chapter>
+
+<chapter id="install_transmitter"><title>Installing &BACKEND;</title>
+
+</chapter>
+
+<chapter id="install_dazzle"><title>Installing &DAZZLE;</title>
+
+
+</chapter>
+
+<chapter><title>Installation Troubleshooting</title>
+
+</chapter>
+</book>

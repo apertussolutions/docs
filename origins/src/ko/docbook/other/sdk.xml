@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[<!ENTITY % local SYSTEM "../local.ent">
+<!ENTITY api SYSTEM "../generated/api.ent">  %local;]>
+<book lang="en">
+	<bookinfo id="bookinfo_titlestuff">
+		<title>Software Development Kit Guide</title>
+		<subtitle>&COMPANY_NAME_SHORT; &PRODUCT_BRAND; &PRODUCT_VERSION;</subtitle>
+		<pubdate><?dbtimestamp format="d B Y"?></pubdate>
+		<copyright>
+			<year>&COPYRIGHT_YEARS;</year>
+			<holder>&COMPANY_NAME_LEGAL;</holder>
+		</copyright>
+			<mediaobject>
+	  <imageobject>
+		<imagedata fileref="images/XenClient.png"/>
+		</imageobject>
+
+	</mediaobject>	
+	</bookinfo>
+	
+	<chapter><title>&COMPANY_NAME_SHORT; &PB; architecture</title>
+
+	<section><title>&PB; Management Stack</title>
+<para>The following (abbreviated) diagram provides a high-level view of the components that handle interaction between the service VM running in a guest domain and the XenClient control domain. When the user interacts with the XenClient Management Interface (XMI), XenClient communicates with the User Interface daemon (UID) over JSON / RPC. The UID is responsible for multiplexing, and translates the JSON / RPC input into D-Bus messages which it forwards to the appropriate components. The UID also receives messages from components over D-Bus, translates to JSON / RPC, and communicates these messages back to XMI.</para>
+<para>A Xen VM instance is created in the control domain for each hosted VM on the machine, all of which are in turn managed by the Xen Manager daemon (Xen Manager).</para> 
+<para>The NetworkManager component is the result of an open-source project. See <ulink url="http://projects.gnome.org/NetworkManager/" /> for implementation details.</para>
+<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata fileref="images/xen_vm_xenmgr.png" />
+</imageobject>
+</mediaobject>
+</informalfigure>
+	<section><title>How the UID converts between JSON/RPC and D-Bus</title>
+	
+	<para>The UID does an http POST over a socket to the UID which consists of a JSON packet, which is mapped 1 to 1 to a D-Bus packet, which is then forwarded to the relevant component. For example, the following introspected D-Bus message:</para>
+<screen><![CDATA[<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+ "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node name="/org/freedesktop/sample_object">
+  <interface name="org.freedesktop.SampleInterface">
+    <method name="Frobate">
+      <arg name="foo" type="i" direction="in"/>
+      <arg name="bar" type="s" direction="out"/>
+      <arg name="baz" type="a{us}" direction="out"/>
+      <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
+    </method>
+    <method name="Bazify">
+      <arg name="bar" type="(iiu)" direction="in"/>
+      <arg name="bar" type="v" direction="out"/>
+    </method>
+    <method name="Mogrify">
+      <arg name="bar" type="(iiav)" direction="in"/>
+    </method>
+    <signal name="Changed">
+      <arg name="new_value" type="b"/>
+    </signal>
+    <property name="Bar" type="y" access="readwrite"/>
+  </interface>
+  <node name="child_of_sample_object"/>
+  <node name="another_child_of_sample_object"/>
+</node>]]></screen>
+<para>Maps to JSON as:</para>
+<screen><![CDATA[{"node":
+    {"@attributes":
+        {"name":"/org/freedesktop/sample_object"},
+     "interface":
+        {"@attributes":
+            {"name":"org.freedesktop.SampleInterface"},
+         "method":[
+            {"@attributes":
+                {"name":"Frobate"},
+             "arg":[
+                {"@attributes":
+                    {"name":"foo",
+                     "type":"i",
+                     "direction":"in"}},
+                {"@attributes":
+                    {"name":"bar",
+                     "type":"s",
+                     "direction":"out"}},
+                {"@attributes":
+                    {"name":"baz",
+                     "type":"a{us}",
+                     "direction":"out"}}],
+             "annotation":
+                {"@attributes":
+                    {"name":"org.freedesktop.DBus.Deprecated",
+                     "value":"true"}}},
+            {"@attributes":
+                {"name":"Bazify"},
+             "arg":[
+                {"@attributes":
+                    {"name":"bar",
+                     "type":"(iiu)",
+                     "direction":"in"}},
+                {"@attributes":
+                    {"name":"bar",
+                     "type":"v",
+                     "direction":"out"}}]},
+            {"@attributes":
+                {"name":"Mogrify"},
+             "arg":
+                {"@attributes":
+                    {"name":"bar",
+                     "type":"(iiav)",
+                     "direction":"in"}}}],
+         "signal":
+            {"@attributes":
+                {"name":"Changed"},
+             "arg":
+                {"@attributes":
+                    {"name":"new_value",
+                     "type":"b"}}},
+         "property":
+            {"@attributes":
+                {"name":"Bar",
+                 "type":"y",
+                 "access":"readwrite"}}},
+     "node":[
+        {"@attributes":
+            {"name":"child_of_sample_object"}},
+        {"@attributes":
+            {"name":"another_child_of_sample_object"}}
+      ]
+   }
+}]]></screen>
+<section><title>Xen Manager</title>
+<para>Xen Manager is the core configuration and monitoring component of the XenClient toolstack. It keeps track of the current state of the XenClient device. It interacts with the user interface daemon to provide VM status and lifecycle services for the UI and Backend daemons. It interacts with power management, device configuration and notification tools on the control domain to configure and maintain device and system state. As part of VM lifecycle management, it ensures consistency of ownership among VMs of some system resources, specifically GPU ownership, and PCI-device pass-through.</para>
+<para>The internal architecture of Xen Manager is intended to be essentially as a state-machine based single-threaded server, using non-blocking communication primitives, primarily sockets. The primary blocking action made by Xen Manager is disk access. All blocking tasks needed for configuration and management are offloaded to XenVM and control domain tools, via requests on D-Bus.</para>
+<para>Since the persistent data related to VM configuration is managed by Xen Manager, all VM configuration operations are performed by Xen Manager and relayed, if necessary to the corresponding Xen VM, if it is running. This is particularly the case for VM snapshot actions, where the disk used by the VM changes on snapshot. Hence, requests to suspend a VM need to be addressed to Xen Manager, which decides the new name of the disk file, and sends the request on to XenVM. To avoid race conditions between the completion of the snapshot operation by Xen VM and the writing of the persistent VM configuration to disk (i.e. race conditions which can be exposed by the system suddenly losing power), Xen Manager keeps a log of pending snapshot operations, which it processes on startup.</para>
+<para>Since the system needs to work both in the presence and absence of any backend component Xen Manager also provides default policies for USB and wireless. It operates in two modes: in the presence of the backend component, the policy service of the backend component is used, but actions based on those policies are performed by Xen Manager; in the absence of a backend component, it uses the default (permissive) USB and wireless policies to perform these actions. The presence or absence of a backend component is determined by querying D-Bus. This query is robust with respect to startup order of the Xen Manager and backend daemons.</para>
+<para>VMs can be created via two management mechanisms:</para> 
+<itemizedlist><listitem><para>local, by the user installing from local media</para></listitem>
+<listitem><para>remote, via the user's instantiation of appliance template published by the &BACKEND;.</para></listitem>
+</itemizedlist> 
+<para>For locally managed VMs, the configuration state is entirely managed by Xen Manager. For remotely managed VMs, the configuration state is managed by the backend client as well as Xen Manager. The backend client controls appliance instantiation, appliance updates, and appliance removal, whereas Xen Manager has a copy of the VM configuration for the latest complete appliance configuration.</para>
+<para>VM configurations contain metadata that specifies whether a VM is a Primary VM (PVM), a Service VM, or a Secondary VM (SVM). These are mutually exclusive categories. A PVM is a VM that when running has ownership of the GPU. There can be multiple PVMs configured on the system, but only one of them can run at any one time. A Service VM is a VM that owns the GPU when a PVM is not running, but will run without GPU ownership when a PVM is running. Only one Service VM can be configured on the system. An SVM is a VM that does not own the GPU at any time. Multiple SVMs can be configured and running at any time.</para>
+<para>VM configurations also specify pass-through of PCI devices. Xen Manager ensures that running VMs do not collide over ownership of PCI devices, and fails a request to start a VM if it detects PCI pass-through conflicts with the currently running VMs.</para> 
+<para>The persistent state managed by Xen Manager is kept in an optionally encrypted LVM volume. This state has the following components:</para>
+<itemizedlist>
+<listitem><para>per VM configuration and runtime state</para></listitem>
+<listitem><para>user-configured device assignment policies</para></listitem>
+<listitem><para>device credentials (for example, for wireless access points)</para></listitem>
+</itemizedlist>
+<para>This state is kept in the <filename>/config</filename> directory in text files.</para>
+<para>The dynamic state maintained by Xen Manager is:</para>
+<itemizedlist>
+<listitem><para>a log of events that have occurred on the system, for retrieval by the Local UI</para></listitem>
+<listitem><para>status of VM lifecycle operations (e.g. s3 suspend/resume)</para></listitem>
+</itemizedlist>
+
+</section>
+	</section>
+	<section><title>High-level Interfaces</title><para>Xen Manager communicates with other components of the system through D-Bus. The interfaces of Xen Manager with the rest of the system are described in this section.</para>
+	<section><title>VM Lifecycle management</title><para>This interface is consumed by the backend component, and the local UI. This interface allows:</para>
+<itemizedlist>
+<listitem><para>addition of new VMs</para></listitem>
+<listitem><para>removal of existing VMs</para></listitem>
+<listitem><para>reconfiguring existing VMs</para></listitem>
+<listitem><para>starting/stopping/suspending/snapshotting of existing VMs</para></listitem>
+<listitem><para>presentation of the current configuration and state of each VM and the device as a whole, and status of any operations-in-progress</para></listitem>
+<listitem><para>default management policies for USB, wireless, audio, etc.</para></listitem>
+</itemizedlist>
+	
+	</section>
+<section><title>Control domain USB tools</title><para>There are two flows of the interaction with these tools. The tools initiate incoming host-level device status and plug/unplug notifications, Xen Manager processes, and relays to the appropriate VM. The policies to decide which action to relay to which target VM are determined by the presence or absence of a backend component, as described above. The default policy is to relay host-level events to all, any, or the currently owning VM for that device, as appropriate. To implement the actions based on these policies, Xen Manager calls out either Xen VM or to these tools. Communication between Xen Manager and these tools is over D-Bus.</para><para>In the case when a backend component is absent, Xen Manager maintains persistent state comprising of device-to-VM assignments chosen by the user.
+</para>
+</section>
+<section><title>Control domain wireless tools</title>
+<para>The interaction with control domain wireless tools is similar to the USB case described above.</para></section>
+<section><title>Control domain power management tools</title>
+<para>Xen Manager maintains any user-specified policies for power management. The interaction between Xen Manager, the control domain and Xen VM for the currently running uses the following algorithm:</para>
+<itemizedlist>
+<listitem><para>If any PVM is running, then the GPU is owned by that PVM (even if the Service VM is running). Only one PVM can be running at a time; this is enforced by Xen Manager.</para></listitem>
+<listitem><para>If the IOVM is running, and no VM marked as PVM is running, then the GPU is owned by IOVM.</para></listitem>
+</itemizedlist>
+<para>The VM that owns the GPU is the last to be suspended, and the first to be restored, on host suspend/resume events.</para>
+</section>
+
+
+	</section>
+	</section>
+	<section><title>Client Management Stack</title>
+<para>This section describes the components of the client management stack
+that pertain to the backend.</para>
+
+<para>XenVM is a dom0-based daemon that is responsible for managing a
+single running VM. there is one XenVM instance in dom0 for each
+running VM, allowing XenVM to implement a reasonably simple state
+machine for the management of its associated virtual machine.
+In general, all operations
+on XenVM instances should be initiated by XenMgr.
+XenMgr is the core configuration and monitoring component of the
+client toolstack. XenMgr acts as a single point of
+contact for all VM management operations on the client device. It
+is effectively a single, extensible, event loop that handles and
+dispatches events across XenVM instances and higher-level tools.
+XenMgr provides a simple API for the control of VMs on the client
+device.</para>
+<para>XCUId is the user interface component of XenClient. It is
+currently incorporated directly within XenMgr, but will be broken
+out into an independent daemon in dom0. XCUId is responsible for
+presenting the local client UI for display in VMs, it is also
+responsible for the client-side of backend support for proprietary
+Citrix functionality. XCUId contains a set of web pages
+representing the client UI, and forwards requests regarding VM
+state to XenMgr. The proprietary version of XenClient will
+include a more functional XCUId, which links in libraries that
+allow the client to be managed by the transmitter.
+ClientUI is the web-based client control interface. It is
+presented by XCUId, and rendered inside client VMs as a component
+of the Xen tools installation.</para>
+</section>
+	<section><title>Services running in the &PB; hypervisor</title>
+<para></para>
+<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata fileref="images/hypervisor_services.png" width="90%"/>
+</imageobject>
+</mediaobject>
+</informalfigure>
+	</section>
+	<section><title>Services running in Service VM</title>
+	
+<para></para>
+<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata fileref="images/service_vm_services.png" width="40%"/>
+</imageobject>
+</mediaobject>
+</informalfigure>
+	</section>
+	<section><title>Services running in the primary VM</title>
+	<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata fileref="images/services_primary_vm.png" width="75%"/>
+</imageobject>
+</mediaobject>
+</informalfigure>
+	<para></para>
+	</section>
+
+	</chapter>
+	<chapter><title>&BACKEND; Architecture</title>
+
+<para>The Figure below shows a high-level architectural block diagram of the
+backend components, and the relevant components on the client device
+pertaining to the administration of XenClient hosts. Each of the
+components in this diagram is described below, including details on
+the approach to be used for implementation.</para>
+<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata fileref="images/architecture.png" width="450px"/>
+</imageobject>
+</mediaobject>
+</informalfigure><para>The overall system is structured as a backend environment, which runs
+on servers in a datacenter. The backend will be installable as both a
+Windows Server application and a Linux-based XenServer VM. The
+backend manages a collection of XenClient-based notebooks. Notebooks
+are controlled by users using a local client UI, which is a web
+browser-based UI that is installed as an integrated component in guest
+VMs and is also available through the instant-on VM. Administration
+of the backend itself is provided through a password-protected WebUI.
+In addition to the administrative facilities of the backend UI, users
+may also log in for purposes such as managing their devices, and
+accessing backups.</para>
+<section><title>&BACKEND;</title>
+<para>As mentioned above, the backend server is responsible for the
+management of Users, Devices, and Appliances. The backend presents a
+WebUI-based console to both users and administrators.</para>
+<section><title>XenClient Transmitter</title><para> - is the core of the backend
+implementation. It is written in Python, using SQLAlchemy as an
+object relational mapper for access to an underlying database
+system. Any database supported by SQLAlchemy (effectively
+anything with ODBC) will be supported.</para></section>
+<section><title>Backend WebUI</title><para> - the web console is written using the Google
+Web Toolkit (GWT). GWT allows the UI to be developed in Java, and
+then performs source-to-source translation of into optimized and
+obfuscated javascript. Communications between the WebUI and the
+backend itself are HTTP-based. Where server interactions need to
+query the database, AJAX and JSON RPC are used.</para></section>
+<section><title>DBMS</title><para> - Any ODBC-providing DBMS supported by SQLAlchemy may be
+supported. We currently develop by including an embedded SQLLite
+with the backend and have found that SQLlite actually scales
+surprisingly well. We are in the process to switching development
+and test over to MSSQL.</para></section>
+<section><title>Image Store</title><para> - Any network file system target that can be mounted
+by the transmitter and image server may be used. At the moment
+this is likely to be CIFS on windows and NFS on Linux. The image
+store may be colocated with the backend for smaller deployments.
+Simple Image Server - The Image Server is responsible for
+serving image download and upload requests from client devices.
+It is decoupled from the core of the backend in order to allow for
+maximum scalability: we expect that in large XC deployments,
+backend load will scale a little, but image downloads will scale a
+great deal. The image server interacts with the sync tool on the
+client install in order to provide an image transport that chunks
+data to take advantage of web proxies, provides compression, and
+will provide services for encryption of VM image files.</para></section>
+</section>
+
+	
+	</chapter>
+	<chapter><title></title>
+	<section><title>uid</title>
+	<para>The UI daemon <literal>uid</literal> acts a a translation service between JSON / RPC and <literal>D-Bus</literal>.</para>
+	</section>
+	
+	</chapter>
+
+<chapter><title>Customizing &BRAND_CONSOLE;</title><para>Use CSS and JavaScript please.</para></chapter>
+<chapter><title>&PB; API</title>
+<para>This chapter contains the specification of the &PB; API.</para>
+&api;
+</chapter>
+
+</book>

@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+<!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+<!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+<!ENTITY % local PUBLIC "local" "../shared/local.ent">
+
+  %local;
+]><article lang="en" id="XTReleaseNotes"><?dbhtml dir="XTReleaseNotes"?>
+	<articleinfo id="bookinfo_titlestuff" role="die">
+		<title>&COMPANY_NAME_SHORT;<trademark class="registered"/> &PB;<trademark class="trade"/> &PRODUCT_VERSION; Release Notes</title>
+		<pubdate><?dbtimestamp format="d B Y"?></pubdate>
+  		<releaseinfo>High-assurance isolation &amp; security for virtual environments</releaseinfo>  
+		&legal;
+	</articleinfo>
+<?hard-pagebreak?>
+
+<section><title>Welcome to &PB; &PRODUCT_VERSION;</title>
+<para>&PB; is a secure client hypervisor with management support.  &PB; &PRODUCT_VERSION; includes a number of security and isolation enhancements, and robustness improvements. See <ulink url="http://support.citrix.com/article/CTX138633" /> for more details of security vulnerabilities fixed in this release. Other features of this release are:</para>
+<itemizedlist>
+<listitem><para>Improved platform S3 support.</para></listitem>
+<listitem><para>Fixed erratic scrollbar when scrolling through long lists of VM icons in &BC;.</para></listitem>
+<listitem><para>SDK fixes, including restoration of missing files and correction of contents listing.</para></listitem>
+<listitem><para>Ability to modify properties of deployed VMs.</para></listitem>
+<listitem><para>Greyed out icon for running VMs marked for deletion.</para></listitem>
+<listitem><para>If &BACKEND; detects that VM disks have been modified by another party, &BACKEND; will restore the disks to the target state.</para></listitem>
+<listitem><para>Various fixes to VM icons in &BC; to prevent flickering and scrolling glitches.</para></listitem>
+<listitem><para>VMs now will only attempt to boot from devices specified in the boot order settings, instead of attempting to boot from disk, optical media and floppy drive respectively as fallback.</para></listitem>
+<listitem><para>SELinux policy change to allow <command>vhd-util</command> to access the VHD key for VMs deployed by &BACKEND;.</para></listitem>
+<listitem><para>Support for disks that are both measured and encrypted.</para></listitem>
+</itemizedlist>
+</section>
+
+<section>
+<title>What's new in XT 3.1</title>
+<para>XT 3.1 features a number of general reliability and robustness improvements in a number of areas, as well as new XenClient and &BACKEND; functionality.  Some of the highlights of this release are listed below:</para>
+
+<itemizedlist>
+<listitem><para><emphasis role="bold">Windows 8 support</emphasis> as a virtual machine.</para></listitem>
+<listitem><para><emphasis role="bold">Improved Measured Launch configuration experience and robustness</emphasis>: removing the need to use the command-line to set up the product to use TXT and the TPM, as well as broader hardware compatibility and reliability.</para></listitem>
+<listitem><para><emphasis role="bold">API improvements</emphasis>: A number of new features are exposed to service VMs, including the ability to request user attention, provision of a random data source from domain 0, access to the APIs from Windows VMs, and firewall control.</para></listitem>
+<listitem><para><emphasis role="bold">Greater VM and platform configurability from &BACKEND;</emphasis>: prevent access to the local terminal, deliver and boot VMs from ISO images, ability to prevent users from changing VM policy of synchronized VMs.</para></listitem>
+<listitem><para><emphasis role="bold">Non-platform &BACKEND;s</emphasis>, allowing administrators to configure a &BACKEND; to be unable to modify platform settings or upgrade the platform software.</para></listitem>
+<listitem><para><emphasis role="bold">Improved support for USB devices in Linux VMs.</emphasis></para></listitem>
+<listitem><para><emphasis role="bold">Service VM deployment via the &BACKEND;</emphasis>: configuring VM properties such as multiple networks and internal firewall rules.</para></listitem>
+</itemizedlist>
+
+<para>These features extend the management and isolation improvements introduced in &PB; 3.0.</para>
+
+
+
+
+
+</section>
+<section><title>Upgrading from a previous version</title>
+
+<para>This release supports upgrade from the &UPGRADEABLE_PRODUCT_RELEASES; of &PB;.  The installation CD provided with this release can be used to upgrade a standalone system.  Alternatively, the over-the-air upgrade feature can be used to perform the upgrade on a running system.  The user should specify the location of the upgrade repository that is provided as part of the release materials.  If the client is being managed by a &BACKEND;, this configuration can be done by the administrator on the &BACKEND;.  For more details of upgrading a device via &BACKEND;, please refer to the &BACKEND; Administrator's Guide.</para>
+
+<para>The &BACKEND; can also be upgraded from a previous version.  The service should be taken offline temporarily for the procedure (this takes only a small number of minutes to perform).  For detailed instructions on performing this upgrade, please refer to the <citetitle>&BACKEND; Administrator Guide</citetitle>.</para>
+
+<para>As with any software upgrade, please be sure to back up any essential data before beginning the upgrade procedure.</para>
+
+</section>
+	<section id="known_issues"><title>Known Issues</title>
+	
+		<informaltable frame="none" width="6.5in">
+			<tgroup cols="1">
+
+            <colspec colwidth="6.5in"/>
+			<colspec colwidth="5.50in"/>
+
+			<tbody>
+
+			<row>
+				<entry>
+					<para role="horrible-release-note-hack">Revocation of SINIT ACM v51 and v59 - Action Required</para>
+					<para><emphasis role="bold">Issue:</emphasis> Intel has disclosed a security vulnerability in the SINIT ACM for 2nd and 3rd generation i5 and i7 processors. The vulnerable ACM has been removed from &PB; and a new version of this ACM with the vulnerability fixed is in place in this latest release. While the vulnerable SINIT ACM has been removed from &PB;, &PB; users are strongly advised to revoke the vulnerable SINIT ACM. A description of the vulnerability and directions for revoking the effected SINIT ACM can be found <ulink url=" https://security-center.intel.com/advisory.aspx?intelid=INTEL-SA-00035&amp;languageid=en-fr">here</ulink><footnote><para>https://security-center.intel.com/advisory.aspx?intelid=INTEL-SA-00035&amp;languageid=en-fr</para></footnote>.</para>
+					<note><para>Due to the nature of the SINIT ACM revocation, &PB; is no longer able to support the legacy 2nd generation only SINIT ACM. This was included in previous releases to maintain compatibility with Dell 2nd generation system that are not compatible with the new 2nd and 3rd generation combined SINIT ACM. A future BIOS update for Dell 2nd gen i5 and i7 systems may fix this issue.
+</para></note>
+				</entry>
+			</row>			
+			
+			
+			
+			<!-- This problem affects tools uninstall in releases older than 3.1.2, and is therefore relevant when upgrading to 3.1.2 (or later) from a release older than 3.1.2. The release note should be removed once we no longer support upgrade from releases older than 3.1.2. See XC-9787 for more details -->
+			<row>
+				<entry>
+                    <para role="horrible-release-note-hack">Networking problems in Windows VMs after upgrading tools</para>
+					<para><emphasis role="bold">Issue: </emphasis> Windows VM wired and/or wireless drivers may not be correctly installed after tools upgrade.</para>
+					
+					<para><emphasis role="bold">Workaround:</emphasis> The problem is with &PB; Windows tools upgrade rather than fresh install so one workaround is to create a new Windows VM from scratch and install tools in to it.  Alternatively, in the affected VM:</para>
+<procedure>
+<title>To troubleshoot networking issues</title>
+<step><para>From the Windows Control Panel, open Device Manager.</para></step>
+<step><para>Identify the device which is not working (<literal>Citrix PV Ethernet Adapter</literal> for wired networking or <literal>Citrix PV Wireless Adapter</literal> for wireless networking).</para></step>
+<step><para>From the Windows Control Panel, open Device Manager.</para></step>
+<step><para>Right-click the device and choose <guilabel>Update driver software...</guilabel>.</para></step>
+<step><para>Choose <guilabel>Search automatically for updated driver software</guilabel>.</para></step>
+<step><para>This step may report <guilabel>The best driver software for your device is already installed</guilabel> or <guilabel>Windows encountered a problem installing the driver software for your device</guilabel>.</para></step>
+<step><para>Right-click the device and choose <guilabel>Uninstall</guilabel>.</para></step>
+<step><para>If this offers the option to <guilabel>Delete the driver software for this device</guilabel>, leave this option unselected. </para></step>
+<step><para>Right click any device in device manager and choose <guilabel>Scan for hardware changes</guilabel>.</para></step>
+<step><para>The device should now be working correctly. </para></step>
+</procedure>
+
+
+					
+				</entry>
+			</row>
+
+			<!-- XC-9829: Workaround for CitrixUSB.exe failing to run. -->
+			<row>
+				<entry>
+					<para role="horrible-release-note-hack">USB issues in Windows XP VMs</para>
+					<para><emphasis role="bold">Issue:</emphasis> The &PB; USB service may fail to start on a Windows XP VM unless certain libraries from Microsoft .NET 3.5 are installed in the VM. To determine whether the service is running, open Task Manager and check whether <literal>CitrixUSB.exe</literal> appears in the list of processes.</para>
+					<para><emphasis role="bold">Workaround:</emphasis> Install Microsoft .NET 3.5 in the VM. This is included on the &PV_TOOLS; CD.</para>
+				</entry>
+			</row>
+												
+			<row>
+				<entry>
+                    <para role="horrible-release-note-hack">USB 3 ports not supported</para>
+					<para><emphasis role="bold">Issue:</emphasis> USB 3 ports are not supported in this release. These ports can be used to power or charge USB devices, but not for connectivity.</para>
+					<para><emphasis role="bold">Workaround:</emphasis> None known at the moment.</para>
+				</entry>
+			</row>
+		
+			<row>
+				<entry>
+                    <para role="horrible-release-note-hack">PXE installation of Debian Squeeze VMs not supported</para>
+					<para><emphasis role="bold">Issue:</emphasis> Installation of Debian Squeeze on &PB; VMs is not supported due to missing symbols in the <literal>sd_mod</literal> driver in the Squeeze kernel.</para>
+					<para><emphasis role="bold">Workaround:</emphasis> Install Debian Squeeze VMs with an installation disk. Alternatively, you can use the GTK PXE Installer.</para>
+				</entry>
+			</row>
+
+			<row>
+				<entry>
+                    <para role="horrible-release-note-hack">Installation of Debian Wheezy 32-bit VMs fails to install the GRUB boot loader</para>
+					<para><emphasis role="bold">Issue:</emphasis> If you attempt to install a Debian Wheezy 32-bit VM, it fails to install the GRUB boot loader and displays the message <literal>Installation step failed</literal>.</para>
+					<para><emphasis role="bold">Workaround:</emphasis> When you get the error, do the following:</para>
+					<procedure>
+						<step><para>Press <keycap>ALT + F2</keycap> to open a command line console.</para></step>
+						<step><para>Run the command:</para>
+						<screen>chroot /target /bin/bash</screen></step>
+						<step><para>Run the command:</para>
+						<screen>apt-cdrom -d /media/cdrom add</screen></step>
+						<step><para>Run the command:</para>
+						<screen>apt-get update</screen></step>
+						<step><para>Type "exit" twice:</para>
+						<screen>exit					
+exit</screen></step>
+						<step><para>Press <keycap>ALT + F1</keycap> to return to the installer screen and try installing the GRUB bootloader again.</para></step>
+					</procedure>
+				</entry>
+			</row>
+			<!-- XC-9859 -->
+			<row>
+				<entry>
+					<para role="horrible-release-note-hack">Ubuntu 12.04 VM may fail to suspend when a USB storage device is attached</para>
+					<para><emphasis role="bold">Issue:</emphasis> An Ubuntu 12.04 VM may fail to suspend if a USB storage device is assigned to the VM.</para>
+					<para><emphasis role="bold">Workaround:</emphasis> Remove the USB storage device from the VM before suspending the VM.</para>
+				</entry>
+			</row>
+			<row>
+				<entry>
+                    <para role="horrible-release-note-hack">Intel Trusted Execution Technology (TXT) Does Not Work on Dell Latitude E6420</para>
+					<para><emphasis role="bold">Workaround:</emphasis> None known at present.</para>
+				</entry>
+			</row>	
+			
+			<row>
+				<entry>
+					<para role="horrible-release-note-hack">Device Stability Issues with 3D Graphics Passthrough</para>
+					<para>There are a number of issues that may be experienced when enabling 3D graphics passthrough:</para>
+					<itemizedlist>
+						<listitem><para>On Ivy Bridge/HD4000 systems, the graphics drivers are not bundled with &PB; as they conflict with older versions of the hardware.  These can be downloaded and installed from the Intel website.</para></listitem>
+						<listitem><para>Some Lenovo systems may reset the brightness when starting a VM with the Intel drivers.  To work around this, try instead installing the OEM driver from the Lenovo website.</para></listitem>
+						<listitem><para>&PB; may generally be less stable with 3D Graphics Passthrough enabled.  For best use of this feature, minimise the number of other VMs with displays running.</para></listitem>
+					</itemizedlist>
+				</entry>
+			</row>
+
+			<row>
+				<entry>
+					<para role="horrible-release-note-hack">Some HP Devices Fail to Resume from Sleep</para>
+					<para><emphasis role="bold">Issue:</emphasis> On HP 2760p systems, after installation of &PB; and enabling of TXT, the first time the device enters into ACPI State S3 (sleep), &PB; fails to resume.</para>
+					<para><emphasis role="bold">Workaround:</emphasis> The system has to be manually powered off using the power switch and then restarted. Subsequently, sleep and resume work as expected.</para>
+				</entry>
+			</row>
+
+			<row>
+				<entry>
+					<para role="horrible-release-note-hack">PXE Answerfile Limitation</para><para>
+						<emphasis role="bold">Issue:</emphasis> The <command>defer="true"</command> attribute on the <command>password</command> tag in the PXE answerfile is not supported in this release.</para>
+				</entry>
+			</row>
+
+            <row>
+                <entry>
+                    <para role="horrible-release-note-hack">Using Multiple Monitors with &PB;, Secondary Monitors Are Still Visible When &PB; is Locked</para><para>
+                        <emphasis role="bold">Issue:</emphasis> If you are using &PB; with Secure Authentication with a multi-monitor configuration and have set a timeout for locking the screen (<guilabel>System Settings &gt; Login</guilabel> in the &BRAND_CONSOLE; interface), if the timeout period elapses and the screen locks, secondary monitors are still displayed. You need to make sure any secondary screens are not displaying anything compromising.
+                    </para>
+                    <para>
+                        <emphasis role="bold">Workaround:</emphasis> Assure that any secondary monitors are not displaying anything compromising before locking the &BRAND_CONSOLE; screen.
+                    </para>
+                </entry>
+            </row>
+			
+			<row>
+				<entry>
+					<para role="horrible-release-note-hack">ATI Graphics VM Hangs when Attempting to Resume from Hibernation</para>
+                    <para><emphasis role="bold">Issue:</emphasis> The <guilabel>Resuming Windows</guilabel> screen hangs when an ATI graphics enabled VM is resumed from hibernation.</para>
+					<para><emphasis role="bold">Workaround:</emphasis> Do not hibernate a VM that is using ATI graphics.</para>
+				</entry>
+			</row>
+
+            <row>
+                <entry>
+                    <para role="horrible-release-note-hack">Graphics Crash on ATI Radeon HD 6570 in HP 8200</para><para>
+                        <emphasis role="bold">Issue:</emphasis> If you are using &PB; with an ATI Radeon HD 6570 in an HP 8200 you may encounter VM crashes.
+                    </para>
+                    <para>
+                        <emphasis role="bold">Workaround:</emphasis> Avoid this combination of graphics card and system.
+                    </para>
+                </entry>
+            </row>
+
+
+	    <row>
+	      <entry>
+                    <para role="horrible-release-note-hack">VMs with multiple vCPUs may be unreliable</para><para>
+                        <emphasis role="bold">Issue:</emphasis> VM crashes have been reported with multiple VCPUs.
+                    </para>
+                    <para><emphasis role="bold">Workaround:</emphasis>
+                        If you encounter trouble either restore
+                        <command>vcpus</command> to 1 or, for Linux VMs, try setting
+                        <command>xci-cpuid-signature</command> to    false:</para>
+					<screen>xec-vm -n <replaceable>vm_name</replaceable> set vcpus 1
+					xec-vm -n <replaceable>vm_name</replaceable> set xci-cpuid-signature false</screen>
+	    
+		</entry></row>
+		<row>
+	      <entry>
+
+                    <para role="horrible-release-note-hack">Disabling WiFi for a VM has no effect on Linux VMs.</para><para>
+                        <emphasis role="bold">Issue: WiFi still works on Linux VMs after wireless networking is disabled for that VM, since the WiFi network is treated
+			as a wired network. Similarly, deleting the wired network disables WiFi.</emphasis> 
+                    </para>
+                    <para>
+                        <emphasis role="bold">Workaround:</emphasis> Delete the second network interface using the UI or: <screen>xec-vm -n vmname -c 1 delete</screen>
+                    </para>
+	    
+
+                </entry>
+</row>
+	    <row>
+	      <entry>
+ 
+                    <para role="horrible-release-note-hack">Tools installation on Ubuntu 12.04 may fail due to gdebi-core not being installed</para><para>
+                        <emphasis role="bold">Issue:</emphasis>Installing &PB; tools in an Ubuntu VM may fail with a message asking you to install <command>gdebi-ore</command>.
+
+                    </para>
+                    <para>
+                        <emphasis role="bold">Workaround:</emphasis> Run: <screen>sudo apt-get install gdebi-core</screen> then repeat the tool installation.
+                    </para>
+                </entry>
+	    </row>
+
+					<row>
+						<entry>
+                        <para role="horrible-release-note-hack">USB Devices Remain Associated to Windows XP VMs When Put to Sleep Using &BC;</para>
+						<para><emphasis role="bold">Workaround:</emphasis>  Manually disassociate the VM using &BC;.</para>
+                                            </entry>
+                    </row>		
+
+							<row>
+                                            <entry>
+                        <para role="horrible-release-note-hack">&HDX; VMs Unstable When Assigned Greater than 3GB of RAM</para>
+						<para><emphasis role="bold">Workaround:</emphasis> Assign a maximum of 3GB of RAM to a &HDX; VM.</para>
+                                            </entry>
+                                    </row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Burning a CD Using Apple iTunes May Fail on Windows 7</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Please use the Microsoft Windows 7 CD-burning utility.</para>
+						</entry>
+					</row>
+					
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Mouse Becomes Unresponsive Intermittently on Dell Systems When Using Windows Touchpad Driver</para>
+							<para><emphasis role="bold">Issue:</emphasis> A conflict between the &PB; emulated generic PS/2 mouse driver and a Dell Touchpad driver causes the mouse to become unresponsive for a brief period on a regular basis.</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Uninstall the Dell Touchpad driver.</para>
+						</entry>
+					</row>
+					
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Setting Non-&HDX; VM Display Resolution to 1920x1200 or 1920x1080 Causes Graphics Corruption</para>
+							<para><emphasis role="bold">Issue:</emphasis> If a laptop display does not natively support 1920x1200 or 1920x1080  resolution, attempting to set the display to such a resolution on a non-&HDX; VM causes graphics corruption. This is a known bug in this release as is should not be possible to set the display to a resolution that is not natively supported.</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Only set the resolution of a non-&HDX; VM to a natively supported resolution.</para>
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Running a Low Resolution &HDX; VM May Interfere With the Displays of Other VMs Using a Higher Resolution</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Raise the screen resolution setting of the HDX VM.</para>
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Disconnection of External Display Does Not Always Trigger Screen Adjustment</para>
+							<para><emphasis role="bold">Issue:</emphasis> If an external monitor has been attached when a PVM is in use and then it is disconnected with an SVM in use, the screen does not adjust.</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Switch back to the PVM to update the configuration.</para>
+						</entry>
+					</row>  
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Black Screen and Unresponsive System When Attempting to Update Graphics Drivers</para>
+							<para><emphasis role="bold">Issue:</emphasis> Attempting to update the graphics drivers on a &HDX;-enabled VM using the Device Manager <guilabel>Update Driver Software</guilabel> function can cause &PB; to hang, requiring a reboot.</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Do not use the <guilabel>Update Driver Software</guilabel> function to upgrade graphics drivers.</para>
+						</entry>
+					</row>  
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Installing an Updated Webcam Driver Available from Windows Update for the Internal Webcam May Cause it to Stop Working on Some Laptop Models</para>
+							<para><emphasis role="bold">Workaround:</emphasis> In Device Manager, right click on the effected webcam device and select <guilabel>Properties</guilabel>. Select the <guilabel>Driver</guilabel> tab, and click <guilabel>Roll Back Driver</guilabel>.</para>
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Unplugging a USB Audio Device While In Use on an XP VM Can Cause the VM to Hang</para>
+							<para><emphasis role="bold">Issue:</emphasis> Unplugging a USB audio device, such as a set of USB headphones while it is  actively in use can cause an XP VM to hang.</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Ensure that the USB audio device is not currently is use (for example, currently playing music) and unplug the device using the standard XP mechanism.</para>
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Windows Safe Mode Prevents &HDX; VM Switching</para><para>
+								<emphasis role="bold">Issue:</emphasis> Booting a &HDX; enabled VM into Windows Safe Mode prevents the &PB; Switcher Bar from loading and also switching between VMs using the <keycap>Ctrl</keycap> hotkeys.</para>
+							<para>
+								<emphasis role="bold">Workaround:</emphasis> Reboot the VM, exiting Safe Mode.</para>
+						</entry>
+					</row>
+
+			<row>
+						<entry>
+							<para role="horrible-release-note-hack">External Monitor Blank When Attached</para><para>
+								<emphasis role="bold">Issue:</emphasis> When a &HDX; VM is running and you plug an external monitor into your device when the &HDX; VM is not currently on screen, the screen remains blank.</para>
+							<para>
+								<emphasis role="bold">Workaround:</emphasis> Always switch to the &HDX; VM, if running, before plugging in an external monitor.</para>
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Unable to Install VMs from External USB Optical Media Device If Internal Device is Present</para>
+							<para><emphasis role="bold">Issue:</emphasis> VMs on a laptop with an internal optical media drive cannot boot from an external optical media drive.</para>
+
+						</entry>
+					</row>
+
+					</tbody>   
+			</tgroup>
+		</informaltable>
+	
+	</section>
+<section><title>Workarounds</title>		
+	<procedure id="recovering_a_full_disk">
+	<title>To Recover from a Full Disk</title>
+	<step><para>Reboot the &PB; host.</para></step>
+	<step><para>While the &PB; boot screen is displayed, press <keycap>Esc</keycap>.</para></step>
+	<step><para>Boot into the <guilabel>console access</guilabel> option.</para></step>
+	<step><para>When a console is available, log in as <literal>root</literal>.</para></step>
+	<step><para>Delete the file <filename>/storage/xc_reserved</filename>:</para>
+	<screen>rm /storage/xc_reserved</screen>
+	<para>This will free up sufficient disk space to allow you to boot into &PB; and backup your VMs.</para></step>
+	</procedure>
+</section>
+
+	
+	
+	</article>

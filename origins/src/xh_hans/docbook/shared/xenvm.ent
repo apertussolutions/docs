@@ -1,0 +1,6 @@
+
+
+	<section xmlns:tp="http://telepathy.freedesktop.org/wiki/DbusSpec#extensions-v0"><title>
+				Interface <phrase role="die">xenvm.signal.notify</phrase></title><section><title>Signals:</title><section><title><phrase role="die">notify</phrase></title><para>Signals a VM state change.</para><para>The arguments are:</para><informaltable frame="none"><tgroup cols="4"><colspec colwidth="1in"/><colspec colwidth="1in"/><colspec colwidth="1in"/><colspec colwidth="3.5in"/><thead><row><entry>Type</entry><entry>Name</entry><entry>Direction</entry><entry>Description</entry></row></thead><tbody><row><entry>as</entry><entry><phrase role="die">vmstate</phrase></entry><entry>in</entry><entry/></row></tbody></tgroup></informaltable></section></section></section>
+
+

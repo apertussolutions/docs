@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE targetset SYSTEM "../../../../doctools/docbook-xsl/common/targetdatabase.dtd" [
+	<!ENTITY docbook_test SYSTEM "docbook_test.db">
+]>
+<targetset>
+	<targetsetinfo>
+		Description of this target database document,
+		which is for the examples in olink doc.
+	</targetsetinfo>
+	<!-- Site map for generating relative paths between documents -->
+		<sitemap>
+		<dir name=".">
+			<document targetdoc="docbook_test"  
+					baseuri="docbook_test.html"> 
+				&docbook_test;
+			</document>
+		</dir>
+	</sitemap>
+</targetset>
+

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+
+<!ENTITY COMPANY_NAME_SHORT "Citrix">
+
+<!ENTITY PB "&PRODUCT_BRAND;">
+<!ENTITY COPYRIGHT_YEARS "2011">
+
+<!ENTITY COMPANY_NAME_LEGAL "Citrix Systems, Inc.">
+
+<!ENTITY COMPANY_NAME "&COMPANY_NAME_LEGAL;">
+<!ENTITY COMPANY_NAME_DIR "Citrix">
+<!ENTITY COMPANY "&COMPANY_NAME_SHORT;">
+
+<!ENTITY BRAND_SERVER "&PRODUCT_BRAND; Host">
+<!ENTITY BRAND_SERVERS "&BRAND_SERVER;s">
+<!ENTITY BRAND_SERVER_POSS "&BRAND_SERVER;'s">
+
+
+<!ENTITY PRODUCT_BRAND "___PRODUCT_BRAND___">
+<!ENTITY BACKEND "Synchronizer">
+<!ENTITY BACKEND_SERVER "Synchronizer server">
+<!ENTITY BACKEND_VM "Synchronizer VM">
+
+<!ENTITY DAZZLE "&RECEIVER;">
+<!ENTITY RECEIVER "&COMPANY_NAME_SHORT; Receiver">
+<!ENTITY XT "XT">
+<!ENTITY ONLINE_PLUGIN "&COMPANY_NAME_SHORT; Online Plugin">
+
+<!ENTITY VM_SHARED_MODE "Dynamic VM Image Mode (Experimental)">
+<!ENTITY VM_PRIVATE_MODE "Static VM Image Mode">
+<!ENTITY VM_HYBRID_MODE "Hybrid VM Image Mode">
+
+<!ENTITY BRAND_CONSOLE "&COMPANY_NAME_SHORT; Receiver for &PB;">
+<!ENTITY BC "&BRAND_CONSOLE;">
+<!ENTITY BEC "&BACKEND; for &PB; console">
+<!ENTITY PORTICA "Secure Application Sharing">
+<!ENTITY PORTICA_VIEW "Application Subscribing">
+<!ENTITY PORTICA_SHARE "Application Publishing">
+<!ENTITY OPEN_CONSOLE "In &BC;, press <keycap>Ctrl + Shift + t</keycap> to open a control domain console window.">
+<!ENTITY OC "&OPEN_CONSOLE;">
+
+<!ENTITY HDX_FIRST "&COMPANY_NAME_SHORT; 3D Graphics Support">
+<!ENTITY HDX "3D Graphics Support">
+<!ENTITY PV_TOOLS "&COMPANY_NAME_SHORT; &PB; Tools">
+
+<!ENTITY PRODUCT_VERSION "2.0">
+<!ENTITY XT_PRODUCT_VERSION "1.2">
+<!-- 
+=============================================
+Below this line insert any info used more than once that may change in future releases.
+=============================================
+-->
+

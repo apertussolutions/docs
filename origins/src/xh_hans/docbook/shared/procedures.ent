@@ -1,0 +1,1319 @@
+<section><title>Procedure 1</title><procedure><title>To Prepare a Lenovo Device for Installation</title>
+<step performance="required"><para>While the machine is booting, press the blue ThinkVantage button and then <guilabel moreinfo="none">F1</guilabel>.</para></step>
+<step performance="required"><para>Set <phrase role="die"><guilabel moreinfo="none">Config &gt; CPU &gt; Intel Virtualization Technology</guilabel></phrase> to <literal moreinfo="none">Enabled</literal>.</para></step>
+<step performance="required"><para>Set <guilabel moreinfo="none">Config &gt; CPU &gt; Intel VT-d feature</guilabel> to <literal moreinfo="none">Enabled</literal>.</para></step>
+<step performance="required"><para>Set <guilabel moreinfo="none">Security &gt; Security Chip &gt; Security Chip</guilabel> to <literal moreinfo="none">Disabled</literal>.</para></step>
+<step performance="required"><para>Set <guilabel moreinfo="none">Serial ATA (SATA) &gt; SATA Controller Mode Option</guilabel> to <literal moreinfo="none">AHCI</literal>.</para></step>
+<step performance="required"><para>If the machine has a physical wireless switch, make sure that it is set to turn wireless on.</para></step>
+</procedure></section>
+<section><title>Procedure 2</title><procedure><title>To Prepare a Dell Device for Installation</title>
+<step performance="required"><para>While the machine is booting, press <keycap moreinfo="none">F12</keycap> and select <guilabel moreinfo="none">BIOS Setup</guilabel>.</para></step>
+<step performance="required"><para>Set <phrase role="die"><guilabel moreinfo="none">System Configuration &gt; SATA Operation &gt; AHCI</guilabel></phrase>.</para></step>
+<step performance="required"><para>Set <phrase role="die"><guilabel moreinfo="none">Virtualization Support &gt; Virtualization &gt; Enable Intel Virtualization Technology</guilabel>.</phrase></para></step>
+<step performance="required"><para>Set <phrase role="die"><guilabel moreinfo="none">Virtualization Support &gt; VT for Direct I/O &gt; Enable VT for Direct I/O</guilabel>.</phrase></para></step>
+<step performance="required"><para>Ensure that the <phrase role="die"><guilabel moreinfo="none">Virtualization Support &gt; Trusted Execution</guilabel></phrase> checkbox is not checked.</para></step>
+<step performance="required"><para>Ensure that the <phrase role="die"><guilabel moreinfo="none">Security &gt; TPM Security</guilabel></phrase> checkbox is not checked.</para></step>
+<step performance="required"><para>Ensure that the <phrase role="die"><guilabel moreinfo="none">Power Management &gt; Wireless Radio Control &gt; WLAN</guilabel></phrase> checkbox is not checked.</para></step>
+<step performance="required"><para>Ensure that the <phrase role="die"><guilabel moreinfo="none">Power Management &gt; Wireless Radio Control &gt; WWAN</guilabel></phrase> checkbox is not checked.</para></step>
+<step performance="required"><para>Set <guilabel moreinfo="none">Wireless &gt; Wi-Fi Catcher</guilabel> to <literal moreinfo="none">Disabled</literal>.</para></step>
+<step performance="required"><para>If the machine has a physical wireless switch, make sure that it is set to turn wireless on.</para></step>
+</procedure></section>
+<section><title>Procedure 3</title><procedure><title>To Prepare an HP Device for Installation</title>
+<step performance="required"><para>Press <keycap moreinfo="none">Esc</keycap> and then <keycap moreinfo="none">F10</keycap> while the machine is booting to enter BIOS setup.</para></step>
+<step performance="required"><para>Set <phrase role="die"><guilabel moreinfo="none">System &gt; System Configuration &gt; Virtualization Technology &gt; Enabled</guilabel></phrase>.</para></step>
+<step performance="required"><para>Set <phrase role="die"><guilabel moreinfo="none">System &gt; System Configuration &gt; SATA Device Mode &gt; AHCI</guilabel></phrase>.</para></step>
+<step performance="required"><para>Set <phrase role="die"><guilabel moreinfo="none">System &gt; System Configuration &gt; TXT Technology &gt; Disabled</guilabel></phrase>.</para></step>
+<step performance="required"><para>Press the WiFi icon so it changes color from red to blue.</para></step>
+</procedure></section>
+<section><title>Procedure 4</title><procedure><title>To Prepare a Panasonic Device for Installation</title>
+<step performance="required"><para>Press <keycap moreinfo="none">F2</keycap> while the machine is booting to enter BIOS setup.</para></step>
+<step performance="required"><para>Set <phrase role="die"><guilabel moreinfo="none">Advanced &gt; Intel (R) Virtualization Technology &gt; Enabled</guilabel></phrase>.</para></step>
+<step performance="required"><para>Set <phrase role="die"><guilabel moreinfo="none">Advanced &gt; Intel (R) VT-d &gt; Enabled</guilabel></phrase>.</para></step>
+<step performance="required"><para>Set <phrase role="die"><guilabel moreinfo="none">Advanced &gt; Intel (R) Trusted Execution Technology &gt; Disabled</guilabel></phrase>.</para></step>
+
+</procedure></section>
+<section><title>Procedure 5</title><procedure><title>To Prepare a Fujitsu Device for Installation</title>
+<step performance="required"><para>Press <keycap moreinfo="none">Enter</keycap> while the machine is booting and select <guilabel moreinfo="none">BIOS setup</guilabel>.</para></step>
+<step performance="required"><para>Set <phrase role="die"><guilabel moreinfo="none">Advanced &gt; CPU Features &gt; Virtualization Technology &gt; enabled</guilabel></phrase>.</para></step>
+<step performance="required"><para>Set <phrase role="die"><guilabel moreinfo="none">Advanced &gt; CPU Features &gt; Intel (R) VT-d &gt; Enabled</guilabel></phrase>.</para></step>
+<step performance="required"><para>Set <phrase role="die"><guilabel moreinfo="none">Advanced &gt; CPU Features &gt; Intel (R) TXT &gt; Disabled</guilabel></phrase>.</para></step>
+</procedure></section>
+<section><title>Procedure 6</title><procedure id="quick_install">
+		<title>To Perform a Quick Install or Upgrade</title>
+		<para><indexterm significance="normal"><primary>___PRODUCT_BRAND___</primary>
+<secondary>installing</secondary><tertiary>quick</tertiary></indexterm>Quick install does not include the option to register with a Synchronizer server, or to enable <command moreinfo="none">ssh</command> access to the control domain. If you choose <guilabel moreinfo="none">Quick install</guilabel> and later decide to use Synchronizer you can connect to your Synchronizer server using Citrix Receiver for ___PRODUCT_BRAND___.</para>
+		<step performance="required">
+		<para>Boot from the ___PRODUCT_BRAND___ installation media or network in the case of a PXE boot setup.</para></step>
+		<step performance="required">
+		<para>Choose <guilabel moreinfo="none">Quick install</guilabel>.</para>
+		</step>
+		<step performance="required">
+		<para>Choose <guilabel moreinfo="none">OK</guilabel> and review the software license.</para>
+		</step>
+		<step performance="required">
+		<para>Choose <guilabel moreinfo="none">OK</guilabel> and <guilabel moreinfo="none">Yes</guilabel> to accept the terms of the license.</para>
+		</step>
+<step performance="required">
+		<para>Select the keyboard layout of the device and choose <guilabel moreinfo="none">Select</guilabel>.</para>
+		</step>
+		
+<step performance="required" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/view_details.ent"><para>Hover your mouse over the VM icon and click <guilabel moreinfo="none">Details</guilabel> to open the VM details window.</para></step>
+		
+		<step performance="required">
+		<para>Choose <guilabel moreinfo="none">Verify</guilabel> to ensure that the installation media is valid and uncorrupted, or <guilabel moreinfo="none">Skip</guilabel>.</para>
+		</step>
+	<step performance="required"><para>If an existing ___PRODUCT_BRAND___ installation is detected, you are presented with the option to <guilabel moreinfo="none">Upgrade</guilabel> or perform a <guilabel moreinfo="none">Fresh Install</guilabel>. If you select <guilabel moreinfo="none">Upgrade</guilabel>, ___PRODUCT_BRAND___ will be upgraded to the new version of the software and your existing settings and VMs  preserved. When the upgrade is complete, you are prompted to reboot. If you choose <guilabel moreinfo="none">Fresh Install</guilabel>, the installation procedure continues below.</para></step> 
+<step performance="required"><para>You are warned that the hard drive partition will be overwritten. Select <guilabel moreinfo="none">Continue</guilabel>.</para></step>
+		<step performance="required"><para>Next you are prompted to provide a password for the system. You will need this password to log in to the control domain and generate status reports or perform other diagnostics. Enter the password and choose <guilabel moreinfo="none">OK</guilabel>.</para></step>
+		<step performance="required"><para>You are then prompted to confirm your password by entering it again. Enter the password and choose <guilabel moreinfo="none">OK</guilabel>.</para></step>
+		 
+		<step performance="required">
+		<para>The installation commences, and a progress bar is displayed. When the installation has completed, choose <guilabel moreinfo="none">Continue</guilabel> and then <guilabel moreinfo="none">Reboot</guilabel> to reboot the machine.</para>
+		
+		</step>
+		<step performance="required">
+		<para>Upon reboot, the Citrix Receiver for ___PRODUCT_BRAND___ is displayed. If you have performed an upgrade from a previous version of ___PRODUCT_BRAND___, update the ___PRODUCT_BRAND___ software on your VMs as described in <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="updating_VMs"/>.</para>
+		</step>
+	</procedure></section>
+<section><title>Procedure 7</title><procedure id="advanced_install">
+		<title>To Perform an Advanced Install or Upgrade<indexterm significance="normal"><primary>___PRODUCT_BRAND___</primary> 
+<secondary>installing</secondary><tertiary>advanced</tertiary></indexterm><indexterm significance="normal"><primary>___PRODUCT_BRAND___</primary>
+<secondary>upgrading</secondary><tertiary>advanced</tertiary></indexterm></title>
+		<step performance="required">
+		<para>Boot from the ___PRODUCT_BRAND___ installation media.</para></step>
+		<step performance="required">
+		<para>Choose <guilabel moreinfo="none">Advanced Install</guilabel>.</para>
+		</step>
+		<step performance="required">
+		<para>Choose <guilabel moreinfo="none">OK</guilabel> and review the software license.</para>
+		</step>
+		<step performance="required">
+		<para>Choose <guilabel moreinfo="none">OK</guilabel> and <guilabel moreinfo="none">Yes</guilabel> to accept the terms of the license.</para>
+		</step>
+
+		<step performance="required">
+		<para>Select the keyboard layout of the device and choose <guilabel moreinfo="none">Select</guilabel>.</para>
+		</step>
+		
+		<!--
+		<step>
+		<para>You are asked if you have any optional Supplemental Packs that you want to install. Choose <guilabel>Yes</guilabel> or <guilabel>No</guilabel>.</para>
+		</step>
+		-->
+
+<step performance="required" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/view_details.ent"><para>Hover your mouse over the VM icon and click <guilabel moreinfo="none">Details</guilabel> to open the VM details window.</para></step>
+		
+		<step performance="required"><para>Choose <guilabel moreinfo="none">Verify</guilabel> to ensure that the installation media is valid and uncorrupted, or <guilabel moreinfo="none">Skip</guilabel> to move to the next installation step.</para>
+		</step>
+		  
+			<step performance="required"><para>If there is an existing ___PRODUCT_BRAND___ installation detected, you are presented with the option to <guilabel moreinfo="none">Upgrade</guilabel> or perform a <guilabel moreinfo="none">Fresh Install</guilabel>. If you select <guilabel moreinfo="none">Upgrade</guilabel>, click <guilabel moreinfo="none">Continue</guilabel> to be upgraded to the new version of the software. Your existing settings and VMs  preserved.</para>
+<para>When the upgrade is complete, you are prompted to reboot. If you choose <guilabel moreinfo="none">Fresh Install</guilabel>, the installation procedure continues below.</para></step>
+<step performance="required"><para>You are warned that the device hard drive will be overwritten. Select <guilabel moreinfo="none">Continue</guilabel>.</para>
+<note><para>If you choose to upgrade from a previous version, please update the Citrix ___PRODUCT_BRAND___ Tools on all VMs.</para></note></step> 
+	
+
+		<step performance="required"><para>Choose <guilabel moreinfo="none">Continue</guilabel> to begin the installation.</para></step>
+		
+		<step performance="required"><para>Next you are prompted to provide a password for the system. You will need this password to log in to the control domain and generate status reports or perform other diagnostics.  Enter the password and choose <guilabel moreinfo="none">OK</guilabel>.</para></step>
+		<step performance="required"><para>You are then prompted to confirm your password by entering it again. Enter the password and choose <guilabel moreinfo="none">OK</guilabel>.</para></step>
+		<step performance="required"><para>Select <guilabel moreinfo="none">Yes</guilabel> to enable remote access to the ___PRODUCT_BRAND___ device over SSH. This allows you to connect directly to the ___PRODUCT_BRAND___ hypervisor file system to perform diagnostic tasks.</para></step>
+		<step performance="required">
+		<para>Choose <guilabel moreinfo="none">Register</guilabel> to enter a Synchronizer URL.</para>
+		</step>
+		<step performance="required"><para>Enter the address of your Synchronizer server and click <guilabel moreinfo="none">OK</guilabel>.</para></step>
+		<step performance="required"><para>Enter the path to a root certificate to be used to authenticate your Synchronizer server, or leave the field empty if you do not want to specify a certificate. Choose <guilabel moreinfo="none">OK</guilabel>.</para>
+		<para>If the Synchronizer server is configured to require <indexterm significance="normal"><primary>Registration PIN</primary></indexterm>Registration PINs, you are also prompted to enter the required PIN now. Enter the PIN provided by your system administrator.</para>
+				<para>If you do not want to register with a Synchronizer, choose <guilabel moreinfo="none">Skip</guilabel>.</para>
+		</step>
+	<step performance="required">
+		<para>Choose <guilabel moreinfo="none">Continue</guilabel>.</para>
+	</step>
+		<step performance="required"><para>When the installation has completed, press <guilabel moreinfo="none">Continue</guilabel> and then <guilabel moreinfo="none">Reboot</guilabel> to reboot the machine.</para></step>
+		<step performance="required">
+		<para>Upon reboot, the Citrix Receiver for ___PRODUCT_BRAND___ is displayed. If you have performed an upgrade from a previous version of ___PRODUCT_BRAND___, update the ___PRODUCT_BRAND___ software on your VMs as described in <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="updating_VMs"/>.</para>
+		
+		</step>
+	</procedure></section>
+<section><title>Procedure 8</title><procedure><title>To Setup the Installation Package</title>
+				<step performance="required"><para>Copy the <filename moreinfo="none">packages.main</filename> directory from the ___PRODUCT_BRAND___ installation medium to a location accessible over HTTP.</para></step>
+				<step performance="required"><para>Notify the users of the location of this directory. The user will manually enter the location when performing the upgrade.</para></step>
+				</procedure></section>
+<section><title>Procedure 9</title><procedure><title>To Upgrade ___PRODUCT_BRAND___ Using Citrix Receiver for ___PRODUCT_BRAND___</title>
+				<step performance="required"><para>In Citrix Receiver for ___PRODUCT_BRAND___, click <guilabel moreinfo="none">System &gt; Software</guilabel>.</para></step>
+				<step performance="required"><para>In the <guilabel moreinfo="none">Software Update</guilabel> textbox, enter the location of the intsllation packages provided by your system administrator.</para></step>
+				<step performance="required"><para>Click the <guilabel moreinfo="none">Check for Update</guilabel> button. The <guilabel moreinfo="none">Software Update</guilabel> dialog is displayed.</para></step>
+<step performance="required"><para>Click the <guilabel moreinfo="none">Download</guilabel> button to download the installation packages.</para></step>
+				<step performance="required"><para>Click <guilabel moreinfo="none">Power &gt; Restart</guilabel> to restart your system and install the Citrix Receiver for ___PRODUCT_BRAND___ update.</para>
+				<note><para>___PRODUCT_BRAND___ will not force-shutdown running VMs. If VMs are running you are prompted to shut them down before restarting.</para></note></step>
+
+				</procedure></section>
+<section><title>Procedure 10</title><procedure><title>To Update Secure Application Sharing</title>
+			<step performance="required"><para>In the Windows VM, click  <guilabel moreinfo="none">Start &gt; Control Panel &gt; Programs and Features</guilabel>.</para></step>
+			<step performance="required"><para>Right click and select <guilabel moreinfo="none">Uninstall</guilabel> on the following programs:</para>
+			<itemizedlist>
+			<listitem><para>Citrix Dazzle plug-in</para></listitem>
+			<listitem><para>Citrix online plug-in</para></listitem>
+			<listitem><para>Citrix Receiver</para></listitem>
+			<listitem><para>Citrix XenClient Application Sharing</para></listitem>
+			<listitem><para>Citrix XenClient Application Viewing</para></listitem>
+			</itemizedlist></step>
+			<step performance="required"><para>Install the new Secure Application Sharing software.</para></step>
+			</procedure></section>
+<section><title>Procedure 11</title><procedure id="create_from_cd"><title>To Create a VM Using an Installation Disc</title>
+<step performance="required"><para><indexterm significance="normal"><primary>VMs</primary>
+<secondary>installing</secondary><tertiary>from optical media</tertiary></indexterm>Click <guilabel moreinfo="none">Add VM</guilabel> and choose <guilabel moreinfo="none">Install from Disc</guilabel>. The <guilabel moreinfo="none">Create from Install Disc</guilabel> wizard is displayed.</para></step>
+<step performance="required"><para>Select the operating system type from the <guilabel moreinfo="none">Type</guilabel> dropdown list.</para></step>
+<!--<step><para>Select the source of your Windows installation media from the <guilabel>Where did you obtain your Windows copy?</guilabel> dropdown list.</para></step>-->
+<step performance="required"><para>Enter a name for the VM and an optional description, if desired. Select an icon to represent the VM.</para></step>
+<step performance="required"><para>Click the <guilabel moreinfo="none">Next</guilabel> button.</para></step>
+<step performance="required"><para>Choose the amount of RAM to assign to the VM. See <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="memory"/> for more information about how ___PRODUCT_BRAND___ handles device memory.</para></step>
+<step performance="required"><para>Choose the number of Virtual CPUs (VCPUs) to assign to the VM. See <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="vcpus"/> for more information about how ___PRODUCT_BRAND___ handles VCPUs.</para></step>
+<step performance="required"><para>Click the <guilabel moreinfo="none">Next</guilabel> button.</para></step>
+
+<step performance="required"><para>Select the size of the virtual disk to assign to the VM. See <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="vhd_sparse"/> for more information about how ___PRODUCT_BRAND___ handles virtual disks.</para></step>
+
+<step performance="required"><para>Select the wireless networking mode. The options are:</para>
+<itemizedlist>
+<listitem><para><guilabel moreinfo="none">Shared Wireless</guilabel>, which gives the VM full access to the wireless network(s) that the ___PRODUCT_BRAND___ host device is connected to using a wireless network card.</para></listitem>
+<listitem><para><guilabel moreinfo="none">Shared 3G (experimental)</guilabel>, which gives the VM access to any 3G networks that the ___PRODUCT_BRAND___ host device is connected to.</para></listitem>
+</itemizedlist>
+</step>
+
+<step performance="required"><para>Select the wired networking mode. The options are:</para>
+<itemizedlist>
+<listitem><para><guilabel moreinfo="none">Bridged</guilabel>, which gives the VM full access to the networks that the ___PRODUCT_BRAND___ host computer is connected to.</para></listitem>
+<listitem><para><guilabel moreinfo="none">Shared</guilabel> which creates a private network on the Citrix Receiver for ___PRODUCT_BRAND___ system and allows outgoing connections using NAT (Network Address Translation). In this case incoming connections to the VM are not possible.</para></listitem>
+<listitem><para><guilabel moreinfo="none">Internal</guilabel> which only allows for network communication between VMs.</para></listitem>
+</itemizedlist>
+<note><para>Bridged mode requires that each virtual NIC is appropriately configured. Either the physical network will have to provide DHCP to allow the interface to establish an IP address and associated configuration, or you will need to statically configure the network settings on that interface from within the VM.</para></note>
+</step>
+<step performance="required"><para>Click the <guilabel moreinfo="none">Next</guilabel> button.</para></step>
+
+<step performance="required"><para>If you would prefer to install the operating system at a later time, select the <guilabel moreinfo="none">Create VM &amp; Install OS later</guilabel> radio button.</para>
+<warning><para>If you are using a Windows installation disk that originated from a OEM supplier, do not start the VM automatically. You will first need to enable OEM installation for the VM so that system properties are presented in a manner that allows the OEM installation disk to verify that it is being installed on genuine hardware. See <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="enable_oem_install"/> for information about how to do this.</para></warning></step>
+
+<step performance="required"><para>Click the <guilabel moreinfo="none">Finish</guilabel> button. Now that you have created a new VM, the next step is to install an operating system on it as described in <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="install_os"/>.</para></step>
+</procedure></section>
+<section><title>Procedure 12</title><procedure id="enable_oem_install">
+<title>To Enable VM Installation from OEM Installation Media</title>
+<para>If you are installing Windows from an OEM version of the Windows installation media, use this procedure to enable OEM installation:</para>
+<step performance="required" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/view_details.ent"><para>Hover your mouse over the VM icon and click <guilabel moreinfo="none">Details</guilabel> to open the VM details window.</para></step>
+<step performance="required"><para>Click the <guilabel moreinfo="none">Advanced</guilabel> menu item.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Edit</guilabel>.</para></step>
+<step performance="required"><para>From the <guilabel moreinfo="none">Allow OEM Windows installs</guilabel> dropdown list, select <guilabel moreinfo="none">Enabled</guilabel>.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Save</guilabel>.</para></step>
+<step performance="required"><para><!-- TODO: check -->Restart ___PRODUCT_BRAND___. When ___PRODUCT_BRAND___ has restarted, start the VM and continue with the standard VM installation procedure.</para></step>
+
+</procedure></section>
+<section><title>Procedure 13</title><procedure id="install_os"><title>To Install an Operating System onto a VM</title>
+<step performance="required"><para>Insert the installation media into the optical media drive. For a network boot installation, skip to the next step.</para>
+</step>
+<step performance="required"><para>Start the VM. The new VM takes focus and begins to boot into the operating system installation procedure. For a network boot, press <keycap moreinfo="none">F12</keycap> (or the relevant key) and select the appropriate boot device.</para><note><para>For security reasons the optical media drive is only accessible from one VM at a time. If a VM is running that has the optical drive assigned to it, it is necessary to shut down that VM before you can boot into the operating system installation medium.</para></note></step>
+<step performance="required"><para>Complete the operating system installation as you would do on a physical machine.</para>
+<note><para>Citrix recommends not enabling automatic Windows updates until you have installed the Citrix ___PRODUCT_BRAND___ Tools.</para></note></step>
+
+<!-- <step><para>If you are installing a Windows XP VM, download and install the Windows Installer 3.1 Redistributable from <ulink url="http://www.microsoft.com/downloads/details.aspx?familyid=889482FC-5F56-4A38-B838-DE776FD4138C&amp;displaylang=en"></ulink>, or run Windows Update before proceeding to the next step to install Windows Installer 3.1.</para></step> -->
+<step performance="required"><para><indexterm significance="normal"><primary>Citrix ___PRODUCT_BRAND___ Tools</primary>
+<secondary>installing</secondary></indexterm>When installation is complete, install the Citrix ___PRODUCT_BRAND___ Tools by running <filename moreinfo="none">setup.exe</filename> from the <phrase role="die"><guilabel moreinfo="none">xc-tools</guilabel></phrase> disk, which is usually mounted as the <filename moreinfo="none">E:</filename> drive. This installs high performance virtualization-aware drivers, the ___PRODUCT_BRAND___ Switcher Bar to allow switching between the VMs using a mouse, and optionally the experimental Secure Application Sharing functionality.</para>
+<warning><para>Installation of any software that uses low-level drivers to monitor disk operations before installing the Citrix ___PRODUCT_BRAND___ Tools (for example, antivirus software) will result in problems when hibernating, rebooting, or shutting down the VM. The installation of the Citrix ___PRODUCT_BRAND___ Tools is required for a VM to run on ___PRODUCT_BRAND___.</para></warning>
+<para>For an Ubuntu VM, install the <filename moreinfo="none">xenclient-linuxtools.deb</filename> package.</para>
+</step>
+
+<!--
+<step><para>Disable all power management features. To do this:</para>
+
+-->
+<step performance="required"><para>Run Windows Update.<!-- For sound in Windows 7 32-bit, be sure to install the optional update <guilabel>Microsoft driver update for Intel(r) 82801AA AC'97 Audio Controller</guilabel>. For sound in Windows 7 64-bit, go to <ulink url="http://www.realtek.com.tw/downloads/">http://www.realtek.com.tw/downloads/</ulink> and download the <guilabel>AC'97 Audio Codecs (Software)</guilabel> described as <guilabel>Vista/Win7 (32/64 bits) Driver only (ZIP file)</guilabel>. Unzip the file and install the sound drivers by running <filename>setup.exe</filename>.--></para></step>
+ 
+<step performance="required"><para>Once the installation is complete and updates have been installed you can press <keycap moreinfo="none">Ctrl + 0</keycap> to return to Citrix Receiver for ___PRODUCT_BRAND___</para></step>
+
+</procedure></section>
+<section><title>Procedure 14</title><procedure><title>To Install a VM from Synchronizer<indexterm significance="normal"><primary>VMs</primary>
+<secondary>installing from Synchronizer</secondary></indexterm></title>
+
+<step performance="required"><para>Ensure that you are connected to your Synchronizer server. See <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="registering_with_backend"/> for information about how to connect.</para></step>
+<step performance="required"><para>In Citrix Receiver for ___PRODUCT_BRAND___, click <guilabel moreinfo="none">Add VM</guilabel> and choose <guilabel moreinfo="none">Download From Synchronizer</guilabel>.</para></step>
+<step performance="required"><para>If you have not recently securely authenticated with Synchronizer you are prompted to provide your password.</para>
+</step>
+<step performance="required"><para>The <guilabel moreinfo="none">Download from Synchronizer</guilabel> wizard is displayed.</para></step>
+<step performance="required"><para>Click the <guilabel moreinfo="none">Select a new VM</guilabel> radio button if you want to create a new VM, or the <guilabel moreinfo="none">Restore VM from backup</guilabel> radio button to create a new VM from a VM backup.</para></step>
+ 
+
+<step performance="required"><para>For a new VM, click the VM you want to install. For a new VM from backup, select the VM and the VM backup version.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Next</guilabel>.</para></step>
+
+
+<step performance="required"><para>Provide a name for the VM and click <guilabel moreinfo="none">Finish</guilabel>.</para></step>
+
+<step performance="required"><para>Wait for the VM to download to ___PRODUCT_BRAND___. You can check the download progress in Citrix Receiver for ___PRODUCT_BRAND___ by switching to VM detail view.</para>
+
+</step>
+</procedure></section>
+<section><title>Procedure 15</title><procedure><title>To Configure a Wired Network Connection for ___PRODUCT_BRAND___<indexterm significance="normal"><primary>Wired networking</primary>
+<secondary>setup</secondary></indexterm></title><para>A wired connection is automatically created if the computer is plugged in to a network. To confirm that a wired connection exists:</para>
+<step performance="required"><para>In Citrix Receiver for ___PRODUCT_BRAND___, click the <guilabel moreinfo="none">Network</guilabel> button. A list of available and already connected network connections is displayed.</para></step>
+<step performance="required"><para>Ensure that the <guilabel moreinfo="none">Wired Ethernet connection</guilabel> entry is not grayed out.</para></step>
+					</procedure></section>
+<section><title>Procedure 16</title><procedure><title>To Configure a Static IP Address for ___PRODUCT_BRAND___<indexterm significance="normal"><primary>___PRODUCT_BRAND___</primary><secondary>networking</secondary><tertiary>static IP</tertiary></indexterm></title>
+					<step performance="required"><para>In Citrix Receiver for ___PRODUCT_BRAND___, click on the <guilabel moreinfo="none">Network</guilabel> button and select <guilabel moreinfo="none">Edit Connections...</guilabel>. The <guilabel moreinfo="none">Edit Connections</guilabel> dialog is displayed.</para></step>
+					<step performance="required"><para>Click the <guilabel moreinfo="none">Add</guilabel> button. The <guilabel moreinfo="none">Editing Wired connection 1</guilabel> dialog is displayed.</para></step>
+					<step performance="required"><para>Enter a name for the new network connection in the <guilabel moreinfo="none">Connection name:</guilabel> text box.</para></step>
+<step performance="required"><para>Click the <guilabel moreinfo="none">IPv4 Settings</guilabel> tab.</para></step>
+
+<step performance="required"><para>Select <guilabel moreinfo="none">Manual</guilabel> from the <guilabel moreinfo="none">Method</guilabel> dropdown list.</para></step>
+
+<step performance="required"><para>Click the <guilabel moreinfo="none">Add</guilabel> button.</para></step>
+
+<step performance="required"><para>Click in the <guilabel moreinfo="none">Address</guilabel> field and enter the desired static IP address.</para></step>					
+<step performance="required"><para>Click in the <guilabel moreinfo="none">Netmask</guilabel> field and enter the desired netmask.</para></step>	
+<step performance="required"><para>Click in the <guilabel moreinfo="none">Gateway</guilabel> field and enter the desired gateway address.</para></step>	
+<step performance="required"><para>Click in the <guilabel moreinfo="none">DNS Servers:</guilabel> text box and enter the desired DNS server address.</para></step>	
+
+<step performance="required"><para>Click the <guilabel moreinfo="none">Apply</guilabel> button.</para></step>	
+
+					</procedure></section>
+<section><title>Procedure 17</title><procedure>
+    <title>To Configure a Wireless Network Connection for ___PRODUCT_BRAND___<indexterm significance="normal"><primary>wireless networking</primary>
+<secondary>setup</secondary></indexterm></title><step performance="required"><para>In Citrix Receiver for ___PRODUCT_BRAND___, click the <guilabel moreinfo="none">Network</guilabel> button.
+</para></step>
+    <step performance="required"><para>Choose your preferred wireless network from the list and enter your security credentials.</para></step>
+    
+<!--    <step><para>To use wireless networks you will be ask to enter your own preferred security profile password. This profile password will protect all the wireless network credentials that you enter on &PB; from unauthorized access, and you will need to re-enter this password to connect to secure networks on subsequent reboots. You can optionally leave the password fields blank in which case the wireless credentials will not be protected.</para></step> -->
+    
+   </procedure></section>
+<section><title>Procedure 18</title><procedure>
+<title>To Import a Certificate for Use in Wireless Network Authentication</title>
+<step performance="required"><para>In Citrix Receiver for ___PRODUCT_BRAND___, press <keycap moreinfo="none" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/local.ent">Ctrl + Shift + t</keycap> to open a control domain console window.</para></step>   
+<step performance="required"><para>Run the following command to determine the IP address of the control domain:</para>
+<screen format="linespecific">ifconfig</screen>
+<para>The relevant IP address is named <literal moreinfo="none">brbridged</literal>.</para></step>
+
+   <step performance="required"><para>Copy the certificate to the control domain using the control domain IP address, for example:</para>
+   <screen format="linespecific">scp company.ca.cer root@10.80.249.175:/root</screen>
+   <para>On Windows you could use PSCP, the PuTTY Secure Copy client, or WinSCP to transfer the certificate to the control domain.</para>
+   </step>
+
+   <step performance="required"><para>In the Citrix Receiver for ___PRODUCT_BRAND___ console, run the following command:</para>
+   <screen format="linespecific">scpv4v <replaceable>certificate_filename</replaceable> uivm:/tmp/</screen>
+   <para>You will now be able to browse to the certificate in Network Manager when connecting to your wireless network. The certificate will be available in <guilabel moreinfo="none">File System/tmp</guilabel>.</para></step>
+   
+   </procedure></section>
+<section><title>Procedure 19</title><procedure>
+   <title>To Edit VM Properties<indexterm significance="normal"><primary>VMs</primary><secondary>editing properties</secondary></indexterm></title>
+   <step performance="required" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/view_details.ent"><para>Hover your mouse over the VM icon and click <guilabel moreinfo="none">Details</guilabel> to open the VM details window.</para></step>
+   <step performance="required"><para>Click the relevant tab.</para></step>
+   <step performance="required"><para>Click <guilabel moreinfo="none">Edit</guilabel> and make your changes.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Save</guilabel>. Most configuration items only take effect on the next boot of the VM.</para></step>
+ </procedure></section>
+<section><title>Procedure 20</title><procedure>
+   <title>To Delete a VM<indexterm significance="normal"><primary>VMs</primary><secondary>deleting</secondary></indexterm></title>
+  <para>Use the following procedure to delete a VM.</para>
+ <warning><para>There is no way to recover a deleted VM.</para></warning>
+  <step performance="required"><para>Shutdown the VM.</para></step>
+<step performance="required" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/view_details.ent"><para>Hover your mouse over the VM icon and click <guilabel moreinfo="none">Details</guilabel> to open the VM details window.</para></step>
+  
+  <step performance="required"><para>Click <guilabel moreinfo="none">Delete</guilabel>, and confirm that you want to delete the VM.</para></step>
+ </procedure></section>
+<section><title>Procedure 21</title><procedure><title>To Assign a USB Device to a VM<indexterm significance="normal"><primary>VMs</primary>
+<secondary>assigning USB devices</secondary></indexterm></title>
+   <step performance="required"><para>Ensure that the VM you want to assign the USB device to is running.</para></step>
+<step performance="required" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/view_details.ent"><para>Hover your mouse over the VM icon and click <guilabel moreinfo="none">Details</guilabel> to open the VM details window.</para></step>
+   <step performance="required"><para>Click <guilabel moreinfo="none">Add a Device</guilabel>. The <guilabel moreinfo="none">Connect a Device</guilabel> dialog is displayed.</para></step>
+<step performance="required"><para>Select the USB device in the list.</para></step>
+<step performance="required"><para>If the USB device you want to re-assign is currently in use by a running VM you will be warned to eject the device first. </para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Connect</guilabel>.</para></step>
+<step performance="required"><para>If you want the assignment to persist across reboots, check the <guilabel moreinfo="none">Always use with this VM</guilabel> checkbox.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Save</guilabel>.</para></step>
+</procedure></section>
+<section><title>Procedure 22</title><procedure>
+   <title>To Change the VM Switcher Key</title>
+   <step performance="required" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/view_details.ent"><para>Hover your mouse over the VM icon and click <guilabel moreinfo="none">Details</guilabel> to open the VM details window.</para></step>
+   <step performance="required"><para>Click <guilabel moreinfo="none">General</guilabel>.</para></step>
+   <step performance="required"><para>Click <guilabel moreinfo="none">Edit</guilabel>.</para></step>
+   
+      <step performance="required"><para>Select the new switcher key from the <guilabel moreinfo="none">Switcher Key</guilabel> dropdown list. If you select a switcher key that is already in use by another VM, the switcher keys of the two VMs will be swapped.</para></step>
+   
+<step performance="required"><para>Click <guilabel moreinfo="none">Save</guilabel>.</para></step>
+ </procedure></section>
+<section><title>Procedure 23</title><procedure><title>To Enable 3D Graphics Support</title>
+<!-- <warning><para>Do not attempt to resize the display of an XP VM, and do not let Windows do this automatically, until you have installed the latest Intel graphics drivers.</para></warning> -->
+
+<step performance="required" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/view_details.ent"><para>Hover your mouse over the VM icon and click <guilabel moreinfo="none">Details</guilabel> to open the VM details window.</para></step>
+<step performance="required"><para>If you are enabling 3D Graphics Support on a Vista VM, navigate to <guilabel moreinfo="none">Start &gt; Control Panel &gt; Classic View &gt; System &gt; Advanced System Settings &gt; Hardware &gt; Windows Update Driver Settings</guilabel> and select <guilabel moreinfo="none">Ask me each time I connect a new device before checking for drivers</guilabel>.</para></step>
+<step performance="required"><para>Shut down the VM.</para></step>
+<step performance="required" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/view_details.ent"><para>Hover your mouse over the VM icon and click <guilabel moreinfo="none">Details</guilabel> to open the VM details window.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Edit</guilabel>.</para></step>  
+<step performance="required"><para>From the <guilabel moreinfo="none">3D Graphics</guilabel> dropdown list, select <guilabel moreinfo="none">Enabled</guilabel>.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Save</guilabel>.</para></step>
+<step performance="required"><para>Restart the VM. A newly enabled 3D Graphics Support VM boots and automatically installs the required graphics drivers. A reboot is required after the drivers have installed. When the 3D Graphics Support VM has booted, an optimum graphics resolution is automatically chosen. If this is a Vista VM, however, the graphics drivers will not install automatically. Use the following procedure to install graphics drivers on a Vista VM:</para>
+
+<procedure><title>To Install Graphics Drivers on Vista</title>
+<step performance="required"><para>Navigate to <guilabel moreinfo="none">Start &gt; Control Panel &gt; Classic View &gt; Device Manager</guilabel>.</para></step>
+<step performance="required"><para>Right-click on <guilabel moreinfo="none">Standard VGA Graphics Adapter</guilabel> and select <guilabel moreinfo="none">Update Driver Software ...</guilabel>.</para></step>
+<step performance="required"><para>Select <guilabel moreinfo="none">Search automatically for updated driver software</guilabel> and then <guilabel moreinfo="none">Don't search online</guilabel>. This will cause the correct graphics drivers to be installed. A reboot will be required after the drivers have installed.</para></step>  
+</procedure>
+<warning><para>It has been observed that sometimes the installation of the graphics drivers on Vista can end with a black screen and unresponsive device. Should this occur, wait for all hard drive activity to cease, and manually reboot your ___PRODUCT_BRAND___ device.</para></warning>
+<para>If you are using a supported ATI graphics card, please download and install the graphics drivers from the support section of your device manufacturer's website.</para>
+</step>
+
+<!-- <step><para>The next step is to install the latest Intel graphics driver on the VM. Failure to install these drivers degrades the &HDX; experience and can cause &HDX; to not function.</para> 
+<note><para>For a Windows 7 VM, the latest graphics drivers are automatically installed by the Windows update mechanism.</para></note> 
+</step>
+<step><para><indexterm><primary>graphics</primary>
+<secondary>installing graphics drivers</secondary></indexterm>Navigate to <ulink url="http://downloadcenter.intel.com/default.aspx" />.</para></step>
+<step><para>Select <guilabel>Graphics</guilabel> from the <guilabel>Select a product family</guilabel> list.</para></step>
+<step><para>Select <guilabel>Laptop graphics controllers</guilabel> from the <guilabel>Select a product line</guilabel> list.</para></step>
+<step><para>Select <guilabel>Mobile Intel 4 Series Express Chipset Family</guilabel> from the <guilabel>Select a product name</guilabel> list.</para></step>
+<step><para>Select your operating system from the <guilabel>Select an Operating System</guilabel> list.</para></step>
+<step><para>The required graphics drivers are displayed in the search results. Download and install the latest graphics driver. Depending on your operating system, the name of the drivers you need are:</para>
+
+<variablelist>
+<varlistentry><term>Microsoft Windows XP 32bit SP3</term>
+<listitem><para>Intel<trademark class="registered" /> Graphics Driver for Windows XP, version <literal>14.42.1.5248 (6.14.10.5248)</literal>. The filename of the download is <filename>winxp_14421.zip</filename>.</para></listitem>
+</varlistentry>
+<varlistentry><term>Microsoft Windows Vista 32bit SP2</term>
+<listitem><para>Intel<trademark class="registered" /> Graphics Driver for Windows 7 and Windows Vista (exe), version <literal>15.17.3.2104 (8.15.10.2104)</literal>. The filename of the download is <filename>WinVista7_15173.exe</filename>.</para></listitem>
+</varlistentry>
+<varlistentry><term>Microsoft Windows 7 32bit</term>
+<listitem><para>Intel<trademark class="registered" /> Graphics Driver for Windows 7 and Windows Vista (exe), version <literal>15.17.3.2104 (8.15.10.2104)</literal>. The filename of the download is <filename>WinVista7_15173.exe</filename>.</para></listitem>
+</varlistentry>
+</variablelist>
+</step>-->
+</procedure></section>
+<section><title>Procedure 24</title><procedure><title>To Install Graphics Drivers on Vista</title>
+<step performance="required"><para>Navigate to <guilabel moreinfo="none">Start &gt; Control Panel &gt; Classic View &gt; Device Manager</guilabel>.</para></step>
+<step performance="required"><para>Right-click on <guilabel moreinfo="none">Standard VGA Graphics Adapter</guilabel> and select <guilabel moreinfo="none">Update Driver Software ...</guilabel>.</para></step>
+<step performance="required"><para>Select <guilabel moreinfo="none">Search automatically for updated driver software</guilabel> and then <guilabel moreinfo="none">Don't search online</guilabel>. This will cause the correct graphics drivers to be installed. A reboot will be required after the drivers have installed.</para></step>  
+</procedure></section>
+<section><title>Procedure 25</title><procedure><title>To Mount the Citrix ___PRODUCT_BRAND___ Tools Installer in a VM<indexterm significance="normal"><primary>Citrix ___PRODUCT_BRAND___ Tools</primary>
+<secondary>mounting in a VM</secondary></indexterm></title>
+<step performance="required" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/view_details.ent"><para>Hover your mouse over the VM icon and click <guilabel moreinfo="none">Details</guilabel> to open the VM details window.</para></step>
+
+<step performance="required"><para>Click <guilabel moreinfo="none">Edit</guilabel>.</para></step>
+<step performance="required"><para>From the <guilabel moreinfo="none">Tools CD</guilabel> dropdown list, select <guilabel moreinfo="none">Attached</guilabel></para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Save</guilabel>.</para></step>
+</procedure></section>
+<section><title>Procedure 26</title><procedure id="portica_view"><title>To Set Up a VM for Application Subscribing<indexterm significance="normal"><primary>VMs</primary>
+<secondary>Setting up for Application Subscribing</secondary></indexterm></title>
+<warning><para>Ensure that you have installed the Citrix ___PRODUCT_BRAND___ Tools and rebooted before installing the <guilabel moreinfo="none">Subscribe to Applications</guilabel> software. Failure to do so can cause installation to fail.</para></warning>
+<step performance="required"><para>Navigate to the <phrase role="die"><filename moreinfo="none">xc-tools</filename></phrase> disk, which is usually mounted as the <filename moreinfo="none">E:</filename> drive. Double-click <filename moreinfo="none">setup.exe</filename>. The <guilabel moreinfo="none">Citrix XenClient Setup</guilabel> installer is displayed.</para></step>
+<step performance="required"><para>Accept the software license agreement and click <guilabel moreinfo="none">Next</guilabel>.</para></step>
+
+<step performance="required"><para>Check the <guilabel moreinfo="none">Subscribe to Applications</guilabel> checkbox and click <guilabel moreinfo="none">Next</guilabel> and <guilabel moreinfo="none">Install</guilabel>.</para></step>
+<step performance="required"><para>When the software has finished installing, switch to the <literal moreinfo="none">Windows Black</literal> mouse pointer scheme with pointer shadow enabled. This will eliminate any problems with multiple mouse pointers.</para></step>
+
+<step performance="required"><para>Restart the VM.</para>
+<note><para>If you are using Secure Application Sharing on a Windows XP VM, please restart the VM twice before attempting to use the Secure Application Sharing functionality.</para></note>
+</step>
+
+</procedure></section>
+<section><title>Procedure 27</title><procedure>
+   <title>To Register ___PRODUCT_BRAND___ With a Synchronizer Server</title>
+   <important><para>If you are not a user with <literal moreinfo="none">Admin</literal> rights, you must have a VM image assigned to you before you can connect to Synchronizer.</para></important>
+   
+<step performance="required"><para>In Citrix Receiver for ___PRODUCT_BRAND___, click the <guilabel moreinfo="none">System</guilabel> button. The <guilabel moreinfo="none">System Settings</guilabel> window is displayed.</para></step>
+<step performance="required"><para>Click  <guilabel moreinfo="none">Synchronizer</guilabel>.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Register</guilabel>.</para></step>
+<step performance="required"><para>Enter the host name of your Synchronizer server in the <guilabel moreinfo="none">Synchronizer Address</guilabel> text box.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Next</guilabel>.</para></step>
+<step performance="required"><para>An authorization code is displayed. Please ensure that the authentication code is the same as the one provided by your system administrator. Cancel the connection process if the codes do not match, and alert your system administrator.</para>
+<para>If the Synchronizer server is configured to require <indexterm significance="normal"><primary>Registration PIN</primary></indexterm>Registration PINs, you are also prompted to enter the required PIN now. Enter the PIN provided by your system administrator.</para></step>
+
+<step performance="required"><para>Press <keycap moreinfo="none">Ctrl + Alt + Backspace</keycap> to securely authenticate with your Synchronizer server.</para></step>
+<step performance="required"><para>Enter your Synchronizer user name and password and press <keycap moreinfo="none">Enter</keycap>.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Close</guilabel> to exit the <guilabel moreinfo="none">System Settings</guilabel> window.</para></step>
+</procedure></section>
+<section><title>Procedure 28</title><procedure><title>To Publish a VM to Synchronizer<indexterm significance="normal"><primary>VMs</primary>
+<secondary>publishing to Synchronizer</secondary></indexterm></title>
+<note><para>Only Synchronizer users with <literal moreinfo="none">Admin</literal> rights can publish VMs to Synchronizer. See the <citetitle>Citrix XenClient Synchronizer Administrator Guide</citetitle> for more information.</para></note>
+<step performance="required"><para>Shutdown the VM you want to publish.</para></step>
+<step performance="required" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/view_details.ent"><para>Hover your mouse over the VM icon and click <guilabel moreinfo="none">Details</guilabel> to open the VM details window.</para></step>
+
+<step performance="required"><para>Click <guilabel moreinfo="none">Upload VM</guilabel>.</para></step>
+
+<step performance="required"><para>Enter a name and description for the VM.</para></step>
+<step performance="required"><para>If the VM was installed from optical media or over the network (as opposed to having been downloaded from Synchronizer), you can check the <guilabel moreinfo="none">Dynamic VM Image Mode (Experimental)</guilabel> checkbox to create a VM in Dynamic VM Image Mode (Experimental). See <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="shared_image_mode"/> for more information.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Next</guilabel>.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Finish</guilabel>.</para></step>
+
+</procedure></section>
+<section><title>Procedure 29</title><procedure id="backing_up_with_backend">
+	<title>To Backup a Synchronizer-Managed VM<indexterm significance="normal"><primary>VMs</primary><secondary>backing up</secondary></indexterm></title>
+	<para>Only users who have been authorised to make manual backups are able to perform this procedure.</para>
+	<note><para>When a VM is backed up it is given a timestamp which is derived from the time in the BIOS of the device. When a new VM image version is created in Synchronizer, it is given a timestamp which is derived from the NTP server Synchronizer uses to get accurate time information. Please note that this may cause some discrepancies in timestamps.</para></note>
+	
+	<step performance="required" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/view_details.ent"><para>Hover your mouse over the VM icon and click <guilabel moreinfo="none">Details</guilabel> to open the VM details window.</para></step>
+<step performance="required"><para>Click the <guilabel moreinfo="none">Backup Now</guilabel> button.</para></step>	
+</procedure></section>
+<section><title>Procedure 30</title><procedure id="updating_with_backend">
+	<title>To Check for Updates to a Synchronizer-managed VM<indexterm significance="normal"><primary>VMs</primary>
+<secondary>checking for updates</secondary></indexterm></title>
+<step performance="required" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/view_details.ent"><para>Hover your mouse over the VM icon and click <guilabel moreinfo="none">Details</guilabel> to open the VM details window.</para></step>
+<step performance="required"><para>Click the <guilabel moreinfo="none">Check  Now</guilabel> button.</para></step>	
+<step performance="required"><para>If updates are available, they immediately begin to download. The updates could consist of VM assignment policy updates or, in the case of a Dynamic VM Image Mode (Experimental) VM, system disk updates to a new version.</para></step>
+<step performance="required"><para>If the message <guilabel moreinfo="none">Shutdown Required</guilabel> is displayed, shut down the VM. Do not perform a VM restart instead. When the VM has shut down, the VM configuration is updated. It is then safe to start the VM again.</para></step>
+</procedure></section>
+<section><title>Procedure 31</title><procedure>
+<title>To Open a Control Domain Console</title>
+<step performance="required"><para>In Citrix Receiver for ___PRODUCT_BRAND___, press <keycap moreinfo="none" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/local.ent">Ctrl + Shift + t</keycap> to open a control domain console window. Alternately press <keycap moreinfo="none">Ctrl + Shift + h</keycap> to open a larger control domain terminal window.</para>
+<note><para>Use <keycap moreinfo="none">Alt + Tab</keycap> to bring the console back into focus should it end up behind Citrix Receiver for ___PRODUCT_BRAND___.</para></note></step>
+</procedure></section>
+<section><title>Procedure 32</title><procedure><title>To Generate a ___PRODUCT_BRAND___ Status Report<indexterm significance="normal"><primary>Status report</primary>
+<secondary>generating</secondary></indexterm></title>
+<step performance="required"><para>In Citrix Receiver for ___PRODUCT_BRAND___, click <guilabel moreinfo="none">System &gt; Status Report</guilabel>, then click the <guilabel moreinfo="none">Create Status Report</guilabel> button. Alternately, press <keycap moreinfo="none">Ctrl + Alt + r</keycap>. The <guilabel moreinfo="none">Create Status Report</guilabel> wizard is displayed. </para></step>
+
+<step performance="required"><para>Select what information you would like to include in the status report. Screenshots and diagnostic information about the VMs running on the Citrix Receiver for ___PRODUCT_BRAND___ device can be extremely helpful with the diagnosis of technical issues, but you may prefer not to divulge this information. If you do not want to include screenshots of VMs in the status report, uncheck the <guilabel moreinfo="none">Include screenshots of the VMs in this report checkbox</guilabel>. If you do not want any other diagnostic information about your VMs to be included, uncheck the <guilabel moreinfo="none">Include other diagnostic information from the VMs in this report</guilabel> checkbox.</para>
+</step>
+<step performance="required"><para>Click the <guilabel moreinfo="none">Next</guilabel> button.</para></step>
+
+
+<step performance="required"><para>Enter a short (8 words or less if possible) summary of the problem you have encountered in the <guilabel moreinfo="none">Summary</guilabel> text box.</para></step>
+<step performance="required"><para>Enter a more detailed description of the problem in the <guilabel moreinfo="none">Description</guilabel> text area.</para></step>
+
+<step performance="required"><para>Click the <guilabel moreinfo="none">Next</guilabel> button.</para></step>
+
+<step performance="required"><para>Enter the steps that you think are required to reproduce the problem in the <guilabel moreinfo="none">Steps to Reproduce</guilabel> text area.</para></step>
+<step performance="required"><para>If you have contacted Citrix with regard to this issue and have been given a technical support case number or a ticket number, enter the number you have been given in the <guilabel moreinfo="none">Support Number</guilabel> text box.</para></step>
+
+
+<step performance="required"><para>Click the <guilabel moreinfo="none">Next</guilabel> button.</para></step>
+
+<step performance="required"><para id="test_xinclude">Click the <guilabel moreinfo="none">Next</guilabel> button again to start generating the report. The report is saved as a <literal moreinfo="none">.tar.gz</literal> file on the control domain file system in the <filename moreinfo="none">/storage/status-report</filename> directory. The file is named after the summary of the issue.</para>
+<para>Because the status report might contain sensitive information, no direct download link is provided. It is instead required to log in to a control domain console as the <literal moreinfo="none">root</literal> user in order to access the status report. Contact your system administrator if you do not access to the <literal moreinfo="none">root</literal> user password to arrange for the status report to be retrieved. To retrieve the status report, either use <command moreinfo="none">SCP</command>, <command moreinfo="none">WinSCP</command>, or an equivalent tool. Alternately, take the following steps:</para>
+<substeps performance="required">
+<step performance="required"><para>Ensure that the device is connected to a network, either wired or wireless.</para>
+</step>
+<step performance="required"><para>In Citrix Receiver for ___PRODUCT_BRAND___, press <keycap moreinfo="none" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/local.ent">Ctrl + Shift + t</keycap> to open a control domain console window.</para></step>
+
+<step performance="required"><para>Run the <command moreinfo="none">status-server</command> command:</para>
+<screen format="linespecific">status-server</screen>
+</step>
+<step performance="required"><para>Use a web browser on another device or in a VM to download the status report from the URL indicated by the <literal moreinfo="none">status-server</literal> command.</para>
+</step>
+<step performance="required"><para>Press <guilabel moreinfo="none">Enter</guilabel> to shut down the status server.</para>
+</step>
+
+</substeps>
+</step>
+</procedure></section>
+<section><title>Procedure 33</title><procedure id="recovering_a_full_disk">
+	<title>Recovering from a Full Disk</title>
+	<step performance="required"><para>Reboot the ___PRODUCT_BRAND___ host.</para></step>
+	<step performance="required"><para>While the ___PRODUCT_BRAND___ boot screen is displayed, press <keycap moreinfo="none">Esc</keycap>.</para></step>
+	<step performance="required"><para>Boot into the <guilabel moreinfo="none">console access</guilabel> option.</para></step>
+	<step performance="required"><para>When a console is available, log in as <literal moreinfo="none">root</literal>.</para></step>
+	<step performance="required"><para>Delete the file <filename moreinfo="none">/storage/xc_reserved</filename>:</para>
+	<screen format="linespecific">rm /storage/xc_reserved</screen>
+	<para>This will free up sufficient disk space to allow you to boot into ___PRODUCT_BRAND___ and backup your VMs to Synchronizer.</para></step>
+	</procedure></section>
+<section><title>Procedure 34</title><procedure><title>To Turn on ATAPI Logging to Debug CD / DVD Issues</title>
+<step performance="required"><para>Open a console from Citrix Receiver for ___PRODUCT_BRAND___.</para></step>
+
+<step performance="required"><para>Run the command:</para>
+<screen format="linespecific">touch /etc/debugcdrom</screen></step>
+<step performance="required"><para>Logs will be written to <filename moreinfo="none">/var/log/cdrom-<replaceable>VM_slot_number</replaceable>.log</filename> until the <filename moreinfo="none">/etc/debugcdrom</filename> file is removed.</para></step>
+</procedure></section>
+<section><title>Procedure 35</title><procedure>
+	<title>To Boot Into a Control Domain Console</title>
+	<step performance="required"><para>Reboot the ___PRODUCT_BRAND___ host.</para></step>
+	<step performance="required"><para>While the ___PRODUCT_BRAND___ boot screen is displayed, press <keycap moreinfo="none">Esc</keycap>.</para></step>
+	<step performance="required"><para>Boot into the <guilabel moreinfo="none">console access</guilabel> option.</para></step>
+	<step performance="required"><para>When a console is available, log in as <literal moreinfo="none">root</literal>.</para></step>
+	</procedure></section>
+<section><title>Procedure 36</title><procedure>
+<title>To Refresh Citrix Receiver for ___PRODUCT_BRAND___</title>
+<step performance="required"><para>In Citrix Receiver for ___PRODUCT_BRAND___, press <keycap moreinfo="none">Ctrl + Q</keycap>.</para></step>
+</procedure></section>
+<section><title>Procedure 37</title><procedure>
+<title>To Change the Control Domain Root Password<indexterm significance="normal"><primary>control domain</primary>
+<secondary>changing root password</secondary></indexterm></title>
+<step performance="required"><para>In Citrix Receiver for ___PRODUCT_BRAND___, press <keycap moreinfo="none" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/local.ent">Ctrl + Shift + t</keycap> to open a control domain console window.</para></step>
+<step performance="required"><para>Create a text file containing your old password.</para></step>
+<step performance="required"><para>Create a text file containing your new password.</para></step>
+<step performance="required"><para>Run the following command:</para>
+<screen format="linespecific">sec-change-root-credentials <replaceable>new_password_file_path</replaceable> \
+<replaceable>old_password_file_path</replaceable></screen>
+<para>Both files will be securely deleted when you run the <command moreinfo="none">sec-change-root-credentials</command> command.</para></step>
+
+</procedure></section>
+<section><title>Procedure 38</title><procedure><title>To Troubleshoot PXE Installation Issues</title>
+<step performance="required"><para>___PRODUCT_BRAND___ 2.0 uses a customized <filename moreinfo="none">pxelinux.0</filename> file, which can be found on the installer CD at <filename moreinfo="none">/isolinux/pxelinux.0</filename>. This file must be copied to your PXE server.</para></step></procedure></section>
+<section><title>Procedure 39</title><procedure>
+<title>To Return to Citrix Receiver for ___PRODUCT_BRAND___ from an Unresponsive VM (Force Switching)</title>
+<para>Use this procedure to return to Citrix Receiver for ___PRODUCT_BRAND___ if a VM with 3D Graphics Support enabled becomes unresponsive to attempts to switch away from it.</para>
+<warning><para>Forcing a switch should only be attempted as a last resort. Particularly, forcing a switch while a 3D Graphics Support VM is booting or shutting down can lead to the VM graphics becoming corrupt. Citrix highly recommends immediately shutting down any VM you have force switched away from and restarting it.</para></warning>
+<step performance="required"><para>Press and hold <keycap moreinfo="none">Ctrl + 0</keycap> for 15 seconds.</para></step>
+<step performance="required"><para>If Citrix Receiver for ___PRODUCT_BRAND___ is still not displayed, press <keycap moreinfo="none">Ctrl + 0</keycap> once again to switch to Citrix Receiver for ___PRODUCT_BRAND___.</para></step>
+</procedure></section>
+<section><title>Procedure 40</title><procedure><title>To Determine the IP Address of a ___PRODUCT_BRAND___ Device</title>
+			<step performance="required"><para>In Citrix Receiver for ___PRODUCT_BRAND___ click on the Network Manager icon at the top-right of the screen, and select <guilabel moreinfo="none">Connection Information</guilabel> from the popup menu.</para></step>
+			<step performance="required"><para>The details of all active network connections are displayed, including the IP address.</para></step>
+			
+			
+			</procedure></section>
+<section><title>Procedure 41</title><procedure><title>To Ensure That the <guilabel moreinfo="none">Select more apps...</guilabel> Shortcut Appears in the Start Menu</title>
+<step performance="required"><para>Run the <command moreinfo="none"><replaceable>drive_letter</replaceable>:Program Files\Citrix\SelfServicePlugin\SelfService.exe</command> executable in the Application Subscribing VM:</para></step>
+		
+		</procedure></section>
+<section><title>Procedure 42</title><procedure><title>To Ensure Application Publishing Applications Appear in Citrix Receiver</title>
+		<step performance="required"><para>Ensure the Application Subscribing VM is running.</para></step>
+		<step performance="required"><para>Start or restart all Application Publishing VMs and log in.</para></step>
+
+<step performance="required"><para>Run the following command in the Application Subscribing VM:</para>
+<screen format="linespecific"><replaceable>disk_letter</replaceable>:\Program Files\Citrix\XCI\XciAppUpdater.exe</screen></step>
+		<step performance="required"><para>Start Citrix Receiver.</para></step>
+		</procedure></section>
+<section><title>Procedure 43</title><procedure><title>To Generate an Installation Status Report<indexterm significance="normal"><primary>Installation status report</primary>
+<secondary>generating</secondary></indexterm></title><step performance="required"><para>During installation, press <keycap moreinfo="none">Alt + F7</keycap> and select <guilabel moreinfo="none">Continue</guilabel>.</para></step>
+<step performance="required"><para>Enter a description of the issues you are experiencing with the installation and select <guilabel moreinfo="none">OK</guilabel>. The system will start to generate a status report.</para></step>
+<step performance="required"><para>When report generation is complete, the status report filename is displayed. Select <guilabel moreinfo="none">Web Server</guilabel>. </para></step>
+<step performance="required"><para>The URL of a web server is displayed. Point your web browser to the address displayed to download the installation status report.</para></step>
+</procedure></section>
+<section><title>Procedure 1</title><procedure id="manual_graphics_driver_install_vista"><title>To Manually Install Graphics Drivers on a Vista VM</title>
+
+			<step performance="required"><para>Navigate to <ulink url="http://downloadcenter.intel.com/default.aspx"/>.</para></step>
+			<step performance="required"><para>Select <guilabel moreinfo="none">Graphics</guilabel> from the <guilabel moreinfo="none">Select a product family</guilabel> list.</para></step>
+			<step performance="required"><para>Select <guilabel moreinfo="none">Laptop graphics controllers</guilabel> from the <guilabel moreinfo="none">Select a product line</guilabel> list.</para></step>
+			<step performance="required"><para>Select <guilabel moreinfo="none">Mobile Intel 4 Series Express Chipset Family</guilabel> from the <guilabel moreinfo="none">Select a product name</guilabel> list.</para></step>
+			<step performance="required"><para>Select your operating system from the <guilabel moreinfo="none">Select an Operating System</guilabel> list.</para></step>
+			<step performance="required"><para>The required graphics drivers are displayed in the search results. Download and install the latest graphics driver. The name of the driver you need is Intel<trademark class="registered"/> Graphics Driver for Windows 7 and Windows Vista (exe), version <literal moreinfo="none">15.17.3.2104 (8.15.10.2104)</literal>. The filename of the download is <filename moreinfo="none">WinVista7_15173.exe</filename>.</para></step>
+		</procedure></section>
+<section><title>Procedure 2</title><procedure id="to_disable_usb_legacy_support">
+			<title>To Disable USB Legacy Support on an HP 8440p</title>
+			<step performance="required"><para>While the device is booting, press <keycap moreinfo="none">Esc</keycap>.</para></step>
+			<step performance="required"><para>Navigate to <guilabel moreinfo="none">System Configuration &gt; Device Configurations</guilabel>.</para></step>
+		<step performance="required"><para>Uncheck the <literal moreinfo="none">USB legacy support</literal> checkbox.</para></step>
+	</procedure></section>
+<section><title>Procedure 1</title><procedure>
+<title>To Create and Deploy a VM Image</title>
+<step performance="required"><para>Register the ___PRODUCT_BRAND___ device with Synchronizer. See <olink targetdoc="SynchronizerSetupAndUsageGuide" targetptr="to_connect_a_device_to"/> for more information.</para></step>
+<step performance="required"><para>Install and configure an operating system and a set of applications in a VM on the ___PRODUCT_BRAND___ device. See the <citetitle>___PRODUCT_BRAND___ Setup and Usage Guide</citetitle> for information about how to do this.</para></step>
+<step performance="required"><para>Using Citrix Receiver for ___PRODUCT_BRAND___, upload the VM to Synchronizer. This creates a VM image that can be assigned to multiple users. See <olink targetdoc="SynchronizerSetupAndUsageGuide" targetptr="to_upload_a_vm_to"/>  for more information.</para></step>
+<step performance="required"><para>Using the Synchronizer web interface, assign a VM image version to a user or user group. See <olink targetdoc="SynchronizerSetupAndUsageGuide" targetptr="to_assign_a_vm_image"/> for more information.</para></step>
+<step performance="required"><para>The ___PRODUCT_BRAND___ user can download VM images to create new VMs from the set of VM images that have been assigned to them. See the <citetitle>___PRODUCT_BRAND___ Setup and Usage Guide</citetitle> for information about how to do this.</para></step>
+
+</procedure></section>
+<section><title>Procedure 2</title><procedure><title>To Create a new VM Image Version</title>
+<step performance="required"><para>Assign the VM image to a user or administrator, ensuring that you set the assignment policy to <literal moreinfo="none">Allow Authorship</literal> and <literal moreinfo="none">Allow changing VM Properties</literal>.</para></step>
+<step performance="required"><para>The user then downloads the assigned VM image to a ___PRODUCT_BRAND___ device.</para></step>
+<step performance="required"><para>Once the new VM version is prepared, the user uploads the new VM version to Synchronizer, keeping the same VM name.</para></step>
+</procedure></section>
+<section><title>Procedure 3</title><procedure id="install-beginning"><title>To Download, Import, and Prepare the Virtual Appliance</title>
+<para>The following procedure assumes that you are working on a Windows machine that has XenCenter installed.</para>
+
+<step performance="required"><para>Download the Synchronizer appliance from <ulink url="http://www.citrix.com/xenclient/tryit">http://www.citrix.com/xenclient/tryit</ulink>. This is a compressed archive which contains a <literal moreinfo="none">.xva</literal> file.</para></step>
+
+<step performance="required"><para>Uncompress the file and double-click the <filename moreinfo="none">.xva</filename> file to import it into XenCenter.</para></step>
+
+<step performance="required"><para>XenCenter launches, and the <guilabel moreinfo="none">Import Source</guilabel> page of the <guilabel moreinfo="none">Import</guilabel> wizard is displayed. </para></step>
+<step performance="required"><para>Click the <guilabel moreinfo="none">Next</guilabel> button. The <guilabel moreinfo="none">Home server</guilabel> page is displayed.</para></step>
+
+<step performance="required"><para>Choose a pool or a server on which to start the Synchronizer VM, then click <guibutton moreinfo="none">Next</guibutton>.</para>
+<para>The <guilabel moreinfo="none">Storage</guilabel> page is displayed.</para></step>
+
+<step performance="required"><para>Choose a storage repository on which the imported virtual disks of the VM will be created, then click <guibutton moreinfo="none">Import</guibutton>.</para>
+<para>The <guilabel moreinfo="none">Importing VM...</guilabel> progress bar is displayed. After a short time, the <guilabel moreinfo="none">Network</guilabel> page of the <guilabel moreinfo="none">Import</guilabel> wizard is displayed.</para></step>
+
+<step performance="required"><para>Select the network that you want the VM to have access to, then click <guibutton moreinfo="none">Next</guibutton>.</para>
+<para>The <guilabel moreinfo="none">Finish</guilabel> page is displayed.</para></step>
+
+<step performance="required"><para>At the bottom of the <guilabel moreinfo="none">Finish</guilabel> page is a checkbox labeled <guilabel moreinfo="none">Start VM after import</guilabel> which is checked by default. Uncheck this if you want to increase the size of the virtual disk assigned to hold your VM images (which is 18GB by default). You can then choose to increase the size of the virtual disk before starting the VM and stepping through the various steps of the Synchronizer installation.</para>
+
+<para>You can also change the virtual CPU properties and virtual memory assigned to the appliance at this point (the default RAM assigned is 1 GB).</para>
+
+<para>If you do start the VM automatically after the import operation is finished, you can always shut it down to resize the virtual disk and change CPU and memory properties afterwards.</para></step>
+
+<step performance="required"><para>Click <guibutton moreinfo="none">Finish</guibutton> to exit the wizard.</para>
+
+<para>The import process begins. This can take several minutes. When the VM is finished being imported, it will appear under the selected host node, or under the node of the host which the system chose if you selected a pool to import it into rather than a specific host.</para></step>
+
+<step performance="required"><para>If you want to change the properties of the Synchronizer VM or resize the virtual disk to be used for VM image storage, complete the following steps. If not you can continue to the next step.</para>
+
+  <substeps performance="required">
+    <step performance="required">
+      <para>If you do want to resize the virtual disk for the VM, select it on the left pane, then click the <guilabel moreinfo="none">Storage</guilabel> tab, then select the virtual disk named <guilabel moreinfo="none">xt-data-vol</guilabel> and click the <guibutton moreinfo="none">Properties</guibutton> button.</para>
+    </step>
+<step performance="required"><para>The <guilabel moreinfo="none">Properties</guilabel> dialog box is displayed for the selected virtual disk.</para>
+</step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Size and Location</guilabel> on the left side, and use the <guilabel moreinfo="none">Size</guilabel> control to set the disk size to the desired value.</para>
+
+</step>
+
+<step performance="required"><para>Click the <guibutton moreinfo="none">OK</guibutton> button.</para>
+<para>The dialog box closes and, after a few moments, the <guilabel moreinfo="none">Size</guilabel> column in the <guilabel moreinfo="none">Storage</guilabel> tab is updated to the new size.</para></step>
+	<step performance="required">
+<para>If you do want to modify the CPU properties, select the VM on the left pane, then click the <guilabel moreinfo="none">General</guilabel> tab.</para></step>
+<step performance="required"><para>Click the <guibutton moreinfo="none">Properties</guibutton> button at the top of the window. The <guilabel moreinfo="none">Properties</guilabel> dialog box of the selected VM is displayed.</para></step>
+
+<step performance="required"><para>Click <guilabel moreinfo="none">CPU and Memory</guilabel> on the left side.</para>
+
+<para>Use the <guilabel moreinfo="none">Number of VCPUs</guilabel> control to set the number of virtual CPUs to the desired value. You can also set the <guilabel moreinfo="none">VCPU priority</guilabel> and the amount of RAM to be assigned to the Synchronizer VM on this page.</para>
+<note><para>1024 MB is the default amount of memory, but Synchronizer can work with as little as 256 MB, so you can reduce the amount of RAM if desired.</para></note>
+
+</step>
+
+<step performance="required"><para>Click <guibutton moreinfo="none">OK</guibutton>.</para>
+</step>
+<step performance="required"><para>If you changed the <guilabel moreinfo="none">VM memory</guilabel> or the <guilabel moreinfo="none">Number of VCPUs</guilabel> setting the <guilabel moreinfo="none">VM General Changes</guilabel> dialog box is displayed, stating that the VM must be restarted for the new settings to take effect. Click the <guilabel moreinfo="none">OK</guilabel> button to dismiss this dialog box.</para></step>
+<step performance="required"><para>If required, right-click on the VM and select <guilabel moreinfo="none">Reboot</guilabel>, then click <guilabel moreinfo="none">Yes</guilabel> to confirm the reboot action.</para></step>
+	</substeps>
+</step>
+
+<step performance="required"><para>If your VM is not already started, right-click on the VM and select <guilabel moreinfo="none">Start</guilabel>.</para></step>
+
+<step performance="required"><para>Once the Synchronizer VM has started, click the <guilabel moreinfo="none">Console</guilabel> tab to access the command line console.</para></step>
+
+<step performance="required"><para>Initial installation steps are performed and the VM boots. Once the VM has booted the <guilabel moreinfo="none">Synchronizer for ___PRODUCT_BRAND___</guilabel> console is displayed, which guides you through the rest of the Synchronizer installation process.</para></step>
+<step performance="required"><para>The <guilabel moreinfo="none">End User License Agreement</guilabel> screen is displayed. Press <keycap moreinfo="none">Enter</keycap> to accept the license agreement.</para></step>
+<step performance="required"><para>On the next screen, enter and confirm a <literal moreinfo="none">root</literal> password for the VM and press <keycap moreinfo="none">Enter</keycap> to continue.</para></step>
+<step performance="required"><para>On the next screen, select the <guilabel moreinfo="none">IP adress configuration mode</guilabel>. Select <guilabel moreinfo="none">DHCP</guilabel> to enter the hostname allocated to this VM by a DHCP server or <guilabel moreinfo="none">Static</guilabel> to set up a static IP address, hostname and DNS server configuration. Press <guilabel moreinfo="none">Enter</guilabel> to confirm your chosen network settings. The <guilabel moreinfo="none">Configuring network...</guilabel> message is displayed.</para>
+<note><para>If the Synchronizer FQDN cannot be resolved, due to incorrect DNS settings for example, an appropriate IP address will be chosen and used as the Synchronizer URL.</para></note>
+</step>
+
+<step performance="required"><para>When the system has completed writing the network configuration, the <guilabel moreinfo="none">Customize certficate attributes</guilabel> screen is displayed. Use this screen to configure the details of the certificate to be used for HTTPS communication with the Synchronizer VM. Fill in the desired values and then press <guilabel moreinfo="none">Enter</guilabel>. The <guilabel moreinfo="none">Installing certificates...</guilabel> message is displayed.</para>
+</step>
+<step performance="required"><para>On the next screen, enter and confirm an administrator password to be used for accessing the Synchronizer web interface as the <literal moreinfo="none">admin</literal> user, and press <keycap moreinfo="none">Enter</keycap> to continue. The <guilabel moreinfo="none">The initial Synchronizer setup process is complete</guilabel> message is displayed alongside the Synchronizer web interface FQDN. Press <keycap moreinfo="none">Enter</keycap> to continue.</para></step>
+<step performance="required"><para>The <guilabel moreinfo="none">Synchronizer for ___PRODUCT_BRAND___</guilabel> configuration console is displayed. This is the standard console to be used for changing Synchronizer configuration, which is automatically displayed in the <guilabel moreinfo="none">Console</guilabel> tab of the VM in XenClient whenever the Synchronizer VM is booted.</para></step>
+</procedure></section>
+<section><title>Procedure 4</title><procedure><title>To Join an AD Domain</title>
+	<step performance="required"><para>In the console, follow the menu path <guilabel moreinfo="none">Active Directory Settings</guilabel>.</para></step>
+	<step performance="required"><para>Enter the FQDN of your AD server, the user name and the password.</para></step>
+<step performance="required"><para>Press <keycap moreinfo="none">Enter</keycap>.</para></step>
+	</procedure></section>
+<section><title>Procedure 5</title><procedure><title>To Configure the Management Interface</title>
+	
+	<step performance="required"><para>In the console, follow the menu path <guilabel moreinfo="none">Network and Management Interface &gt; Configure Managment Interface &gt; Configure Network Interface</guilabel>.</para></step>
+	<step performance="required"><para>Select the type of configuration desired and press <guilabel moreinfo="none">Enter</guilabel>. If you are using a static IP address without DHCP, enter the IP address, netmask, gateway and hostname. Press <guilabel moreinfo="none">Enter</guilabel>.</para></step>
+	<step performance="required"><para>Press <guilabel moreinfo="none">Enter</guilabel> to accept the configuration changes.</para></step>
+	</procedure></section>
+<section><title>Procedure 6</title><procedure><title>To Configure a DNS Server</title>
+		
+		<step performance="required"><para>In the console, follow the menu path <guilabel moreinfo="none">Network and Management Interface &gt; Configure DNS resolver</guilabel>. The following dialog box is displayed:</para>
+		<informalfigure float="0">
+   <mediaobject>
+     <imageobject>
+      <imagedata align="center" fileref="images/backend_dns_configuration.png"/>
+     </imageobject>
+    </mediaobject>
+</informalfigure>
+		</step>
+
+		<step performance="required"><para>Select the relevant operation and press <guilabel moreinfo="none">Enter</guilabel>.</para></step>
+		</procedure></section>
+<section><title>Procedure 7</title><procedure><title>To Change Admission Control Settings</title>
+		<para>The Admission control settings control the maximum number of ___PRODUCT_BRAND___ devices that can connect to your Synchronizer server at the same time. By default at installation time, the mode is set to Automatic, which has a fixed number of 25 clients that can connect. You can change the mode to Manual and decrease increase this number to a maximum allowed value of 50.</para>
+		<para>There is also Disconnect grace period with a default of 180 seconds. A client holds an admission slot while performing a transfer and gives up the slot when the transfer completes. However, there are times when a transfer might be interrupted (intermittent network connectivity, or perhaps the user has manually paused the transfer). The Disconnect grace period allows the client to maintain its admission slot and resume transfer.</para>
+		<step performance="required"><para>In the console, select <guilabel moreinfo="none">Admission Control Settings</guilabel> and press <guilabel moreinfo="none">Enter</guilabel>.</para></step>
+		<step performance="required"><para>Select the admission control setting mode, <guilabel moreinfo="none">Manual</guilabel> or <guilabel moreinfo="none">Automatic</guilabel>, then press <guilabel moreinfo="none">Enter</guilabel>.</para></step>
+		<step performance="required"><para>If you chose <guilabel moreinfo="none">Manual</guilabel> in the previous step, enter the desired number of <guilabel moreinfo="none">Maximum connections</guilabel> (the default is 25), then press <guilabel moreinfo="none">Enter</guilabel>. Enter the desired number of seconds for the <guilabel moreinfo="none">Disconnect grace period</guilabel> (the default is 180 seconds) and press <guilabel moreinfo="none">Enter</guilabel> again.</para>
+		<para>If you chose <guilabel moreinfo="none">Automatic</guilabel> in the previous step, you are only prompted to edit the desired number of seconds for the <guilabel moreinfo="none">Disconnect grace period</guilabel>. Press <guilabel moreinfo="none">Enter</guilabel>.</para></step>
+		<step performance="required"><para>An "updating settings" message is displayed, then a "configuration successful" message. Press <guilabel moreinfo="none">Enter</guilabel> to dismiss the message.</para></step>
+		</procedure></section>
+<section><title>Procedure 8</title><procedure><title>To Change The Root Password</title>
+		<step performance="required"><para>In the console, follow the menu path <guilabel moreinfo="none">Authentication &gt; Change Root Password</guilabel>.</para></step>
+		<step performance="required"><para>Enter the old password, the new password, and then confirm the new password and press <keycap moreinfo="none">Enter</keycap>.</para></step>
+		</procedure></section>
+<section><title>Procedure 9</title><procedure><title>To Change the Synchronizer web interface Admin User Password</title>
+		<step performance="required"><para>In the console, follow the menu path <guilabel moreinfo="none">Admin web interface &gt; Change Admin web interface Password</guilabel>.</para></step>
+		<step performance="required"><para>Enter the new password, confirm the new password and press <keycap moreinfo="none">Enter</keycap>.</para></step>
+		</procedure></section>
+<section><title>Procedure 10</title><procedure><title>To Regenerate the CA Certificates</title>
+		<note><para>Regenerating a CA certificate also cause a new SSL certificate to be generated. This is to ensure that there is never a situation where a valid CA certificate exists but no SSL certificate exists.</para></note>
+		<step performance="required"><para>In the console, follow the menu path <guilabel moreinfo="none">SSL Certificate &gt; CA Certificate</guilabel>.</para></step>
+		<step performance="required"><para>Enter the certificate attributes and press <keycap moreinfo="none">Enter</keycap>. The <guilabel moreinfo="none">Generate Certificate</guilabel> dialog is displayed. Press <keycap moreinfo="none">Enter</keycap> to continue. The <guilabel moreinfo="none">Installing Certificates...</guilabel> dialog is displayed.</para></step>
+		<step performance="required"><para>On completion the message <guilabel moreinfo="none">Certificate Installation Successful</guilabel> is displayed.</para></step>
+		</procedure></section>
+<section><title>Procedure 11</title><procedure><title>To Regenerate the Web Server SSL Certificates</title>
+<step performance="required"><para>In the console, follow the menu path <guilabel moreinfo="none">SSL Certificate &gt; SSL Certificate for Web Server</guilabel>.</para></step>
+		<step performance="required"><para>Enter the certificate attributes and press <keycap moreinfo="none">Enter</keycap>. The <guilabel moreinfo="none">Generate Certificate</guilabel> dialog is displayed. Press <keycap moreinfo="none">Enter</keycap> to continue. The <guilabel moreinfo="none">Installing Certificates...</guilabel> dialog is displayed.</para></step>
+		<step performance="required"><para>On completion the message <guilabel moreinfo="none">Certificate Installation Successful</guilabel> is displayed.</para></step>
+		</procedure></section>
+<section><title>Procedure 12</title><procedure id="create_user"><title>To Create a Local Synchronizer User<indexterm significance="normal"><primary>Users</primary><secondary>creating</secondary></indexterm></title>
+			<para>A local user exist entirely in the Synchronizer database.</para>
+			
+<step performance="required"><para>In the Synchronizer web interface, click <guilabel moreinfo="none">Users</guilabel>.</para></step>
+
+<step performance="required"><para>Click <guilabel moreinfo="none">Add Local User</guilabel>. The <guilabel moreinfo="none">Add Local User</guilabel> dialog is displayed.</para>
+<informalfigure float="0" id="synchronizer_ui-create-new-local-user">
+   <mediaobject>
+     <imageobject>
+      <imagedata align="center" fileref="images/webui-create-new-local-user.png" width="75%"/>
+     </imageobject>
+    </mediaobject>
+</informalfigure>
+</step>
+<step performance="required"><para>Enter the user details.</para></step>
+<step performance="required"><para>To grant the user <literal moreinfo="none">Admin</literal> rights, select <guilabel moreinfo="none">Admin</guilabel> from the <guilabel moreinfo="none">Role</guilabel> dropdown list. <literal moreinfo="none">Admin</literal> rights allow the user to publish VMs to Synchronizer and log in to the Synchronizer web interface.</para></step>
+
+<step performance="required"><para>To grant the user access to Synchronizer, select <literal moreinfo="none">Yes</literal> from the <guilabel moreinfo="none">Allow Synchronizer access</guilabel> dropdown list. Select <literal moreinfo="none">Not specified</literal> to use the access settings of a group to which the user belongs instead, or <literal moreinfo="none">No</literal> to deny the user access for the time being.</para>
+<note><para>An <literal moreinfo="none">admin</literal> user automatically has full access.</para></note></step>
+
+<step performance="required"><para>Click the <guilabel moreinfo="none">Add</guilabel> button.</para></step>
+<!-- <step><para>Click the refresh button at the bottom of the User list.</para></step> -->
+</procedure></section>
+<section><title>Procedure 13</title><procedure><title>To Delete a Local Synchronizer User<indexterm significance="normal"><primary>Users</primary><secondary>deleting</secondary></indexterm></title>
+<para>Deleting a local user has the following effects:</para>
+<itemizedlist>
+<listitem><para>The user name field in the Synchronizer records of all the user's ___PRODUCT_BRAND___ devices is set to empty and the devices becomes unregistered.</para></listitem>
+<listitem><para>All VMs on the user device become unmanaged.</para></listitem>
+<listitem><para>All VM image assignments for the user are deleted.</para></listitem> 
+</itemizedlist>
+<step performance="required"><para>In the Synchronizer web interface, click <guilabel moreinfo="none">Users</guilabel>.</para></step>
+<step performance="required"><para>Click on the user name.</para></step>
+<step performance="required"><para>Select <guilabel moreinfo="none">Delete User</guilabel> from the dropdown list in the <guilabel moreinfo="none">User Details</guilabel> box. The <guilabel moreinfo="none">Delete Current User</guilabel> dialog is displayed.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Yes</guilabel> to confirm the user deletion.</para></step>
+<step performance="required"><para>If desired, delete the records of the user's devices.</para></step>
+</procedure></section>
+<section><title>Procedure 14</title><procedure><title>To Create a Synchronizer User Group<indexterm significance="normal"><primary>User groups</primary><secondary>creating</secondary></indexterm></title>
+<para>To make the management of VM images easier, Synchronizer supports user groups. An administrator can assign a VM image or a set of VM images to a group of users that have similar computing needs.</para>
+			<step performance="required"><para>In the Synchronizer web interface, click <guilabel moreinfo="none">Users</guilabel>.</para></step>
+			<step performance="required"><para>Click the <guilabel moreinfo="none">Groups</guilabel> tab.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Add Local Group</guilabel>.</para>
+
+<informalfigure float="0" id="synchronizer_ui-create-new-local-group">
+   <mediaobject>
+     <imageobject>
+      <imagedata align="center" fileref="images/webui-create-new-local-group.png" width="75%"/>
+     </imageobject>
+    </mediaobject>
+</informalfigure>
+
+</step>
+<step performance="required"><para>Enter a name for the group in the <guilabel moreinfo="none">Name</guilabel> text box.</para></step>
+<step performance="required"><para>Enter a description of the group in the <guilabel moreinfo="none">Description</guilabel> text box.</para></step>
+<step performance="required"><para>To grant users in the group access to Synchronizer, select <literal moreinfo="none">Yes</literal> from the <guilabel moreinfo="none">Allow Synchronizer access</guilabel> dropdown list. Select <literal moreinfo="none">Not specified</literal> to use the access settings of the individual users instead, or <literal moreinfo="none">No</literal> to deny the group access for the time being.</para></step>
+<!--
+<para>Complete the following optional fields if desired:</para>
+<variablelist>
+<varlistentry><term>Information</term><listitem><para>Any further information about the group.</para></listitem></varlistentry>
+<varlistentry><term>Homepage</term><listitem><para>The URL of the group home page.</para></listitem></varlistentry>
+</variablelist>
+-->
+
+<step performance="required"><para>Click <guilabel moreinfo="none">Add</guilabel>.</para></step>
+<!-- <step><para>Click the refresh button at the bottom of the Group list.</para></step> -->
+</procedure></section>
+<section><title>Procedure 15</title><procedure><title>To Add a User to a Group<indexterm significance="normal"><primary>Users</primary><secondary>adding to a group</secondary></indexterm></title>
+			<para>Once a group has been created, you can add new users to it, who will inherit the VM images already assigned to the group.</para>
+<note><para>Synchronizer does not support adding both local and AD users to the same group.</para></note>
+			<note><para>___PRODUCT_BRAND___ does not provide the facility to edit the membership of AD groups. Any changes to AD groups or users must be performed using your interface to AD.</para></note>
+			
+			<step performance="required"><para>In the Synchronizer web interface, click <guilabel moreinfo="none">Users</guilabel>.</para></step>
+<step performance="required"><para>Click the <guilabel moreinfo="none">Groups</guilabel> tab.</para></step>
+<step performance="required"><para>Click the group that you want to add the user to.</para></step> 
+<step performance="required"><para>Click <guilabel moreinfo="none">Edit Group</guilabel>. The <guilabel moreinfo="none">Edit Group Membership</guilabel> window is displayed.</para></step>
+
+			<step performance="required"><para>Select the user or users that you want to add to the group in the list on the left. You can hold down <keycap moreinfo="none">Ctrl</keycap> and click to add multiple users.</para></step>
+			
+			
+			
+			<step performance="required"><para>Click <guilabel moreinfo="none">Add selected</guilabel> to add the selected users.</para></step>
+			
+			<step performance="required"><para>To grant the group access to Synchronizer, select <literal moreinfo="none">Yes</literal> from the <guilabel moreinfo="none">Allow Synchronizer access</guilabel> dropdown list. Select <literal moreinfo="none">Not specified</literal> to use the access settings specified in the user settings instead, or <literal moreinfo="none">No</literal> to deny the user group access for the time being.</para></step>
+			
+			<step performance="required"><para>Click <guilabel moreinfo="none">OK</guilabel>.</para></step>
+</procedure></section>
+<section><title>Procedure 16</title><procedure><title>To Delete a Local Synchronizer User Group<indexterm significance="normal"><primary>User groups</primary><secondary>deleting</secondary></indexterm></title>
+<para>Deleting a local user group also deletes all VM image assignments to the group.</para>
+<step performance="required"><para>In the Synchronizer web interface, click <guilabel moreinfo="none">Users</guilabel>.</para></step>
+<step performance="required"><para>Click the <guilabel moreinfo="none">Groups</guilabel> tab.</para></step>
+<step performance="required"><para>Click on the group name.</para></step>
+<step performance="required"><para>Select <guilabel moreinfo="none">Delete Group</guilabel> from the dropdown list in the <guilabel moreinfo="none">Group Details</guilabel> box. The <guilabel moreinfo="none">Delete Current Group</guilabel> dialog is displayed.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Yes</guilabel> to confirm the group deletion.</para></step>
+</procedure></section>
+<section><title>Procedure 17</title><procedure id="link_in_ad_user">
+<title>To Link in an Existing AD User<indexterm significance="normal"><primary>Users</primary><secondary>linking from AD</secondary></indexterm></title>
+<para>You can link in an existing AD user to Synchronizer. When the user logs in they will be authenticated against the AD server.</para>
+
+<note><para>This feature is only available in the web interface if your Synchronizer is connected to an AD server.</para></note>
+			<step performance="required"><para>In the Synchronizer web interface, click <guilabel moreinfo="none">Users</guilabel>.</para></step>
+
+<step performance="required"><para>Click <guilabel moreinfo="none">Add Link to AD User</guilabel>. The <guilabel moreinfo="none">Add Link to Domain User</guilabel> window is displayed.</para>
+<!--
+<informalfigure id="synchronizer_ui-link-ad-user">
+   <mediaobject>
+     <imageobject>
+      <imagedata align="center" fileref="images/webui-link-ad-user.png"/>
+     </imageobject>
+    </mediaobject>
+</informalfigure>
+-->
+
+</step>
+<step performance="required"><para>Enter the <guilabel moreinfo="none">Username</guilabel> and the <guilabel moreinfo="none">Domain</guilabel>.</para></step>
+<step performance="required"><para>Select the user role from the <guilabel moreinfo="none">Role</guilabel> dropdown list.</para></step>
+<step performance="required"><para>To grant the user access to Synchronizer, select <literal moreinfo="none">Yes</literal> from the <guilabel moreinfo="none">Allow Synchronizer access</guilabel> dropdown list. Select <literal moreinfo="none">Not specified</literal> to use the access settings of a group to which the user belongs instead, or <literal moreinfo="none">No</literal> to deny the user access for the time being.</para></step>
+
+<step performance="required"><para>Click <guilabel moreinfo="none">Link</guilabel>. Synchronizer connects to the AD domain specified, and creates the link if a valid user has been specified.</para></step>
+
+</procedure></section>
+<section><title>Procedure 18</title><procedure><title>To Link in an Existing AD User Group<indexterm significance="normal"><primary>AD user group</primary><secondary>linking</secondary></indexterm><indexterm significance="normal"><primary>Users</primary><secondary>linking in group</secondary></indexterm></title>
+<para>You can link in an existing AD user group to Synchronizer. When a user in this group logs in they will be authenticated against the AD server.</para>
+<note><para>This feature is only available in the web interface if your Synchronizer is connected to an AD server.</para></note>
+	<step performance="required"><para>In the Synchronizer web interface, click <guilabel moreinfo="none">Users</guilabel>.</para></step>
+	<step performance="required"><para>Click the <guilabel moreinfo="none">Groups</guilabel> tab.</para></step>
+
+	<step performance="required"><para>Click the <guilabel moreinfo="none">Add Link to AD Group</guilabel> button. The <guilabel moreinfo="none">Add Link to Domain Group</guilabel> window is displayed.</para>
+<!--
+<informalfigure id="synchronizer_ui-link-ad-group">
+   <mediaobject>
+     <imageobject>
+      <imagedata align="center" fileref="images/webui-link-ad-group.png"/>
+     </imageobject>
+    </mediaobject>
+</informalfigure>
+-->
+</step>
+<step performance="required"><para>Enter the <guilabel moreinfo="none">Group Name</guilabel>.</para></step>
+			<step performance="required"><para>To grant the group access to Synchronizer, select <literal moreinfo="none">Yes</literal> from the <guilabel moreinfo="none">Allow Synchronizer access</guilabel> dropdown list. Select <literal moreinfo="none">Not specified</literal> to use the access settings specified in the user settings instead, or <literal moreinfo="none">No</literal> to deny the user group access for the time being.</para></step>
+			 <step performance="required"><para>Click <guilabel moreinfo="none">Link</guilabel>. Synchronizer connects to the specified AD domain, and creates the link if a valid group name is entered.</para></step>
+</procedure></section>
+<section><title>Procedure 19</title><procedure id="to_connect_a_device_to"><title>To Connect a ___PRODUCT_BRAND___ Device to Synchronizer<indexterm significance="normal"><primary>Synchronizer</primary><secondary>connecting</secondary></indexterm></title>
+
+<step performance="required"><para>In Citrix Receiver for ___PRODUCT_BRAND___, click <guibutton moreinfo="none">System</guibutton>. The <guilabel moreinfo="none">System Settings</guilabel> dialog box is displayed.</para></step>
+
+<step performance="required"><para>Click <guibutton moreinfo="none">Synchronizer</guibutton> on the left side of the dialog box.</para></step>
+
+<step performance="required"><para>Click <guibutton moreinfo="none">Register</guibutton>. Enter the FQDN of the Synchronizer server and click <guilabel moreinfo="none">Next</guilabel>.</para></step>
+
+<step performance="required"><para>The <guilabel moreinfo="none">Security</guilabel> dialog box is displayed. Ensure that the code in the dialog box is the same as the one displayed during Synchronizer installation. Click <guilabel moreinfo="none">I trust this server</guilabel> to continue or <guilabel moreinfo="none">No</guilabel> if the codes differ.</para></step>
+
+<step performance="required"><para>Press <keycap moreinfo="none">Ctrl + Alt + Backspace</keycap> and enter your Synchronizer user name and password. Press <keycap moreinfo="none">Enter</keycap> to complete the connection process. Connecting as a user with <literal moreinfo="none">Admin</literal> rights allows you to upload a VM image to Synchronizer.</para></step>
+</procedure></section>
+<section><title>Procedure 20</title><procedure id="to_upload_a_vm_to"><title>To Upload a VM to Synchronizer<indexterm significance="normal"><primary>VM images</primary><secondary>uploading</secondary></indexterm></title>
+
+<step performance="required"><para>In Citrix Receiver for ___PRODUCT_BRAND___, shut down the VM that you want to upload to the Synchronizer.</para></step>
+<step performance="required" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/view_details.ent"><para>Hover your mouse over the VM icon and click <guilabel moreinfo="none">Details</guilabel> to open the VM details window.</para></step>
+
+<step performance="required"><para>Click <guibutton moreinfo="none">Upload VM</guibutton>. The <guilabel moreinfo="none">Upload to Synchronizer</guilabel> dialog box is displayed.</para></step>
+<step performance="required"><para>Enter a <guilabel moreinfo="none">VM name</guilabel> and <guilabel moreinfo="none">Description</guilabel>.</para></step>
+
+<step performance="required"><para>Select the VM image mode. See <olink targetdoc="SynchronizerSetupAndUsageGuide" targetptr="vm_image_modes"/> for more information about VM image modes.</para></step>
+<step performance="required"><para>Click <guibutton moreinfo="none">Finish</guibutton>.</para></step>
+<step performance="required"><para>The transfer of the image to the Synchronizer commences, and a progress bar is displayed. (A similar progress bar is displayed in the Synchronizer web interface if you click <guibutton moreinfo="none">Activity</guibutton>).</para></step>
+</procedure></section>
+<section><title>Procedure 21</title><procedure><title>To Delete a VM Image<indexterm significance="normal"><primary>VM Image</primary><secondary>deleting</secondary></indexterm></title>
+<para>Deleting a VM image removes the VM from Synchronizer. Any deployed VMs that are based on the VM image will become unmanaged by Synchronizer as soon as the client device connects to Synchronizer. All versions and backups of the VM image are deleted, as are any VM image assignments of the deleted VM image.</para>
+<step performance="required"><para>In the Synchronizer web interface, click <guilabel moreinfo="none">Images</guilabel>.</para></step>
+<step performance="required"><para>Click on the name of the VM image you want to delete.</para></step>
+<step performance="required"><para>Click the <guilabel moreinfo="none">Delete VM Image</guilabel> button. The <guilabel moreinfo="none">Delete VM Image</guilabel> dialog box is displayed.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Delete VM</guilabel> to confirm the deletion.</para></step>
+
+</procedure></section>
+<section><title>Procedure 22</title><procedure><title>To find VHDs associated with a VM Image<indexterm significance="normal"><primary>VM Image</primary><secondary>associated VHDs</secondary></indexterm></title>
+<para>To figure out which VHDs are related to a VM, use the following command to output the paths of all VHDs related to a specific VM name and version.</para>
+<step performance="required"><para>At the console for the Synchronizer appliance, run the following command as root:</para>
+<screen format="linespecific">get-vm-disks -n <replaceable>vm_name</replaceable> -v <replaceable>version</replaceable></screen>
+<para>The paths to all the VHDs associated with the specified VM are displayed.</para>
+<note><para>Use double quotes around <replaceable>vm_name</replaceable> if it contains whitespaces.</para></note>
+</step>
+</procedure></section>
+<section><title>Procedure 23</title><procedure id="to_assign_a_vm_image"><title>To Assign a VM Image<indexterm significance="normal"><primary>VM images</primary><secondary>assigning</secondary></indexterm></title>
+<para>Once a VM has been uploaded to Synchronizer, it is shown on the <guilabel moreinfo="none">VM images</guilabel> screen. You can now assign this VM image to users or groups, which allows them to install it on their device.</para>
+<step performance="required"><para>In the Synchronizer web interface, click <guibutton moreinfo="none">Images</guibutton> to display a list of the available VM image images.</para></step>
+
+<step performance="required"><para>Click <guibutton moreinfo="none">Assign</guibutton> of the relevant VM image. The <guilabel moreinfo="none">Assign VM image</guilabel> window is displayed.</para>
+<informalfigure float="0" id="synchronizer_ui-assign-desktop-first-page">
+   <mediaobject>
+     <imageobject>
+      <imagedata align="center" fileref="images/webui-assign-desktop-1.png" width="75%"/>
+     </imageobject>
+    </mediaobject>
+</informalfigure> 
+</step>
+
+<step performance="required"><para>Select either <literal moreinfo="none">User</literal> or <literal moreinfo="none">Group</literal> from the <guilabel moreinfo="none">Assign To</guilabel> drop down menu, then select a specific user or group from the <guilabel moreinfo="none">User</guilabel> or <guilabel moreinfo="none">Group</guilabel> drop down menu.</para></step>
+
+<step performance="required"><para>Click <guibutton moreinfo="none">Continue</guibutton>.</para></step>
+
+<step performance="required"><para>The <guilabel moreinfo="none">VM image</guilabel> page of the wizard is displayed. Select the VM and the VM version to be assigned.</para></step>
+
+<!--
+<para>Set a <guilabel>Lease Time</guilabel> in days, <guilabel>Disk Backup Frequency</guilabel> in hours, <guilabel>Phone Home Frequency</guilabel> in minutes, and select whether or not to <guilabel>Allow Authorship</guilabel> and <guilabel>Allow Changing VM Properties</guilabel>.</para>
+-->
+<step performance="required">
+<para>Click <guilabel moreinfo="none">Continue</guilabel>. The <guilabel moreinfo="none">Policy</guilabel> page of the wizard is displayed. Here you can set <indexterm significance="normal"><primary>VM Policies</primary></indexterm>VM policy.</para>
+</step>
+<step performance="required"><para>On the <guilabel moreinfo="none">General</guilabel> page, you can set the following:</para>
+<informaltable>
+<tgroup cols="2">
+<colspec colwidth="1.5in"/>
+<colspec colwidth="*"/>
+
+<thead><row>
+<entry><para>Setting</para></entry>
+<entry><para>Description</para></entry>
+</row></thead>
+<tbody>
+
+<row>
+<entry><para><guilabel moreinfo="none"><indexterm significance="normal"><primary>VM Policies</primary><secondary>Number of VCPUs</secondary></indexterm>vCPU</guilabel></para></entry>
+<entry><para>The number of VCPUs to assign to the VM.</para></entry>
+</row>
+
+
+<row>
+<entry><para><guilabel moreinfo="none"><indexterm significance="normal"><primary>VM Policies</primary><secondary>Memory</secondary></indexterm>Memory</guilabel></para></entry>
+<entry><para>The amount of virtual RAM to assign to the VM.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel moreinfo="none"><indexterm significance="normal"><primary>VM Policies</primary><secondary>Enable Disk Encryption</secondary></indexterm>Enable Disk Encryption</guilabel></para></entry>
+<entry><para>If enabled, the contents of the VHD files used by the VM will be encrypted using the AES XTS (256-bit) cypher.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel moreinfo="none"><indexterm significance="normal"><primary>VM Policies</primary><secondary>Enable 3D Graphics</secondary></indexterm>Enable 3D Graphics</guilabel></para></entry>
+<entry><para>If enabled, the VM will have 3D graphics support enabled. Note that this means that the client device this image is assigned to can only run one VM at a time.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel moreinfo="none"><indexterm significance="normal"><primary>VM Policies</primary><secondary>Enable Autoboot</secondary></indexterm>Enable Autoboot</guilabel></para></entry>
+<entry><para>If enabled, the VM will automatically boot when its host device is booted.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel moreinfo="none"><indexterm significance="normal"><primary>VM Policies</primary><secondary>Enable Communication Between VMs</secondary></indexterm>Enable Communication Between VMs</guilabel></para></entry>
+<entry><para>If enabled, this controls the VM's firewall settings so that seamless applications will work.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel moreinfo="none"><indexterm significance="normal"><primary>VM Policies</primary><secondary>Allow users(s) to change properties</secondary></indexterm>Allow users(s) to change properties</guilabel></para></entry>
+<entry><para>If enabled, allows users to change VM properties in Citrix Receiver for ___PRODUCT_BRAND___.</para></entry>
+</row>
+
+</tbody>
+</tgroup>
+</informaltable>
+
+</step>
+<step performance="required"><para>Click <indexterm significance="normal"><primary>VM Policies</primary><secondary>Network access</secondary></indexterm><guibutton moreinfo="none">Network</guibutton> and select whether or not to enable <guilabel moreinfo="none">Wired</guilabel> and <guilabel moreinfo="none">Wireless</guilabel> access for this user.</para>
+</step>
+<step performance="required">
+<para>Click <indexterm significance="normal"><primary>VM Policies</primary><secondary>USB devices</secondary></indexterm> <guibutton moreinfo="none">Devices</guibutton> and select which classes of USB devices are allowed to be used.</para>
+<warning><para>Because many USB devices are composite USB devices which expose multiple devices of different device classes, not allowing a particular device class can affect the ability of the user to use USB devices which one otherwise might expect to work. For example, some USB modems initially present themselves as mass storage devices to allow the user to install drivers contained on the mass storage embedded in the device. It is only after the drivers are installed that the USB modem is recognized as a USB modem. However, if mass storage USB is disallowed under the policy you set, the user will not be able to install the drivers and will therefore not be able to use the USB modem.</para></warning>
+
+<informaltable>
+<tgroup cols="2">
+<colspec colwidth="1.5in"/>
+<colspec colwidth="*"/>
+
+<thead><row>
+<entry><para>USB device class</para></entry>
+<entry><para>Description</para></entry>
+</row></thead>
+
+<tbody>
+
+<row>
+<entry><para><guilabel moreinfo="none">Audio</guilabel></para></entry>
+<entry><para>Devices for interfacing external audio devices (microphones, audio line level signals, etc.) to the computer. Select the level of enablement using the radio buttons.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel moreinfo="none">Optical Drive</guilabel></para></entry>
+<entry><para>The onboard optical drive, for example Blu-ray drive.  Select the level of enablement using the radio buttons.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel moreinfo="none">Allow these USB Devices - Audio</guilabel></para></entry>
+<entry><para>Audio USB devices.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel moreinfo="none">Allow these USB Devices - Still Imaging (camera)</guilabel></para></entry>
+<entry><para>Devices for capturing still images (cameras, scanners).</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel moreinfo="none">Allow these USB Devices - Printers</guilabel></para></entry>
+<entry><para>USB printers.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel moreinfo="none">Allow these USB Devices - Mass Storage</guilabel></para></entry>
+<entry><para>External hard drives, DVD burners, USB sticks, etc.</para></entry>
+</row>
+<!--
+<row>
+<entry><para><guilabel>USB Hubs</guilabel></para></entry>
+<entry><para>Allows chaining of multiple USB devices to a single USB port</para></entry>
+</row>
+-->
+<row>
+<entry><para><guilabel moreinfo="none">Allow these USB Devices - Video</guilabel></para></entry>
+<entry><para>Devices for capturing video data (web cams, digital video cameras).</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel moreinfo="none">Allow these USB Devices - Unclassified USB devices</guilabel></para></entry>
+<entry><para>All devices which do not have a standard USB class ID.</para></entry>
+</row>
+
+</tbody>
+</tgroup>
+</informaltable>
+
+
+</step>
+
+<step performance="required">
+<para>Click <indexterm significance="normal"><primary>VM Policies</primary><secondary>Synchronization</secondary></indexterm> <guibutton moreinfo="none">Synchronization</guibutton> and set the following properties:</para>
+<informaltable>
+<tgroup cols="3">
+<colspec colwidth="1.5in"/>
+<colspec colwidth="1.0in"/>
+<colspec colwidth="*"/>
+
+<thead><row>
+<entry><para>Setting</para></entry>
+<entry><para>Default</para></entry>
+<entry><para>Description</para></entry>
+</row></thead>
+<tbody>
+
+<row>
+<entry><para><guilabel moreinfo="none"><indexterm significance="normal"><primary>VM Policies</primary><secondary>Lease expiration</secondary></indexterm> Lease Expiration</guilabel></para></entry>
+<entry><para>14 days</para></entry>
+<entry><para>The number of days that the VM image is leased to the user. If the user does not authenticate with the Synchronizer before the lease time expires, the leased VM shuts down and the <guilabel moreinfo="none">REMOTE LOCKED</guilabel> message is displayed. Connecting to and authenticating with  Synchronizer will renew the lease. To ensure that lease times are not renewable, the administrator of the Synchronizer needs to manually revoke the assignment of the VM image to the user when they wish the lease to expire and not be renewable anymore. Enter <literal moreinfo="none">0</literal> if you do not want to use a lease time for this assignment.</para></entry>
+</row>
+
+<row>
+<entry><para><indexterm significance="normal"><primary>VM Policies</primary><secondary>Update schedule</secondary></indexterm><guilabel moreinfo="none">Update Schedule</guilabel></para></entry>
+<entry><para>60 minutes</para></entry>
+<entry><para>The interval, in minutes, that the registered ___PRODUCT_BRAND___ device will check for policy updates from the Synchronizer.</para></entry>
+</row>
+
+
+<row>
+<entry><para><indexterm significance="normal"><primary>VM Policies</primary><secondary>Backup schedule</secondary></indexterm><guilabel moreinfo="none">Backup Schedule</guilabel></para></entry>
+<entry><para>Disabled</para></entry>
+<entry><para>Enable to cause the VM image to be backed up automatically. The user may also choose to manually backup from ___PRODUCT_BRAND___.</para></entry>
+</row>
+
+<row>
+<entry><para><indexterm significance="normal"><primary>VM Policies</primary><secondary>Backup frequency</secondary></indexterm><guilabel moreinfo="none">Frequency</guilabel></para></entry>
+<entry><para>1 hours</para></entry>
+<entry><para>This field is only displayed if the <guilabel moreinfo="none">Automatically</guilabel> checkbox is checked. The number of hours that will elapse before the VM image will next be backed up automatically. The user may also be allowed to backup manually using Citrix Receiver for ___PRODUCT_BRAND___.</para></entry>
+</row>
+
+
+
+<row>
+<entry><para><indexterm significance="normal"><primary>VM Policies</primary><secondary>Allowing manual updates</secondary></indexterm><guilabel moreinfo="none">Allow Manual</guilabel></para></entry>
+<entry><para>Disabled</para></entry>
+<entry><para>Allows the user to manually perform VM backups.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel moreinfo="none"><indexterm significance="normal"><primary>VM Policies</primary><secondary>Backup contents</secondary></indexterm>Backup Contents</guilabel></para></entry>
+<entry><para>All-Data</para></entry>
+<entry><para>By default all data is backed up. For Windows VMs, setting this property to <literal moreinfo="none">User-Data</literal> causes only the user directories of the VM to be backed up.</para></entry>
+</row>
+
+
+
+</tbody>
+</tgroup>
+</informaltable>
+</step>
+
+<step performance="required">
+<para>Click <indexterm significance="normal"><primary>VM Policies</primary><secondary>Advanced</secondary></indexterm><guibutton moreinfo="none">Advanced</guibutton> and set the following property:</para>
+<informaltable>
+<tgroup cols="3">
+<colspec colwidth="1.5in"/>
+<colspec colwidth="1.0in"/>
+<colspec colwidth="*"/>
+
+<thead><row>
+<entry><para>Setting</para></entry>
+<entry><para>Default</para></entry>
+<entry><para>Description</para></entry>
+</row></thead>
+<tbody>
+
+
+<row>
+<entry><para><guilabel moreinfo="none">Allow users to author new versions of this image</guilabel></para></entry>
+<entry><para>Enabled for users with the <literal moreinfo="none">admin</literal> role; disabled for other users</para></entry>
+<entry><para>Sets whether the user can upload a VM to the Synchronizer.</para></entry>
+</row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</step>
+<step performance="required"><para>Click <guibutton moreinfo="none">Finish</guibutton>.</para>
+</step>
+</procedure></section>
+<section><title>Procedure 24</title><procedure><title>To Edit an Assignment<indexterm significance="normal"><primary>Assignments</primary><secondary>editing</secondary></indexterm></title>
+<step performance="required"><para>In the Synchronizer web interface, click <guilabel moreinfo="none">Users</guilabel>.</para></step>
+<step performance="required"><para>Click the relevant user name.</para></step>
+<step performance="required"><para>Next to the relevant assignment in the <guilabel moreinfo="none">Available Assignments</guilabel> table, select the <guilabel moreinfo="none">Edit</guilabel> action. Follow the steps of the <guilabel moreinfo="none">Assign VM Image</guilabel> wizard to edit the assignment.</para>
+<note><para>Disk encryption is only applied when a VM is first deployed to a device. Editing an assignment at a later point will not cause the disk to be encrypted.</para></note></step>
+</procedure></section>
+<section><title>Procedure 25</title><procedure><title>To Revoke an Assignment<indexterm significance="normal"><primary>Assignments</primary><secondary>revoking</secondary></indexterm></title>
+<para>Revoking an assignment causes all the details of the assignment to be permanently erased from Synchronizer. Once the lease time of the VM expires, the user no longer be able to use it.</para>
+<step performance="required"><para>In the Synchronizer web interface, click <guilabel moreinfo="none">Users</guilabel>.</para></step>
+<step performance="required"><para>Click the relevant user name.</para></step>
+<step performance="required"><para>Next to the relevant assignment in the <guilabel moreinfo="none">Available Assignments</guilabel> table, select the <guilabel moreinfo="none">Revoke</guilabel> action.</para></step>
+<step performance="required"><para>The <guilabel moreinfo="none">Revoke Assignment?</guilabel> dialog is displayed. Click <guilabel moreinfo="none">Revoke</guilabel> to permanently revoke the assignment.</para></step>
+</procedure></section>
+<section><title>Procedure 26</title><procedure><title>To Mark a Device as Lost<indexterm significance="normal"><primary>Devices</primary><secondary>marking as lost</secondary></indexterm></title>
+<step performance="required"><para>In the Synchronizer web interface, click <guilabel moreinfo="none">Devices</guilabel>.</para></step>
+
+<step performance="required"><para>Click <guilabel moreinfo="none">Mark as Lost</guilabel> next to the lost device and click <guilabel moreinfo="none">Yes</guilabel>.</para></step>
+
+</procedure></section>
+<section><title>Procedure 27</title><procedure><title>To Delete a Device<indexterm significance="normal"><primary>Devices</primary><secondary>deleting</secondary></indexterm></title>
+<step performance="required"><para>In the Synchronizer web interface, click <guilabel moreinfo="none">Devices</guilabel>.</para></step>
+
+<step performance="required"><para>Next to the device in the <guilabel moreinfo="none">All Devices</guilabel> table, select the <guilabel moreinfo="none">Delete</guilabel> action.</para></step>
+</procedure></section>
+<section><title>Procedure 28</title><procedure id="adding_an_nfs_image_repository"><title>To Add an NFS Image Repository<indexterm significance="normal"><primary>Image repositories</primary><secondary>adding</secondary></indexterm></title>
+
+<step performance="required"><para><indexterm significance="normal"><primary>NFS image repository</primary></indexterm>In the Synchronizer web interface, click <guilabel moreinfo="none">Settings</guilabel>.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Add Image Repository</guilabel>.
+</para></step>
+<step performance="required"><para>Enter a name to identify the repository in the <guilabel moreinfo="none">Name</guilabel> text box.</para></step>
+<step performance="required"><para>Enter the IP address or DNS name of the NFS server, for example, <literal moreinfo="none">nfs.mycompany.com</literal> in the <guilabel moreinfo="none">Server Address</guilabel> text box.</para></step>
+<step performance="required"><para>Enter the  path to the exported share on the server (for example, <filename moreinfo="none">/exports/xc-images</filename>) in the <guilabel moreinfo="none">Server Path</guilabel> text box.</para></step>
+<step performance="required"><para>Enter and standard Linux mount options you want to use in the <guilabel moreinfo="none">Mount Options</guilabel> text box.</para></step>
+
+<step performance="required"><para>Click <guilabel moreinfo="none">OK</guilabel>.</para></step>
+<step performance="required"><para>All new VM images will be put in the new network image repository.<!-- A <filename>dropbox</filename> directory is created in the image repository. You can put existing VHD VM images in this directory to make them available to &BACKEND;. --></para></step>
+		  </procedure></section>
+<section><title>Procedure 29</title><procedure id="adding_registration_pin"><title>To Add a Registration PIN<indexterm significance="normal"><primary>Registration PINS</primary><secondary>adding</secondary></indexterm></title>
+<step performance="required"><para>On the <guilabel moreinfo="none">Settings</guilabel> page, in the <guilabel moreinfo="none">Registration PINs</guilabel> section, click the <guilabel moreinfo="none">Add Registration PIN</guilabel> button. A dialog box appears.</para></step>
+<step performance="required"><para>In the <guilabel moreinfo="none">Number of devices</guilabel> field, enter a number (or use the increment/decrement control on the right). The default is 1.</para>
+<para>In the <guilabel moreinfo="none">Expiry</guilabel> field, if the <guilabel moreinfo="none">Enabled</guilabel> checkbox to its right is checked, enter a date in the form yyyy-mm-dd (or use the calendar button to the right and choose a date from the calendar control that is displayed). By default the expiry date is enabled and set to 30 days from now.</para>
+<para>In the <guilabel moreinfo="none">Description</guilabel> field, type some descriptive text.</para> 
+<para>All of these fields are required.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">OK</guilabel>. The dialog box closes and the new PIN is added the list in the <guilabel moreinfo="none">Registration PINs</guilabel> section.</para></step>
+</procedure></section>
+<section><title>Procedure 30</title><procedure id="enabling_registration_pins"><title>To Enable the Use of Registration PINs<indexterm significance="normal"><primary>Registration PINS</primary><secondary>enabling</secondary></indexterm></title>
+<step performance="required"><para>Click the button on the top right of the <guilabel moreinfo="none">Registration PINs</guilabel> section to set its state to ON.</para></step> 
+</procedure></section>
+<section><title>Procedure 31</title><procedure id="disabling_registration_pins"><title>To Disable the Use of Registration PINs<indexterm significance="normal"><primary>Registration PINS</primary><secondary>disabling</secondary></indexterm></title>
+<step performance="required"><para>Click the button on the top right of the <guilabel moreinfo="none">Registration PINs</guilabel> section to set its state to OFF.</para></step> 
+</procedure></section>
+<section><title>Procedure 32</title><procedure><title>To Enable Transfer Over HTTP</title>
+<step performance="required"><para>In XenCenter, click the <guilabel moreinfo="none">Console</guilabel> tab of your Synchronizer VM.</para></step>
+<step performance="required"><para>Enter the command:</para>
+<screen format="linespecific">vi /xt/config/site.conf</screen></step>
+<step performance="required"><para>Change the line:</para>
+<screen format="linespecific">imagelibrary.bulk_transfer_scheme = "https"</screen></step>
+<step performance="required"><para>To read:</para>
+<screen format="linespecific">imagelibrary.bulk_transfer_scheme = "http"</screen></step>
+<step performance="required"><para>Reboot the Synchronizer VM. VM images will now transfer using HTTP over port 80.</para></step>
+</procedure></section>
+<section><title>Procedure 33</title><procedure><title>To upgrade Synchronizer to a newer version</title>
+<step performance="required"><para>Transfer the upgrade file <filename moreinfo="none">synchronizer_upgrade.zip</filename> file to the Synchronizer appliance via FTP or wget. For example, from the Synchronizer console, as the root user:</para>
+<screen format="linespecific">wget <replaceable>path to zip file</replaceable>synchronizer_upgrade.zip</screen></step>
+<step performance="required"><para>Once the file has been transferred to the Synchronizer appliance, unzip it with the following command:</para>
+<screen format="linespecific">unzip synchronizer_upgrade.zip</screen>
+</step>
+<step performance="required"><para>Run the upgrade script:</para>
+<screen format="linespecific">./upgrade.sh</screen></step>
+</procedure></section>
+<section><title>Procedure 34</title><procedure><title>To Back Up a Synchronizer</title>
+<step performance="required"><para>In XenCenter, right-click on the Synchronizer appliance and choose <guilabel moreinfo="none">Shut Down</guilabel>.</para></step>
+
+<step performance="required"><para>When the Synchronizer is no longer running, right-click and this time choose <guilabel moreinfo="none">Take Snapshot</guilabel>. In the dialog box that appears, provide a Name and Description for the Snapshot, and make sure the Snapshot mode is set to <guilabel moreinfo="none">Snapshot the virtual machine's disks</guilabel>.</para></step>
+
+<step performance="required">
+<para>When the snapshot is completed, click on the <guilabel moreinfo="none">Snapshots</guilabel> tab, select the snapshot you just took, click the <guilabel moreinfo="none">Actions</guilabel> button above, and select <guilabel moreinfo="none">Export to a File</guilabel> from the menu. You can then browse to a desired location available to the machine your XenCenter is running on, give the export file a name, and click <guilabel moreinfo="none">Save</guilabel>.</para>
+<para>The export operation will take some time.</para> 
+
+<note><para>Starting with XenServer 5.6 Feature Pack 1, you can automate snapshotting of virtual machines if you have the XenServer Platinum Edition. See the <citetitle>VM Protection and Recovery</citetitle> section in the <citetitle>XenServer 5.6 Feature Pack 1 Administrator's Guide</citetitle> for details.</para></note>
+</step>
+
+<step performance="required"><para>Once the Synchronizer export is complete, back up the exported appliance Snapshots remotely as you would back up the VM images.</para></step>
+</procedure></section>
+<section><title>Procedure 35</title><procedure><title>To Author a VM in Dynamic VM Image Mode (Experimental)</title>
+<step performance="required"><para>On a ___PRODUCT_BRAND___ device, ensure that you are connected to Synchronizer as a user with <literal moreinfo="none">Admin</literal> rights.</para></step>
+<step performance="required"><para>Shutdown the VM that you want to use as a template for the Dynamic VM Image Mode (Experimental) VM.</para>
+<note><para>The VM must not already be registered with Synchronizer.</para></note>
+</step>
+<step performance="required" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/view_details.ent"><para>Hover your mouse over the VM icon and click <guilabel moreinfo="none">Details</guilabel> to open the VM details window.</para></step>
+
+<step performance="required"><para>Click <guilabel moreinfo="none">Upload VM</guilabel>.</para></step>
+<step performance="required"><para>Enter a name and description for the VM,  and select the <guilabel moreinfo="none">Dynamic</guilabel> radio button.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Finish</guilabel>. The VM is uploaded to Synchronizer as a Dynamic VM Image Mode (Experimental) VM.</para>
+<para>When a newly created Dynamic VM Image Mode (Experimental) VM is first started, new driver software is automatically installed. Because this driver software cannot persist on reboot for a user without <literal moreinfo="none">Admin</literal> or VM authoring rights, please complete the following steps to now create a second version of the Dynamic VM Image Mode (Experimental) VM to assign to users. If this VM image is destined for use on multiple types of device, it may be necessary to download the Dynamic VM Image Mode (Experimental) VM onto each device in succession, allow the device drivers required by that device to install, and then upload a new version to Synchronizer.</para>
+</step>
+
+<step performance="required"><para>Click <guilabel moreinfo="none">Edit</guilabel> and ensure that <guilabel moreinfo="none">Save changes for Reboots</guilabel> is set to <literal moreinfo="none">Enabled</literal>.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Save</guilabel>.</para></step>
+<step performance="required"><para>Start the VM. When the VM has started, the required drivers install automatically.</para></step>
+<step performance="required"><para>Reboot the VM.</para></step>
+<step performance="required"><para>Shut down the VM and upload it to Synchronizer. Use this version to assign to users.</para>
+<note><para>The user must manually join an AD domain if required after downloading a Dynamic VM Image Mode (Experimental) VM.</para></note>
+</step>
+</procedure></section>
+<section><title>Procedure 36</title><procedure><title>To Update a Dynamic VM Image Mode (Experimental) VM<indexterm significance="normal"><primary>VM images</primary><secondary>updating </secondary></indexterm></title>
+
+<step performance="required"><para>In Synchronizer, assign the Dynamic VM Image Mode (Experimental) VM image to your administrator user account.</para></step>
+<step performance="required"><para>On your ___PRODUCT_BRAND___ device, in Citrix Receiver for ___PRODUCT_BRAND___, create a new VM from Synchronizer, selecting the Dynamic VM Image Mode (Experimental) VM image.</para></step>
+<step performance="required" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/view_details.ent"><para>Hover your mouse over the VM icon and click <guilabel moreinfo="none">Details</guilabel> to open the VM details window.</para></step>
+<step performance="required"><para>Click the <guilabel moreinfo="none">Synchronization</guilabel> tab.</para></step>
+
+<step performance="required"><para>Click <guilabel moreinfo="none">Edit</guilabel> and ensure that <guilabel moreinfo="none">Save changes for Reboots</guilabel> is set to <literal moreinfo="none">Enabled</literal>.</para></step>
+<step performance="required"><para>Click <guilabel moreinfo="none">Save</guilabel>.</para></step>
+
+<step performance="required"><para>Start the VM and perform maintenance work. When you are finished, shutdown the VM.</para></step>
+<step performance="required"><para>Upload the new version of the VM to Synchronizer.</para></step>
+<step performance="required"><para>Assign the new version of the VM to the relevant user(s), setting the VM policy. Users will be able to upgrade to the new version using Citrix Receiver for ___PRODUCT_BRAND___.</para></step>
+</procedure></section>
+<section><title>Procedure 37</title><procedure><title>To Grant a User Admin Rights</title>
+		<step performance="required"><para>At the console for the Synchronizer appliance, run the following command as root:</para>
+		<screen format="linespecific">make-user-admin</screen>
+		<para>The following output is displayed:</para>
+		<screen format="linespecific">This program will grant Synchronizer admin privileges to a user 
+  of your choice. Provide the user information at the prompt below:
+
+    1) To specify a local synchronizer user, simply enter the username 
+       with no prefix. e.g. 'jane'
+
+    2) To specify a synchronizer user that is linked to an AD user, prefix 
+       the username with the NETBIOS name of the domain and a backslash 
+       character. e.g. 'MYDOMAIN\jane'
+
+Enter username (CTRL-C to cancel):</screen></step>
+<step performance="required"><para>Enter the username as prompted and press <keycap moreinfo="none">Enter</keycap>.</para>
+<para>The user role is changed in the Synchronizer database to have admin privileges.</para></step>
+</procedure></section>
+<section><title>Procedure 38</title><procedure><title>To Fix VM Upload Failure due to Insufficient Space</title>
+	<step performance="required"><para>In XenClient, shutdown the Synchronizer VM.</para></step>
+
+	<step performance="required"><para>Click the <guilabel moreinfo="none">Storage</guilabel> tab.</para></step>
+	<step performance="required"><para>Select the <guilabel moreinfo="none">xt-data-vol</guilabel> virtual disk and click <guilabel moreinfo="none">Properties</guilabel>.</para></step>
+
+<step performance="required"><para>Click <guilabel moreinfo="none">Size and location</guilabel> and increase the disk size.</para></step>
+	<step performance="required"><para>Click <guilabel moreinfo="none">OK</guilabel> and restart the Synchronizer VM.</para></step>
+
+	</procedure></section>
+<section><title>Procedure 39</title><procedure><title>To Fix VM Upload Failure due to a Dirty File System</title>
+	<step performance="required"><para>Start the VM and shut it down cleanly.</para></step>
+	<step performance="required"><para>Try the upload again.</para></step>
+
+	</procedure></section>
+<section><title>Procedure 40</title><procedure><title>To Boot a Locked VM</title>
+<step performance="required"><para>In Citrix Receiver for ___PRODUCT_BRAND___, press <keycap moreinfo="none" xml:base="file:///C:/cygwin/home/gordonst/ws/docs_brian.git/doctools/../xml/en_us/docbook/public/../shared/local.ent">Ctrl + Shift + t</keycap> to open a control domain console window.</para></step>
+<step performance="required"><para>Run the <command moreinfo="none">xec-vm</command> command to get the name of the locked VM:</para>
+<screen format="linespecific">xec-vm</screen>
+</step>
+<step performance="required"><para>Run the following two commands:</para>
+<screen format="linespecific">UUID=`xec-vm --name <replaceable>locked_vm_name</replaceable> get uuid`
+db-write /vm/${UUID}/backend/state/operation READY</screen>
+</step>
+<step performance="required"><para>Press <keycap moreinfo="none">Ctrl + q</keycap> to refresh Citrix Receiver for ___PRODUCT_BRAND___.</para></step>
+
+</procedure></section>
+<section><title>Procedure 41</title><procedure><title>To Restart the AD Client Services</title>
+		<step performance="required"><para>Open a console to the Synchronizer and log in as root</para></step>
+		<step performance="required"><para>Run the command:</para>
+		<screen format="linespecific">/sbin/ad-link-restart</screen>
+		</step>
+		</procedure></section>

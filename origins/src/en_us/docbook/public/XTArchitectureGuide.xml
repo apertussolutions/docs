@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[
+  <!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+  <!ENTITY view_details PUBLIC "view_details" "../shared/view_details.ent">
+  <!ENTITY shared_upgrade_and_install_steps PUBLIC "shared_upgrade_and_install_steps" "../shared/shared_upgrade_and_install_steps.ent">
+  <!ENTITY choose_xt_installation_medium PUBLIC "choose_xt_installation_medium" "../shared/choose_xt_installation_medium.ent">
+  <!ENTITY % local PUBLIC "local" "../shared/local.ent">
+  %local;
+]><book id="XTArchitecture" lang="en"><?dbhtml dir="XTArchitecture"?>
+ <bookinfo id="bookinfo_titlestuff" role="die">
+  <title>&COMPANY_NAME_SHORT;<trademark class="registered" role="die"/> &PRODUCT_BRAND;<trademark class="trade"/> &PRODUCT_VERSION; Architecture Guide</title>
+  <pubdate><?dbtimestamp format="d B Y"?></pubdate>
+  <releaseinfo>High-assurance isolation &amp; security for virtual environments</releaseinfo>  
+  &legal;
+  
+ </bookinfo>
+
+<chapter id="about_this_doc"><title>About this document</title><para>
+In this document we describe the software architectures implemented in &PB; features.
+We cover the relevant design and implementation details as well as the technologies on which they depend.
+Where appropriate, we identify security critical technologies and design decisions to assist and facilitate 3rd party analysis.
+Particular attention is paid to the high-level security goals of the system, how these goals are achieved through software architecture and the relative strength of the mechanisms employed.
+</para><para>
+&PB; is a system composed of both open and closed source components.
+As is the case with open source technologies not all of the architectures implemented originate from within &COMPANY_NAME_SHORT; so we are not always the definitive source.
+Where appropriate we reference external documentation that the reader may consult for additional details.
+</para><para>
+This document is intended for software architects and security evaluators in their efforts to determine the appropriateness of the &PB; platform for their respective use-cases.
+After reading this document you will have the requisite knowledge to evaluate the &PB; architecture for use in your environment.
+The architectures detailed in this document are subject to change without notice.
+Please contact &COMPANY_NAME_SHORT; with any comments or corrections to this document.
+</para></chapter>
+
+<chapter id="security_goals"><title>Security Goals</title>
+<para>
+Client virtualization with XenClient aims to provide end users with an experience that meets the expectations set by traditional client computing.
+We aim to provide the performance, graphics, networking and peripheral compatibility that users expect.
+This goal underpins all design and architecture in Citrix Client Virtualization products.
+</para><para>
+The architecture of &PB; is unique in that we extend this goal to formally include security properties.
+By their nature both client and server virtualization platforms add a layer of highly privileged software that acts as an abstraction layer between the hardware and guest VMs.
+This additional software must be built in such a way as to introduce no additional threats to guest VMs beyond those posed by the hardware itself. 
+This security goal is a simple extension of our desire to provide users with an experience indistinguishable from native client computing:
+We aim to provide the security properties that users have come to expect from an OS running on "bare metal".
+</para><para>
+This high-level security goal must be decomposed and made concrete to be useful in an architectural analysis.
+The remainder of this document will tie architecture and implementation details to the following goals:
+</para>
+<section id="separation"><title>Workload Isolation</title><para>
+Isolating guest VMs from the actions of other guests is a primary goal of the Xen Hypervisor.
+Great pains have been taken to create a flexible and fair scheduler in Xen and this work has been <ulink url="http://www.xenproject.org/component/mtree/research/115-comparison-of-the-three-cpu-schedulers-in-xen.html">documented</ulink><footnote><para>http://www.xenproject.org/component/mtree/research/115-comparison-of-the-three-cpu-schedulers-in-xen.html</para></footnote> by the community.
+Maintaining performance separation between guest OS's such that they appear to be the only OS running on the platform is paramount but performance is only half of the story.
+The Xen scheduler prevents denial of service caused by CPU resource consumption but &PB; also implements mechanisms to prevent guest interference through other channels.
+</para></section>
+<section id="mediation"><title>Mediated Access</title><para>
+Where <xref linkend="separation"/> professes our goal of isolating system components to prevent undesired interaction or tampering, this section is an admission that cooperation between VMs is often required to do meaningful work.
+On the surface this need may seem to contradict <xref linkend="separation"/> but it is really complementary.
+Strong isolation is a prerequisite of mediation as without isolation, mediation can not be guaranteed.
+In this way we depend on establishing isolation first and then selectively allow communication between VMs through mediated channels.
+This is a core property of mandatory access control and must be a pervasive design principle throughout the system.
+</para></section>
+<section id="disaggregation"><title>Disaggregation of Security Critical Function</title><para>
+An architectural observation from early in the development of Xen was that the strong isolation properties that are applied to guest VMs or 'workloads' can equally be applied to core system functions to achieve an even stronger system security posture.
+The act of moving security critical function traditionally in the Xen dom0 to separate isolated VMs is termed 'disaggregation'.
+An academic exercise to disaggregate the Xen dom0 as far as possible has been done in the past with the active <ulink url="http://www.cs.ubc.ca/~andy/papers/xoar-sosp-final.pdf">participation of Citrix</ulink><footnote><para>http://www.cs.ubc.ca/~andy/papers/xoar-sosp-final.pdf</para></footnote>.
+Later sections of this document will explicitly address the functions exported from dom0 and the protections put in place to protect the platform from them in the event of a compromise.
+</para></section>
+<section id="strength_of_mechanism"><title>Strength of Mechanism</title><para>All of these goals aim to protect guest VMs from each other and from a compromised platform. The term 'strength of mechanism' is intended to describe the relative strength of a mechanism from those available. Thus the mechanisms used to achieve our security goals and described throughout this guide, should be the strongest mechanisms available. In the event a relatively weaker mechanism is chosen over a stronger one the selection must be sufficiently justified. Wherever possible we aim to use mechanisms available in hardware both for strength and performance reasons.</para></section>
+<section id="integrity_measurement"><title>Integrity and Measurement</title><para>
+The past fifteen years of numerous, stealthy exploits have taught the security community that knowing when you've been compromised is the most valuable piece of information you can have.
+The cycle of software attempting to protect itself from other equally privileged software was identified by industry experts.
+Under the auspices of the <ulink url="http://www.trustedcomputinggroup.org/">Trusted Computing Group (TCG)</ulink><footnote><para>http://www.trustedcomputinggroup.org/</para></footnote>, they attempted to break this cycle through the design and integration of a hardware mechanism that software could rely upon to accurately reflect the integrity state of the platform.
+</para><para>
+This mechanism, specifically designed to resist tampering at the software level, became known as the <ulink url="http://www.trustedcomputinggroup.org/developers/trusted_platform_module/">Trusted Platform Module (TPM)</ulink><footnote><para>http://www.trustedcomputinggroup.org/developers/trusted_platform_module/</para></footnote>.
+By using the TPM as a hardware root of trust for measurement (RTM), CPU manufacturers like <trademark class="registered">Intel</trademark> have been able to provide support for bootstrapping trustworthy software environments directly in hardware. 
+Properly using the available hardware mechanisms enables software systems to load into a pristine environment and have an unforgeable record of the integrity state of the system.
+</para><para>
+These integrity measurements can then be used as the basis for a number of mechanisms designed to ensure the system will only disclose sensitive data to software in the appropriate state.
+Integrity reporting mechanisms are perfectly aligned with our goal of posing no additional threat to guests.
+</para></section>
+<section id="extensability"><title>Extensibility</title><para>
+Strong isolation and a disaggregated design is useful as part of the core platform but these mechanisms should be available for use in as many contexts as possible.
+With this in mind we aim to provide the benefits of these properties to 3rd parties such that their software can benefit from the same protections as the XT platform itself.
+Leveraging this extensible design, applications that had previously relied on week separation mechanisms provided by traditional operating systems can benefit from the security properties of &PB;.
+Thus some 3rd party applications are able to integrate with the &PB; platform and no longer risk compromise or circumvention by OS malware.
+</para></section>
+</chapter>
+
+<chapter><title>The &PB; Measured Launch Process</title>
+<para>When enabled, &PB; Measured Launch measures security-critical components in the Engine Control Domain. We rely heavily on features in the hardware to assist in measuring software components early in the boot process and to provide protection from tampering by other system software. This requires support for <trademark class="registered">Intel</trademark> <trademark>vPro</trademark> hardware, specifically <trademark class="registered">Intel</trademark> <trademark class="registered">Trusted Execution Technology</trademark> (TXT). A good introductory white paper to TXT is available on the <trademark class="registered">Intel</trademark> website: <ulink url="http://www.intel.com/content/www/us/en/trusted-execution-technology/trusted-execution-technology-security-paper.html">here</ulink><footnote><para>http://www.intel.com/content/www/us/en/trusted-execution-technology/trusted-execution-technology-security-paper.html</para></footnote>.</para>
+
+<para>The remainder of this section briefly discusses foundational trusted computing technology required for understanding the Measured Launch process. These descriptions will be brief, with links to external documentation that can be read as background. We then go on to discuss the details of the Measured Launch process as implemented in &PB;.</para>
+
+<section id="software_measurements"><title>Software Measurements</title>
+<para><indexterm><primary>Software Measurements</primary></indexterm><indexterm><primary>Sealed Storage</primary></indexterm>Software Measurements in their most simple form are cryptographic hashes of executable files or configuration data. Individually a measurement of a piece of software is abstract, but in the context of the operating system boot sequence, a series of measurements that describes all software involved in the platform boot can be established. This measurement chain begins with the earliest software (BIOS &amp; firmware) which measures itself and then the next component in the boot chain before transferring control.</para>
+
+<para>As the boot process progresses, execution and measurement continues with each piece of software measuring the next before transferring control. We call the series of measurements produced during this process the &quot;chain of trust&quot; and the rationale behind the architecture is explained thoroughly in the <ulink url="http://www.trustedcomputinggroup.org/resources/tpm_main_specification">TPM Main Specification: Design Principles</ulink><footnote><para>http://www.trustedcomputinggroup.org/resources/tpm_main_specification</para></footnote>.</para>
+</section>
+
+<section id="pcrs_sealedstorage"><title>Platform Configuration Registers &amp; Sealed Storage</title>
+<para><indexterm><primary>Platform Configuration Registers (PCRs)</primary></indexterm><indexterm><primary>Trusted Platform Module (TPM)</primary></indexterm>Sealed Storage is the name of the mechanism provided by the Trusted Platform Module (TPM) to protect secrets from malicious software. The TPM has storage locations called Platform Configuration Registers (PCRs). As the system executes, these PCRs are used to hold measurements (SHA1 hashes) of security relevant software. &PB; is configured in such a way that measurements for the security-relevant components are stored in PCRs before they are executed, creating the &quot;chain of trust&quot; discussed above.</para>
+
+<para>Sealed Storage is a TPM function that allows secrets to be protected by the TPM. A secret is said to be &quot;sealed&quot; to a set of PCR values when the TPM will only divulge the secret if the values present in the PCRs are the expected values. A more detailed discussion of PCR functions and Sealed Storage can be found <ulink url="http://www.rsa.com/rsalabs/technotes/tpm/sealedstorage.pdf">here</ulink><footnote><para>www.rsa.com/rsalabs/technotes/tpm/sealedstorage.pdf</para></footnote>.</para>
+</section>
+
+<section id="txt_trusted_boot"><title><trademark class="registered">Intel</trademark> <trademark class="registered">Trusted Execution Technology</trademark> (TXT)</title>
+<para><indexterm><primary>Trusted Execution Technology (TXT)</primary></indexterm>&PB; uses <trademark class="registered">Intel</trademark> TXT for a hardware-based, dynamic root of trust for measurement (DRTM) of the &PB; launch environment. TXT is invoked prior to &PB; boot, suspend, restart and shutdown. TXT uses open-source (tboot) and closed-source (SINIT) chipset-specific software that is developed and maintained by <trademark class="registered">Intel</trademark>. Successful functioning of TXT also depends on processor support, the quality of an OEM's BIOS implementation, and Trusted Platform Module (TPM) firmware.</para>
+
+<para>As part of executing the <trademark class="registered">Intel</trademark> tboot program, the security relevant early boot components are measured. tboot is executed by the bootloader, before the &PB; hypervisor and dom0 kernel. It performs a number of chipset operations which protect the &PB; hypervisor from tampering by other system software.</para>
+
+<para>Before transferring control to &PB;, tboot measures the Xen hypervisor, the dom0 kernel, the dom0 initramfs, and all other modules loaded by the bootloader. These measurements are stored in the TPM PCRs as part of the chain of trust. In the next section <xref linkend="xt_pcrs" /> we discuss the PCRs used to secure &PB; and which measurements they contain. We then go on to describe how the measured launch and the TPM sealed storage mechanism are used to protect the &PB; system.</para>
+</section>
+
+<section id="xt_pcrs"><title>&PB; PCR Usage</title>      
+<para><indexterm><primary>Trusted Platform Module (TPM)</primary></indexterm><indexterm><primary>Sealed Storage</primary></indexterm>We give only a brief description of the measurements stored in each PCR in this document. Where appropriate, a reference to the definitive documentation is given.</para>
+
+<bridgehead>PCRs for BIOS configuration</bridgehead>
+<para>The contents of these PCRs are documented in the <citetitle>TCG PC Client Specific Implementation Specification For Conventional BIOS</citetitle> document.</para>
+
+<variablelist>
+<varlistentry><term>PCR[0]</term><listitem><para>Used to store the Core Root of Trust for Measurement (CRTM), POST BIOS, and Embedded Option ROMs</para></listitem></varlistentry>
+<varlistentry><term>PCR[1]</term><listitem><para>Platform Configuration</para></listitem></varlistentry>
+<varlistentry><term>PCR[2]</term><listitem><para>Option ROM Code</para></listitem></varlistentry>
+<varlistentry><term>PCR[3]</term><listitem><para>Option ROM Configuration and Data</para></listitem></varlistentry>
+</variablelist>
+
+<bridgehead>PCRs for &PB; Engine root filesystem measurement</bridgehead>
+<para>This PCR is extended with the SHA1 hash of the block device that contains the Engine root file system.
+This is a bulk measurement of all software running in the &PB; Engine.
+The measurement is taken by the initramfs.</para>
+
+<variablelist>
+<varlistentry><term>PCR[15]</term><listitem><para>XenClient XT Engine root filesystem</para></listitem></varlistentry>
+</variablelist>
+
+<bridgehead>PCRs specific to <trademark class="registered">Intel</trademark> TXT and the tboot program</bridgehead>
+<para>The measurements contained in these PCRs are defined in the <citetitle><trademark class="registered">Intel</trademark> MLE Developers Manual</citetitle> and the documentation packaged with the tboot program.</para>
+
+<variablelist>
+<varlistentry><term>PCR[17]</term><listitem><para>TXT data</para>
+<itemizedlist>
+<listitem><para role="die">SHA-1 hash of BIOS ACM: SinitMleData.BiosAcmID (20 bytes)</para></listitem>
+<listitem><para role="die">STM opt-in indicator: SinitMleData.MsegValid (8 bytes)</para></listitem>
+<listitem><para role="die">SHA-1 hash of the STM (or all 0s if opt-out): SinitMleData.StmHash (20 bytes)</para></listitem>
+<listitem><para role="die">LCP Control Field of used policy (PD or PO): SinitMleData.PolicyControl (4 bytes)</para></listitem>
+<listitem><para role="die">SHA-1 hash of used policy (or all 0s if chosen not to be extended): SinitMleData.LcpPolicyHash (20 bytes)</para></listitem>
+<listitem><para role="die">MLE-chosen Capabilities (or all 0s if chosen not to be extended): OsSinitData.Capabilities (4 bytes)</para></listitem>
+</itemizedlist>
+</listitem>
+</varlistentry>
+<varlistentry><term>PCR[18]</term><listitem><para>SHA1 hash of the MLE</para></listitem></varlistentry>
+<varlistentry><term>PCR[19]</term><listitem><para>SHA1 hash of Xen Hypervisor, Kernel and command line, LCP Policy, initramfs, tboot ACMs and XSM policy</para></listitem></varlistentry>
+</variablelist>
+</section>
+
+<section><title>Protecting Secrets in &PB;</title>
+<para>With the supporting technology laid out, the method for protecting secrets in &PB; can be put into context. All encryption keys and unique platform configurations are stored in an LVM partition on the guest which is separate from the root filesystem. We call this volume the &quot;config partition.&quot; The config partition is encrypted and the key (256-bit AES) is sealed in the TPM using the Sealed Storage mechanism described in <xref linkend="pcrs_sealedstorage" />.</para>
+
+<para>The PCRs to which this data is sealed are described in <xref linkend="xt_pcrs" />. These PCRs store measurements taken during the boot sequence by the system BIOS, <trademark class="registered">Intel</trademark> TXT and tboot, and the &PB; Engine. When &PB; boots, the Engine requires access to the encryption key for the config partition. Without this key, the Engine cannot access system configuration or encrypted guest disks. If the TPMs PCRs contain the expected values, the encryption key can be unsealed and the config partition can be accessed. If any of the measured components are changed on disk, the PCR values will be different and properties of sealed storage in the TPM will render the encryption key inaccessible.</para>
+
+<para>While changes to a measured component will result in the config key being inaccessible, for the sake of usability the administrator is able to intervene. When the unseal operation fails on boot, the administrator can unlock the system with their password. When the prompt is displayed, you can choose for either a single boot to be allowed with the modification, or for the changes to be permanently allowed. Permanently allowing changes requires that the encryption key for the config partition be sealed to the new PCR values. If the changes are not permanently allowed the administrative password will be required on all subsequent boots until the changes are either reverted or the config key is sealed to the new measurements.</para>
+</section>
+
+<section><title>Measured Launch Configuration Process</title>
+<para>
+This section documents the control flow for the two methods of enabling &PB; Measured Launch. This section also documents the method used to unseal the config partition and the remedial steps if the unseal fails.</para>
+<section><title>Enabling Measured Launch for the Control Domain at Installation</title>
+<para>The current preferred method for configuring Measured Launch is at system install time. This method has several desirable advantages, the most important of which is that the &PB; system will be protected by the security offered by Measured Launch on first boot. Configuring Measured Launch after first boot leaves the system unprotected for a window of time. During this time, encryption keys for guests will be stored on disk unencrypted.</para>
+
+<para>The Measured Launch configuration in the installer happens in three stages:</para>
+
+<variablelist>
+<varlistentry><term>Compatibility Check</term><listitem>
+<para>
+This is likely the most complicated step in configuring Measured Launch, as it probes the platform's TPM and TXT to determine their state while interacting with the user. It is where configuration begins, and it is accessed in the installer through the Advanced installation option. It begins when the user is asked, "do you wish to configure XenClient Measured Launch?" If the user selects Yes, the installer then probes the TPM and TXT logs to determine whether or not the system is in a state where Measured Launch can be configured. A flow chart describing the paths through these screens is below. 
+</para>
+<informalfigure><mediaobject><imageobject>
+<imagedata align="center" fileref="images/measured_launch_check.png" width="75%" />
+</imageobject></mediaobject></informalfigure>
+</listitem></varlistentry>
+<varlistentry><term>Platform Configuration</term><listitem>
+<para>If the user elects to configure Measured Launch and the compatibility check passes, the &PB; installer will configure the platform to measure itself and finish the configuration on first boot. This is a procedural set of steps and doesn't warrant a diagram. It includes steps like:</para>
+<itemizedlist>
+<listitem><para>generating the 256-bit AES key for the config partition and adding it to the LUKS partition</para></listitem>
+<listitem><para>creating several flags on the file system which instruct the Measured Launch code to perform configuration steps</para></listitem>
+</itemizedlist>
+<para>It is worth noting here that generating a 256-bit AES key often exhausts the entropy pool in the installer. In an interactive installation, the user is prompted to press random keys on the keyboard to repopulate the entropy pool. For unattended installations this isn't always possible.</para>
+
+<para>One possible solution to this problem could be to perform installations on an intentionally noisy network. Interrupts caused by the networking hardware from received packets (ICMP/ping) has the effect of repopulating the entropy pool much like having a user press random keys on the keyboard.</para>
+</listitem></varlistentry>
+<varlistentry><term>TPM Configuration</term><listitem>
+<para>The final step is configuring the TPM itself so that a Measured Launch can be executed. This requires that the installer take ownership of the TPM providing it with an owner password. This password is 15 characters long including alphanumeric and special characters generated randomly. The password is saved to disk encrypted using the platform recovery key, which is itself protected by the administrative password. The TPM SRK is set to the well-known secret as specified by the TCG. This allows the system to automate seal and unseal operations on boot without requiring administrative intervention.</para>
+</listitem></varlistentry>
+<varlistentry><term>First Boot</term><listitem>
+<para>On first boot, &PB; completes the Measured Launch configuration process by performing the first system measurement. See <xref linkend="measured_launch_process" /> for details.</para>
+</listitem></varlistentry>
+</variablelist>
+
+</section>
+<section><title>Enabling Measured Launch for the Control Domain After Installation</title>
+<para>The following diagram shows the initial Measured Launch setup process when configured on the command line by an administrator through the <command>tpm-setup</command> command.</para>
+<informalfigure>
+<mediaobject>
+<imageobject>
+
+<imagedata align="center" fileref="images/trusted_boot_process_setup.png" width="75%" />
+</imageobject>
+</mediaobject>
+</informalfigure>	
+ <!--
+<screen>administrator executes /usr/bin/tpm-setup
+if BIOS version is earlier than minimum version requirement
+    prompt user to update BIOS
+    exit tpm-setup script
+if TPM is not already owned with well known SRK password
+    if error is "Authentication failed", set well known password
+    if error is "No SRK", take ownership of TPM
+        if error message is "No EK"
+            create TPM EK
+            prompt user to restart script
+            exit tpm-setup script
+    repeat test to confirm that TPM is owned with well known SRK password 
+    store list of PCRs to be sealed in /config/config.pcrs if 
+    /config/config.key does not exist
+create key by getting 32 bytes from /dev/random
+set LUKs slot 1 of the config value to use this key</screen>
+-->
+</section>
+<section id="measured_launch_process"><title>Measured Launch Process: Measurement Verification on Boot</title>
+<para>The following diagram shows the verification process which occurs at device boot time.</para>
+<informalfigure>
+<mediaobject>
+<imageobject>
+
+<imagedata align="center" fileref="images/trusted_boot_process_verify_on_boot.png" width="75%" />
+</imageobject>
+</mediaobject>
+</informalfigure>	
+<!--
+<screen>if tpm is enabled (admin previously executed the tpm-setup process)
+    if txt-stat | grep 'TXT measured launch' | awk '{print $4}' == TRUE
+    the system was booted securely
+        is it the first boot after tpm-setup?
+            use the old device key to unseal the /config partition
+            reseal the /config partition
+        else if  (cannot mount /config, i.e. config changed and this is not 
+        first boot after tpm-setup)
+			Print "Unauthorized system modification detected"
+            prompt user for the recovery password
+            offer the option of resealing the system
+            reseal if requested by admin
+        else
+            the system was not booted securely, TXT measured launch failed
+            warn admin that BIOS could be incompatible
+            ask admin to create a status report
+            prompt admin for password to mount /config partition
+            do not offer to reseal the /config partition</screen>
+			
+			-->
+</section>  
+</section>
+
+<section id="txt_tpm-vhd_associated_files"><title>Files Associated With Encrypted VHDs</title>
+<para>The following files are associated with the encrypted VHDs of a VM:</para>
+
+<itemizedlist>
+<listitem><para>the VM configuration file, <filename>/config/vms/<replaceable>vm_uuid</replaceable></filename></para></listitem>
+
+<listitem><para>the VHD file, <filename>/storage/disks/<replaceable>disk_uuid</replaceable></filename></para></listitem>
+
+<listitem><para>the VHD encryption key,  <filename>/config/platform-crypto-keys/<replaceable>disk_uuid</replaceable>+other_text</filename></para></listitem>
+</itemizedlist>
+
+<para>VHD keys are not themselves sealed to the TPM. Instead they are stored in the config partition.  When the device is powered off, VHD keys are protected by the config key which encrypts the config partition and is sealed to the TPM.</para>
+
+<para>VHDs and their associated encryption keys can be copied between machines running the same version of &PB;. If the machines are running different versions, there are likely to be differences between the VM configuration formats.</para>
+
+</section>
+
+<section><title>Generation and Use of Keys for &BACKEND; VMs</title>
+
+<para>When creating encrypted VHDs, normally the toolstack creates a blank disk and subsequently a key is generated and used for the disk. The key is generated by reading an appropriate number of bits from <filename>/dev/random</filename>. This operation in completed in the Control Domain. When creating a VM using the user interface, when the key is being created, a message box appears indicating the reason for a delay, and suggests that the user move the mouse in order to generate more entropy. Typically, these disks and keys will be used as the basis for images being delivered by &BACKEND;.</para>
+
+<para>When a VM is downloaded from the &BACKEND;, the default configuration causes the disk to be snapshotted on the client, and for the new, empty, snapshot to be encrypted (unencrypted snapshots can be used by setting the VM configuration item <emphasis>synchronizer:encrypt_snapshots:false</emphasis>). Any data written to the disk while the VM is running on the device is stored in this snapshot, and protected by the key that is generated for it if encrypted snapshots are being used. The key downloaded to the client protects only the original disk image.</para>
+
+<para>The key used to encrypt the snapshot is generated when the snapshot is first created. It will be generated in the sync-client VM using random data from the Control Domain. The random data will come from either <filename>/dev/random</filename> (the default) or <filename>/dev/urandom</filename>, both in the Control Domain. These are accessed in the sync-client VM over V4V (inter-VM transport). To use <filename>/dev/urandom</filename> rather than <filename>/dev/random</filename>, the device configuration item <emphasis>sync-client:use-pseudorandomness:true</emphasis> can be set. To ensure that <filename>/dev/random</filename> is used, do not set a value for this property.</para>
+
+<para>The VHD keys that are generated for the snapshot are unique to that snapshot. If the disk has the shared property set to <emphasis>True</emphasis> on the &BACKEND;, then the snapshot will be shared between multiple VMs on the same device. Further discussion of the shared property can be found in the <citetitle>&PB; &BACKEND; Administrator's Guide</citetitle>.</para>
+
+<para>When using <filename>/dev/random</filename>, synchronization may pause while the keys for the snapshot disk are being generated. As the user is using the device, more entropy will be generated and the &BACKEND; client will become unblocked. This might cause a delay in VMs appearing on the client, although a progress bar is visible indicating that work is being done. This can be avoided by using <filename>/dev/urandom</filename> as indicated above, although this is a poorer-quality random number source. Since the keys are long-lived, it is recommended that pseudorandomness is not used for the best security.</para>
+
+</section>
+
+</chapter>
+
+<chapter id="video_architecture">
+<title>&PB; Video Architecture</title>
+
+<para>This chapter describes how &PB; handles the graphics displays for a device, both physical and emulated.</para>
+
+<para>After a booting, or upon resuming from S3, &PB; does the following:</para>
+
+<itemizedlist>
+	<listitem><para>The graphics card is initialized</para></listitem>
+	<listitem><para>The system probes and configures the laptop panel and external analog/digital monitors</para></listitem>
+	<listitem><para>At this point, VMs (with native drivers) might or might not be running</para></listitem>
+</itemizedlist>
+
+<para>If VMs are running, the physical and emulated GPUs interact as follows:</para>
+
+<itemizedlist>
+	<listitem><para>If an HDX VM is running:</para>
+	<itemizedlist>
+		<listitem><para>On display panels where the HDX VM's graphics are presented on the display, the HDX VM's native graphics driver writes directly to the physical GPU</para></listitem>
+		<listitem><para>On display panels where the HDX VM's graphics are not presented on the display, the HDX VM's native graphics driver writes to an emulated GPU. &PB; coordinates state with the physical GPU.</para></listitem>
+		<listitem><para>On display panels where a non-HDX VM's graphics are presented on the display, &PB; uses GTT to map the display of the emulated GPU frame buffer to the physical GPU</para></listitem>
+		<listitem><para>On display panels where a non-HDX VM's graphics are not presented on the display, the non-HDX VM's graphics driver writes to an emulated GPU with an off-screen frame buffer</para></listitem>
+	</itemizedlist>
+	</listitem>
+	<listitem><para>If no HDX VM is running, &PB; optimizes GPU power usage based on non-HDX graphics workload</para></listitem>
+</itemizedlist>
+
+<!--
+<informaltable align="left" frame="none" width="6.5in">
+	<tgroup cols="3">
+		<colspec colname="c1" colwidth="1.0in"/>
+		<colspec colname="c2" colwidth="2.75in"/>
+		<colspec colname="c3" colwidth="2.75in"/>
+		<thead>
+			<row>
+				<entry><para></para></entry>
+				<entry><para>HDX VM with VT-d</para></entry>				
+				<entry><para>Non-HDX VM</para></entry>
+			</row>
+		</thead>
+		<tbody>
+			<row>
+				<entry><para><filename>Foreground</filename></para></entry>
+				<entry><para><filename>Native VM drivers write directly to physical GPU</filename></para></entry>			
+				<entry><para>&PB; uses GTT to map display of emulated GPU frame buffer to physical GPU</para></entry>
+			</row>
+			<row>
+				<entry><para><filename>Background</filename></para></entry>
+				<entry><para><filename>Native VM drivers display to emulated GPU, &PB; coordinates state with physical GPU</filename></para></entry>			
+				<entry><para>Native VM drivers write to emulated GPU</para></entry>
+			</row>
+		</tbody>
+	</tgroup>
+</informaltable>
+-->
+
+<figure id="diagram-video_architecture"><title>&PB; Video Architecture</title>
+	<mediaobject>
+		<imageobject>
+			<imagedata align="left" fileref="images/xc-video_architecture-diagram.png" width="6.5in" />
+		</imageobject>
+	</mediaobject>
+</figure>
+</chapter>
+
+<chapter id="disk_security">
+<title>&PB; Disk Security</title>
+
+<para>If you move a physical hard drive from one &PB; system to another, you need to "bless" the disk. This is a security feature to keep somebody from stealing your hard drive and accessing your data. Hold down the <keycap>Shift</keycap> key during boot and select <guilabel>&PB; Technical Support option: console access</guilabel>. You will be prompted to enter the administrative passphrase, which is the password you created when you installed &PB; (the Control Domain password). You will then be asked, "Would you like to reseal the device with the current configuration?" Respond with a yes, then you can reboot the device and use your VMs.</para>
+
+</chapter>
+
+
+<chapter id="xenmgr-request_attention"><title>The request_attention method in the xenmgr interface</title>
+
+<para>The xenmgr interface includes a method, <command>request_attention</command>. Executing this method from any guest VM (user VM or service VM) will cause a dialog box in both the UIVM and Windows guests to alert the user that the VM which sent it requires attention.</para>
+
+<mediaobject>
+	<imageobject>
+		<imagedata align="left" fileref="images/attention_requested-uivm.jpg" width="4in" />
+	</imageobject>
+</mediaobject>
+
+<mediaobject>
+	<imageobject>
+		<imagedata align="left" fileref="images/attention_requested-win7.jpg" width="4in" />
+	</imageobject>
+</mediaobject>
+
+<para>This is useful for the case where a service VM needs credentials from the user or has an issue which requires user intervention to resolve. Note that the dialog box means a VM wants you to switch to the VM; but it does NOT mean that we recommend that you take any action, including but not limited to giving your attention to any VM that is requesting said attention. A malicious VM can repeatedly call this function and cause this dialog box to appear repeatedly; there is no time delay that limits how often any VM can request attention.</para>
+
+</chapter>
+
+<!--
+Put this back in when there are some index terms in here...
+<index />
+-->
+
+</book>

@@ -1,0 +1,1938 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+  <!ENTITY % local SYSTEM "../local.ent"> 
+   %local;
+]>
+<book lang="en" id="installation_guide">
+ <bookinfo id="bookinfo_titlestuff">
+  <title>User Guide</title>
+  <subtitle>&COMPANY_NAME_SHORT; &PRODUCT_BRAND; &PRODUCT_VERSION;</subtitle>
+  <pubdate><?dbtimestamp format="B Y"?></pubdate>
+  
+  <copyright>
+   <year><?dbtimestamp format="Y"?></year>
+  </copyright>
+  <mediaobject>
+   <imageobject>
+    <imagedata fileref="images/XenClient.png"/>
+   </imageobject>
+   
+  </mediaobject>
+  	
+ </bookinfo>
+ 
+ <chapter>
+  <title>Introducing &PRODUCT_BRAND;</title>
+  
+  <para>
+   Thank you for choosing &PRODUCT_BRAND;<trademark class="trade"/> from
+   &COMPANY_NAME_LEGAL;
+  </para>
+  <para>&PB; is a bare-metal hypervisor that uses native hardware
+   support for virtualization to enable near bare-metal performance. 3D
+   graphics and multimedia performance is not compromised. The hypervisor
+   component of the &PB; platform is a thin layer, just a few megabytes in
+   size.
+  </para>
+
+  <para>&PB; allows users to have a personal desktop image that is totally
+   separated and completely isolated from a locked down corporate desktop
+   image running on the same machine. The personal desktop gives the user
+   the ability to install their own applications, while the corporate
+   desktop image remains securely isolated and locked down, which results
+   in a lower cost of operation and IT being able to provide higher
+   service levels to their customers.
+  </para>
+  <para>&BACKEND; provides VM imaging services to &PB;. It allows users to
+   pull imaged VMs on to their &PB;-enabled machines, and also to sync
+   their VMs back to &BACKEND;.
+  </para>
+  <para>&PORTICA; technology allows users to access applications running
+   in VMs other than that in which they are currently working.
+  </para>
+  
+ </chapter>
+
+
+
+ <chapter>
+  <title>Introduction</title>
+  
+  <para>The &PB; software stack consists of four parts:</para>
+  
+  <itemizedlist>
+   
+   <listitem>
+    <para>
+     <emphasis>&PB;</emphasis> is a bare metal hypervisor that allows you
+     to run multiple operating systems on a computer simultaneously.
+    </para>
+   </listitem>
+   
+   <listitem>
+    <para>
+     <emphasis>&BACKEND;</emphasis> provisions, backs up and manages
+     virtual machine (VM) images.
+    </para>
+   </listitem>
+   
+   <listitem>
+    <para>
+     <emphasis>&DAZZLE;</emphasis> is an self-service application store.
+    </para>
+   </listitem>
+   
+   <listitem>
+    <para>
+     <emphasis>&PORTICA;</emphasis> allows application windows to be
+     shared between VMs running on the same computer.
+    </para>
+   </listitem>
+   
+  </itemizedlist>
+  
+  <para>Together, &PB;, &BACKEND;, &DAZZLE; and &PORTICA; provide the
+   capacity to radically simplify the deployment and maintenance of
+   desktops and applications to users in a way that provides secure
+   computing and ease of use for users and administrators alike. By
+   enabling multiple operating systems to be installed on a single
+   computer and providing the ability to switch between running operating
+   systems in real-time, a user can be provided with a single computer for
+   both home and office use, with each operating system securely isolated
+   from the other. Additionally, user data can be separated from
+   system data, and the system data refreshed on a regular basis, ensuring
+   the speed and great user experience of a fresh installation each day,
+   and ease of patch deployment and operating system updates. &PB; differs
+   from many other desktop virtualization schemes by preserving the graphics
+   performance of the virtual machine most commonly used.
+  </para>
+  
+  <para>When it comes to applications, &PB; integrates with &DAZZLE; to
+   allow users to pull the applications they want onto their computers
+   without any intervention by systems administrators. The user can also
+   leverage &PORTICA; to seamlessly share application windows between
+   operating systems.
+  </para>
+  
+  <para>In short, &PB; and related technologies provide a safe, secure and
+   simple way to provision and maintain applications and operating systems
+   in the enterprise in a manner that combines maximum performance, cost
+   effectiveness and ease of use.
+  </para>
+  
+  
+  
+  <section>
+   <title>&PB;</title>
+   
+   <para>The &PB; software is based on bare-metal virtualization. It can
+    be thought of as a software layer that acts as an intermediary between
+    the operating systems (sometimes referred to as virtual machines or
+    VMs) running on it and the physical hardware. This allows the user to
+    run multiple VMs on a single computer simultaneously, and switch
+    between them in real time. The operating systems are isolated from
+    eachother, ensuring that a malicious piece of software that might
+    infect one VM will not be able to infect any other VMs.
+   </para>
+   
+   <para>The hypervisor layer controls the resources of the physical
+    machine (RAM, GPU, disk, and so on) so that all of the available
+    computing power is made available to the VM that the user is currently
+    using. This results in barely measurable performance impact. 
+   </para>
+   
+   <para>&PB; management capabilities are provided by &BRAND_CONSOLE;. The
+    &BRAND_CONSOLE; user interface is displayed after the &PB; software
+    has been installed and the computer has rebooted. &BRAND_CONSOLE;
+    guides the user or systems administrator through the process of
+    installing VMs, either using physical vendor media or by downloading
+    an image that a systems administrator has assigned to them using
+    &BACKEND;. &BRAND_CONSOLE; also provides an easy to use network
+    configuration utility and the ability to start, stop and suspend VMs,
+    and interact with &BACKEND;.
+   </para>
+   
+   <para>Once the user has installed the VMs they want to run on their
+    computer and started them, switching between running VMs is as easy as
+    using a keystroke (for example, 
+    <keycap>
+     Ctrl+<replaceable>2</replaceable>
+    </keycap>
+    )or using the switcher bar, which appears when the
+    user hovers the mouse in the middle of the top of the screen. Other
+    than that, the user experience is almost precisely the same as running
+    a single operating system.
+   </para>
+
+
+     <!-- FIXME: needs to be somewhere else -->
+     <para>&HDX; is a performance enhancement to permit a VM to avoid the
+      overhead of virtualization for the graphics system.</para> 
+     <para>
+      At any given time, only one VM running on a machine can enjoy
+      HDX 3D Graphics acceleration.
+       If multiple VMs are enabled to use HDX 3D Graphics,
+      only the first enabled VM started after the machine is booted
+      will enjoy HDX 3D Graphics acceleration.  </para> <note>
+      <para>&HDX; will only be available once the &PV_TOOLS; have been
+      installed on the VM.  </para> </note> 
+   
+   <section>
+    <title>&PB; networking</title>
+    
+    <para>The XenClient platform allows the user to configure the wired
+     network mode for each virtual machine independently. The preferred
+     choice depends on network topology and user environment. Wireless
+     connections will always be <literal>Shared Mode</literal>. The rest
+     of this section presents the various networking modes.
+    </para>
+    
+    <section>
+     <title>Shared Mode</title>
+     
+     <para>
+      By default all network connections are set to <literal>Shared Mode</literal>. The internal &PB; network architecture uses network address translation (NAT) to allow all virtual machines to share a single external wired or wireless network connection. Wired connections are allocated an IP address in the <literal>
+       172.16.25.<replaceable>x</replaceable>
+      </literal>
+      range.  Wired connections are allocated an IP address in the <literal>
+       172.16.26.<replaceable>x</replaceable> range. 
+      </literal>
+     </para>
+     
+    </section>
+    
+    <section>
+     <title>Bridged Mode (Wired Network Connections only)</title>
+     
+     <para>Bridged Network Connections will expose the virtual network
+      interfaces on individual VMs to the physical Ethernet, allowing them
+      to acquire an external IP Address from the network. Bridged mode is
+      suitable in situations where you want to allow external systems to
+      directly access services such as file or printer sharing within your
+      virtual machine.
+     </para>
+     
+     <note>
+      <para>Bridged mode requires that each virtual NIC be configured
+       appropriately. Either the physical network will have to provide
+       DHCP to allow the interface to establish an IP address and
+       associated configuration, or you will need to statically configure
+       the network settings on that interface from within the virtual
+       machine.
+      </para>
+     </note>
+     
+     
+     
+    </section>
+    
+    <section>
+     <title>Internal</title>
+     
+     <para>Internal Mode only allows network communication between VMs.</para>
+    </section>
+    
+   </section>
+   
+  </section>
+  
+  <section>
+   <title>&BACKEND;</title>
+   
+   <para>&BACKEND; manages and provisions VM images, called Desktops.
+    Once a &PB; computer has registered with &BACKEND; users may:
+   </para>
+   
+   <itemizedlist>
+    
+    <listitem>
+     <para>Download VM images assigned to them by an administrator.</para>
+    </listitem>
+    
+    <listitem>
+     <para>Upload a VM on their computer to &BACKEND;</para>
+    </listitem>
+
+    <listitem>
+     <para>Register it to be managed by &BACKEND;.
+     </para>
+    </listitem>
+    
+    <listitem>
+     <para>Backup their user data.</para>
+    </listitem>
+    
+    <listitem>
+     <para>Receive regular system partition refreshes.</para>
+    </listitem>
+    
+   </itemizedlist>
+   
+
+    <para>When a VM is registered with &BACKEND; as a managed appliance a
+     copy of the original VM is created and made available for use in
+     &BC;. The original VM may still be used but will not have any
+     relationship with &BACKEND;.
+    </para>
+
+   
+   <para>A system administrator can use &BACKEND; to manage users, their
+    desktops  and
+    devices.
+   </para>
+   
+  </section>
+  
+
+  <!-- diagram visual aid -->
+  <section>
+   <title>&PORTICA; overview</title>
+   
+   <para>&PORTICA; enables a user to share application windows seamlessly
+    between running Windows operating systems. Seamless application
+    sharing between VMs is achieved using the proprietary
+    &COMPANY_NAME_SHORT; ICA protocol. To enable seamless application
+    sharing, the <guilabel>&PB; Seamless Application Sharing</guilabel>
+    software must be installed on the VM that is going to share the
+    application. Support for this software is included in the &PV_TOOLS;. 
+    Applications in the VM will be published through &DAZZLE;. See
+    <xref linkend="dazzle_portica" />
+     for more details.
+   </para>
+   
+  </section>
+  
+  <section>
+   <title>&DAZZLE; overview</title>
+   
+   <para>&DAZZLE; provides users with self-service access to the
+    applications and desktops they need to work productively. The
+    easy-to-use &DAZZLE; interface allows users to subscribe to
+    applications and desktops hosted on other &PB; VMs, XenApp and
+    XenDesktop servers with a single click. Applications can be delivered
+    to users in one of three ways. They can be:
+   </para>
+   
+   <itemizedlist>
+    
+    <listitem>
+     <para>
+      <emphasis>Streamed</emphasis> to the user computer and installed so
+      that it can be used when the user is offline.
+     </para>
+    </listitem>
+    
+    <listitem>
+     <para>
+      <emphasis>Accessed online</emphasis> from XenApp or XenDesktop
+      resources.
+     </para>
+    </listitem>
+     
+    
+    <listitem>
+     <para>
+      <emphasis>Locally installed</emphasis> and shared between VMs. In
+      this case the application will be monitored when the user is online
+      and reinstalled if the application gets corrupted or the systems
+      administrator provides an updated version.
+     </para>
+    </listitem>
+     
+    
+   </itemizedlist>
+
+   <!-- FIXME reword with extreme prejudice -->
+
+   <para>In all cases an application shortcut is placed on the user
+    desktop or windows <guilabel>Start</guilabel> menu which starts an ICA
+    session when double-clicked, causing the application to appear
+    integrated on the user desktop.
+   </para>
+   
+   <para>For added security, although the application is shared, when an
+    application is in focus the keystrokes and mouse movements are
+    forwarded directly to the &PB; hypervisor and so that the VM that is
+    displaying the application is never aware of them. 
+    
+   </para>
+   
+  </section>
+  
+ </chapter>
+
+
+ <chapter id="sys_requirements">
+  <title>System Requirements</title>
+  <section>
+   <title>Hardware requirements</title>
+   <para>&PB; runs on 64bit platforms only. The hardware requirements are:</para>
+   <itemizedlist>
+    <listitem>
+     <para>Intel Core 2 Duo Processor
+     </para>
+    </listitem>
+    <listitem>
+     <para>1GB of memory (1 XP Instance) minimum</para>
+    </listitem>
+    <listitem>
+     <para>2GB RAM or greater recommended</para>
+    </listitem>
+    <listitem>
+     <para>160GB disk space or greater recommended</para>
+    </listitem>
+    <listitem>
+     <para>Intel Integrated Graphics 400MHD</para>
+    </listitem>
+    <listitem>
+     <para>Management - Intel vPro</para>
+    </listitem>
+   </itemizedlist>
+  </section>
+  <section>
+   <title>Supported operating systems</title>
+   <para>Supported operating systems are:</para>
+   <itemizedlist>
+    <listitem>
+     <para>Microsoft Windows XP 32bit SP3</para>
+    </listitem>
+    <listitem>
+     <para>Microsoft Windows Vista 32bit SP2</para>
+    </listitem>
+    <listitem>
+     <para>Microsoft Windows 7</para>
+    </listitem>
+   </itemizedlist>
+   
+  </section>
+  
+  <section>
+   <title>Supported laptop models</title>
+   <informaltable>
+    <tgroup cols='8'>
+     <colspec colwidth='0.75in'/>
+     <colspec colwidth='0.75in'/>
+     <colspec colwidth='0.55in'/>
+     <colspec colwidth='1in'/>
+     <colspec colwidth='0.75in'/>
+     <colspec colwidth='1in'/>
+     <colspec colwidth='0.75in'/>
+     
+     <thead><row>
+       <entry>
+        <para>Vendor</para>
+       </entry>
+       <entry>
+        <para>Product</para>
+       </entry>
+       <entry>
+        <para>Type</para>
+       </entry>
+       <entry>
+        <para>WiFi</para>
+       </entry>
+       <entry>
+        <para>Graphic</para>
+       </entry>
+       <entry>
+        <para>CPU</para>
+       </entry>
+       <entry>
+        <para>Chipset</para>
+       </entry>
+       
+      </row>
+     </thead>
+     
+     <tbody>
+      
+      <row>
+       <entry>
+        <para>Dell</para>
+       </entry>
+       <entry>
+        <para>Latitude</para>
+       </entry>
+       <entry>
+        <para>E4300</para>
+       </entry>
+       <entry>
+        <para>Dell Wireless 1397,
+         Dell Wireless 1510,
+         Intel WiFi 5100,
+         Intel WiFi 5300
+        </para>
+       </entry>
+       <entry>
+        <para>Intel GM45</para>
+       </entry>
+       <entry>
+        <para>Intel Centrino 2</para>
+       </entry>
+       <entry>
+        <para>Intel GS45 Express Chipset</para>
+       </entry>
+      </row>
+      
+      <row>
+       <entry>
+        <para>Dell</para>
+       </entry>
+       <entry>
+        <para>Latitude</para>
+       </entry>
+       <entry>
+        <para>E6400</para>
+       </entry>
+       <entry>
+        <para>Dell Wireless 1397,
+         Dell Wireless 1510,
+         Intel WiFi 5100,
+         Intel WiFi 5300
+        </para>
+       </entry>
+       <entry>
+        <para>Intel GM45</para>
+       </entry>
+       <entry>
+        <para>Intel Centrino 2</para>
+       </entry>
+       <entry>
+        <para>Intel 45 Express Chipset</para>
+       </entry>
+      </row>
+            
+
+      <row>
+       <entry>
+        <para>HP</para>
+       </entry>
+       <entry>
+        <para>Elite Book</para>
+       </entry>
+       <entry>
+        <para>6930p</para>
+       </entry>
+       <entry>
+        <para>Intel WiFi 5300,
+         Broadcom 4322AGN
+        </para>
+       </entry>
+       <entry>
+        <para>Intel GM45</para>
+       </entry>
+       <entry>
+        <para>Intel Centrino 2</para>
+       </entry>
+       <entry>
+        <para>Intel GM45 Express Chipset</para>
+       </entry>
+      </row>
+
+      <row>
+       <entry>
+        <para>HP</para>
+       </entry>
+       <entry>
+        <para>TBD</para>
+       </entry>
+       <entry>
+        <para>2530p</para>
+       </entry>
+       <entry>
+        <para>TBD
+        </para>
+       </entry>
+       <entry>
+        <para>TBD</para>
+       </entry>
+       <entry>
+        <para>TBD</para>
+       </entry>
+       <entry>
+        <para>TBD</para>
+       </entry>
+      </row>
+
+      <row>
+       <entry>
+        <para>Lenovo</para>
+       </entry>
+       <entry>
+        <para>Think Pad</para>
+       </entry>
+       <entry>
+        <para>T400</para>
+       </entry>
+       <entry>
+        <para>Intel WiFi 5100,
+         Intel WiFi 5300,
+         Intel WiFi 5350
+        </para>
+       </entry>
+       <entry>
+        <para>Intel GM45</para>
+       </entry>
+       <entry>
+        <para>Intel Centrino 2</para>
+       </entry>
+       <entry>
+        <para>Intel 45 Express Chipset</para>
+       </entry>
+      </row>
+
+      <row>
+       <entry>
+        <para>Lenovo</para>
+       </entry>
+       <entry>
+        <para>TBD</para>
+       </entry>
+       <entry>
+        <para>X200</para>
+       </entry>
+       <entry>
+        <para>TBD
+        </para>
+       </entry>
+       <entry>
+        <para>TBD</para>
+       </entry>
+       <entry>
+        <para>TBD</para>
+       </entry>
+       <entry>
+        <para>TBD</para>
+       </entry>
+      </row>
+
+     </tbody>
+    </tgroup>
+   </informaltable>
+  </section>
+ </chapter>
+ <chapter>
+  <title>Installation Overview</title>
+  <para>To install &PB; and take advantage of &PORTICA; and the &BACKEND; 
+   provisioning services, perform the following steps.
+  </para>
+  <procedure>
+   <title>Installing &PB; and related technologies</title>
+   <step>
+    <para>
+     Install and setup &BACKEND;. See <xref linkend="install_transmitter" /> for information about how to do this.
+    </para>
+   </step>
+   <!-- FIXME: reference env -->
+
+   <step>
+    <para>
+     Install the &PB; software on one of the supported machines. See <xref linkend="installation" /> for information on how to do this. 
+    </para>
+   </step>
+   <step>
+    <para>In &BC;, create a VMs with &HDX_FIRST; enabled. For information
+     about how to do this, see <olink targetdoc="administration" targetptr="create_from_cd" />
+     .
+    </para>
+   </step>
+   
+   <step>
+    <para>In &BC; create a second VM that does not have &HDX; enabled. For
+     information about how to do this, see <olink targetdoc="administration" targetptr="xc_admin" />
+      for information about how to do this.
+    </para>
+   </step>
+   
+   <step>
+    <para>
+     Install &PORTICA;. See <xref linkend="dazzle_portica" /> for
+     information about how to do this.
+    </para>
+   </step>
+   
+   
+  </procedure>
+ </chapter>
+
+ <chapter id="bios">
+  <title>Preparing a machine for installation</title>
+
+  <!-- FIXME: SATA? -->
+
+  <procedure>
+
+   <step>
+    <!-- FIXME: not just BIOS -->
+    <para>Ensure that the hardware has the correct BIOS settings. To do
+     this:
+    </para>
+    <procedure>
+     <!-- FIXME: X200 -->
+     <title>Preparing a Lenovo T400 for installation</title>
+     <step>
+      <para>Press the blue ThinkVantage button, F1 while the machine is
+       booting.
+      </para>
+     </step>
+     <step>
+      <para>
+       Set <guilabel>Config > CPU > Intel Virtualisation Technology</guilabel> to <literal>
+        Enabled
+       </literal>
+       .
+      </para>
+     </step>
+     <step>
+      <para>
+       Set <guilabel>Config > CPU > Intel VT-d feature</guilabel> to <literal>
+        Enabled
+       </literal>
+       .
+      </para>
+     </step>
+     <step>
+      <para>Move the wireless switch to the rightmost position (green).</para>
+     </step>
+     <step>
+      <para>Disable AMT on the T400.</para>
+     </step>
+    </procedure>
+    <procedure>
+     <title>Preparing a Dell E6400 or E4300 for installation</title>
+     <step>
+      <para>Press F12, select BIOS, while the machine is booting.</para>
+     </step>
+     <step>
+      <para>
+       Set <guilabel>Wireless > Wi-Fi Catcher</guilabel> to <literal>
+        Disabled
+       </literal>
+       .
+      </para>
+     </step>
+     <step>
+      <para>
+       Set <guilabel>Virtualisation Support > Virtualisation > Enable
+        Intel Virtualization Technology
+       </guilabel>
+       .
+      </para>
+     </step>
+     <step>
+      <para>
+       Set <guilabel>Virtualisation Support > VT for Direct I/O > Enable
+        VT for Direct I/O
+       </guilabel>
+       .
+      </para>
+     </step>
+     <step>
+      <para>Move the wireless switch towards the screen (red).</para>
+     </step>
+    </procedure>
+    <procedure>
+
+     <!-- FIXME: 2530p -->
+     <title>Preparing a HP6930p for installation</title>
+     <step>
+      <para>Press Esc, F10, while the machine is booting.</para>
+     </step>
+     <step>
+      <para>
+       Set <guilabel>System Configuration > Device Configuration >
+        Virtualization Technology > Enabled
+       </guilabel>
+       .
+      </para>
+     </step>
+     <step>
+      <para>Press the WiFi icon so it changes colour from red to blue.</para>
+     </step>
+     <step>
+      <para>Ensure that you have BIOS version F.12 or later.</para>
+     </step>
+
+    </procedure>
+    <note>
+    <!-- FIXME: TPM. per-model instructions -->
+     <para>Disable TPM (Trusted Platform Module) and TXT (Trusted Execution Technology) for all models.</para>
+    </note>
+   </step>
+  </procedure>
+
+ </chapter>
+
+ <chapter id="installation">
+  <title>Installing &PB;</title>
+  <section>
+   <title>Installing &PB; using the installer CD</title>
+   <para>
+    See <olink targetptr="known_issues"  targetdoc="releasenotes" /> for
+    any known issues that might affect your installation.
+   </para>
+   <warning>
+    <para>Installing &PRODUCT_BRAND; erases the entire contents of the
+     hard disk on the target system.
+    </para>
+   </warning>
+
+   <para>Before beginning the installation process, please ensure that the
+    machine's BIOS is correctly configured. <!-- FIXME -->
+   </para>
+
+   <para>&PB; offers two installation modes: quick installation or
+    advanced installation. Use the arrow keys and the <keycap>Enter</keycap> button to navigate.
+   </para>
+   <procedure>
+    <title>Quick Install</title>
+    <step>
+     <para>Boot from the &PRODUCT_BRAND; Installer CD.</para>
+    </step>
+    <step>
+     <para>
+      Choose <guilabel>Quick Install</guilabel>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Choose <guilabel>OK</guilabel> and review the software license.
+     </para>
+    </step>
+    <step>
+     <para>
+      Choose <guilabel>Exit</guilabel> and <guilabel>Yes</guilabel> to
+      accept the terms of the license.
+     </para>
+    </step>
+    <step>
+     <para>
+      Choose <guilabel>Continue</guilabel>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Choose <guilabel>Verify</guilabel> to ensure that the installation
+      media is valid and uncorrupted, or <guilabel>Skip</guilabel> to
+      begin the installation.
+     </para>
+    </step>
+    <step>
+     <para>
+      When the installation has completed, press <guilabel>Continue</guilabel> and then <guilabel>
+       Reboot
+      </guilabel>
+      to reboot the machine.
+     </para>
+    </step>
+    <step>
+     <para>The &BRAND_CONSOLE; is displayed. You can use the UI to create
+      VMs.
+     </para>
+     
+    </step>
+   </procedure>
+   <procedure>
+    <title>Advanced Install</title>
+    <step>
+     <para>Boot from the &PRODUCT_BRAND; Installer CD.</para>
+    </step>
+    <step>
+     <para>
+      Choose <guilabel>Advanced Install</guilabel>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Choose <guilabel>OK</guilabel> and review the software license.
+     </para>
+    </step>
+    <step>
+     <para>
+      Choose <guilabel>Exit</guilabel> and <guilabel>Yes</guilabel> to
+      accept the terms of the license.
+     </para>
+    </step>
+    <step>
+     <para>
+      Choose <guilabel>Continue</guilabel>.
+     </para>
+    </step>
+    <step>
+     <para>
+     Enter a password, and choose <guilabel>OK</guilabel>. Confirm the
+     password (neither is displayed) and choose <guilabel>OK</guilabel>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Choose <guilabel>Verify</guilabel> to ensure that the installation
+      media is valid and uncorrupted, or <guilabel>Skip</guilabel> to move
+      to the next installation step.
+     </para>
+    </step>
+    <step>
+     <para>
+      Choose <guilabel>Configure</guilabel> to enter a &BACKEND;
+      activation ID, or choose <guilabel>Skip</guilabel>. Enter the full
+      path to your &BACKEND; server and click <guilabel>Continue</guilabel>.
+     </para>
+    </step>
+    <step>
+     <para>
+      When the installation has completed, press <guilabel>Continue</guilabel> and then <guilabel>
+       Reboot
+      </guilabel>
+      to reboot the machine.
+     </para>
+    </step>
+    <step>
+     <para>The &BRAND_CONSOLE; is displayed.
+     </para>
+    </step>
+   </procedure>
+  </section>
+  
+ </chapter>
+
+ 
+ <chapter id="xc_admin">
+  <title>&PB; Administration</title>
+
+  <section>
+   <title>&IOVM;</title>
+
+
+<!-- 
+general Vm display
+-->
+
+   <section>
+    <title>Machine-wide power management</title>
+  </section>
+
+   <!-- FIXME: vm opt details ctrl+0 -->
+
+
+   <section>
+    <title>Other &IOVM; features</title>
+
+<!--
+mac address pass through
+-->
+
+  </section>
+     
+  
+  <section id="networking">
+   <title>Networking</title>
+   
+   <para>
+    &PB; uses the open-source <ulink url="http://projects.gnome.org/NetworkManager/">
+     NetworkManager
+    </ulink>
+    to provide network management functionality in &BC;, which allows you
+    to connect to other computers and to the internet. See <ulink url="http://www.redhat.com/magazine/003jan05/features/networkmanager/">
+     the documentation
+    </ulink>
+    of NetworkManager for more information about setting up networking
+    using NetworkManager.
+   </para>
+   
+   <note>
+    <para>Whatever networks you setup in &BC; will be made available to
+     all VMs, including the Wireless network which is shared between all
+     VMs using Network Address Translation (NAT).
+    </para>
+   </note>
+   
+   <procedure>
+    
+    <title>Configuring a wired network connection</title>
+
+    <step>
+     <para>
+      NetworkManager will automatically connect to the wired network and
+      acquire an IP address with DHCP when an ethernet cable is plugged in.
+     </para>
+    </step>
+    
+   </procedure>
+   
+
+   
+  </section>
+  </section>
+ <!-- transmitter -->
+
+ <section>
+  <title>Virtual Machines</title>
+ 
+
+  <section>
+   <title>Installing Virtual Machines</title>
+   
+   <procedure id="create_from_cd">
+    <title>Creating a VM from vendor media</title>
+    
+    <step>
+     <para>
+      In the &IOVM; click <guilabel>Create VM</guilabel>.
+     </para>
+    </step>
+    
+    <step>
+     <para>
+      Click the <guilabel>Create New from Vendor Media</guilabel> button.
+      The <guilabel>Create a New Virtual Machine</guilabel> wizard is
+      displayed.
+     </para>
+    </step>
+    
+    <step>
+  <mediaobject>
+   <imageobject>
+    <imagedata fileref="images/createVmS1x.png"/>
+   </imageobject>
+   
+  </mediaobject>
+
+     <para>
+      Select the operating system type from the <guilabel>Type</guilabel>
+      dropdown list.
+     </para>
+    </step>
+    
+    <step>
+     <para>Enter a short name for the VM, and optionally its
+      description. Select an icon to represent the VM. The short name and
+      the icon will be used to distinguish VMs in the toolbar.
+     </para>
+    </step>
+    
+    <step>
+     <para>
+      Click <guilabel>Next</guilabel>.
+     </para>
+    </step>
+    
+    <step>
+  <mediaobject>
+   <imageobject>
+    <imagedata fileref="images/createVmS2x.png"/>
+   </imageobject>
+   
+  </mediaobject>
+     <para>Choose the amount of RAM to assign to the VM. The default of 1024Mb
+     is appropriate for Windows Vista and Windows 7. For Windows XP, 512Mb is
+     generally adequate.
+     </para>
+    </step>
+    
+    <step>
+     <para>
+      Click the <guilabel>Next</guilabel> button to go to the next step of
+      the wizard.
+     </para>
+    </step>
+    
+    <step>
+  <mediaobject>
+   <imageobject>
+    <imagedata fileref="images/createVmS3x.png"/>
+   </imageobject>
+   
+  </mediaobject>
+     <para>Specify the size of the virtual disk to assign to the VM.
+           The actual disk space used by a virtual disk reflects how much
+	   data has been written to it, and so may be considerably less
+	   than the size you specify.</para>
+    </step>
+    
+    <step>
+     <para>Select the wired network mode. The options are:</para>
+     
+     <itemizedlist>
+      
+      <listitem>
+       <para>
+        <emphasis>Bridged</emphasis> which is suitable in situations where
+        you want to allow external systems to directly access services
+        such as file or printer sharing within your virtual machine. The
+        Virtual NIC within the VM is bridged to the physical network.
+        Incoming connections to your VM are enabled.
+       </para>
+      </listitem>
+      
+      <listitem>
+       <para>
+        <emphasis>Shared</emphasis> which places your Virtual NIC on a
+        private network on the XenClient system and allows  outgoing
+        connections using NAT (network address translation). In this case
+        you will not be able to allow incoming connections to your virtual
+        machine.
+       </para>
+      </listitem>
+      
+      <listitem>
+       <para>
+        <emphasis>Internal</emphasis> which only allows for network
+        communication between VMs.
+       </para>
+      </listitem>
+      
+     </itemizedlist>
+     
+    </step>
+
+
+    <step><para>Click <guilabel>Next</guilabel></para></step>
+    
+    <step>
+  <mediaobject>
+   <imageobject>
+    <imagedata fileref="images/createVmS4x.png"/>
+   </imageobject>
+   
+  </mediaobject>
+     <para>
+      From the <guilabel>XenClient Tools</guilabel> menu, select 
+      <guilabel>Attached</guilabel>. This causes the &PV_TOOLS; to 
+      be mounted as an extra
+      optical disk drive in the VM.
+      This option may also be used by system integrators to attach arbitrary
+      optical disk images in ISO9660 format, such as OS install disks.
+     </para>
+    </step>
+
+    <step><para>If you select <guilabel>Start virtual machine automatically</guilabel>, this VM will be started automatically shortly after the &PB; platform
+    boots. The VM will receive the display focus instead of the &IOVM;.
+    </para>
+    </step>
+
+    <step>
+     <para>
+      Click the <guilabel>Finish</guilabel> button.
+     </para>
+    </step>
+    
+    <step>
+     <para>Insert the operating system installation media into the optical
+      drive of the machine.
+     </para>
+    </step>
+    
+    <step>
+     <para>Select the VM from the list, and
+      click the <guilabel>Start</guilabel> button. If necessary, press the VM hotkey that is displayed in the UI. The VM will take focus. Complete the operating system installation as you would do on any other physical machine.
+     </para>
+     <note>
+      <para>Do not enable automatic Windows updates until you have
+       installed the &PV_TOOLS;.
+      </para>
+     </note>
+    </step>
+    
+    
+    
+    
+    
+    <step>
+     <para>When installation is complete, install the &PV_TOOLS; by
+      running <filename>setup.exe</filename> from the
+      optical disk (conventionally mounted as D:). This installs high performance virtualization aware
+      drivers and an easy to use VM Switcher bar to allow switching
+      between the VMs.
+     </para>
+    </step>
+
+    <!-- FIXME -->    
+    <step>
+     <para>Download and install the latest graphics and audio drivers.</para>
+    </step>
+
+<!--
+
+go to www.intel.com
+Work | Support & Downloads
+(click no on survey)
+Select a Family | Grahpics
+Select a Line | Laptop graphics controllers
+Select a Product | Mobile Intel(r) 4 Series Express Chipset Family
+Download Drivers and Software
+wait for intel download center to come out of maintenance
+-->
+
+   </procedure>
+  </section>
+
+  </section>
+  <section>
+   <title>Using &PB; with the &BACKEND;</title>
+
+   <para>VMs may be downloaded and uploaded to the &BACKEND;. In &PB;,  causing a VM to be uploaded is termed Publishing. Users may download managed VMs provided by the administrators of the &BACKEND;. To interact with the &BACKEND;, a &PB; instance must be Registered.
+   </para>
+
+
+
+   <!-- register with transmitter -->
+
+<!-- 
+Missing bits:
+ Also a description of the Additional Options dialogue for Managed VMs would be good.
+ edit vm
+ publish
+ connect to transmitter
+
+Also, authors of shared images get the 'Save Changes For Reboots' checkbox; this allows changes to the system disk to be persisted across reboots; useful when installing new software.
+-->
+   
+   <procedure>
+    <title>Creating a VM from &BACKEND;</title>
+    
+    <para>
+     See <xref linkend="transmitter" /> for information about how to make
+     a VM image available to a user using &BACKEND;.
+    </para>
+    
+    <step>
+     <para>
+      In &BC;, click the <guilabel>XENCLIENT</guilabel>.
+     </para>
+    </step>
+    
+    <step>
+     <para>
+      Click the <guilabel>Create New VM</guilabel> button.
+     </para>
+    </step>
+    
+    <step>
+     <para>
+      Click the <guilabel>Create New from Transmitter Desktop</guilabel>
+      button. The <guilabel>Register with &PB; Transmitter</guilabel>
+      wizard is displayed if this is the first time you have  attempted to
+      create a VM using this method. Enter your activation URL and click
+      the <guilabel>Next</guilabel> button.
+     </para>
+     
+     <note>
+      <para>
+       See <xref linkend="transmitter" /> for the procedures to be
+       performed in &BACKEND; to create an activation URL.   
+      </para>
+     </note>
+    </step>
+    
+    <step>
+     <para>
+      Enter your &BACKEND; username and password and click the <guilabel>
+       Next
+      </guilabel>
+      button.
+     </para>
+    </step>
+    
+    <step>
+     <para>
+      Select a VM from the list and click the <guilabel>Next</guilabel>
+      button.
+     </para>
+    </step>
+    
+    <step>
+     <para>
+      Provide a name for the VM and click the <guilabel>Finish</guilabel>
+      button.
+     </para>
+    </step>
+    
+    <step>
+     <para>Wait for the VM to download. When the download has finished,
+      start the VM by selecting it in the Virtual Machines list in the &IOVM; and clicking <guilabel>
+       Start
+      </guilabel>
+      .
+     </para>
+    </step>
+    
+    <step>
+     <para>When installation is complete, install the &PV_TOOLS; by
+      running <filename>setup.exe</filename> from the 
+      optical disk mapped as D:. This installs high performance virtualization aware
+      drivers and an easy to use VM Switcher bar to allow switching
+      between the VMs.
+     </para>
+    </step>
+    
+    <step>
+     <para>Download and install the latest graphics drivers.</para>
+    </step>
+    
+    
+   </procedure>
+   
+  </section>
+  
+   
+ </chapter>
+ 
+ <chapter id="dazzle_portica">
+  <title>&DAZZLE; and &PORTICA;</title>
+
+
+  
+  <para>All applications, including those that originate from &DAZZLE;,
+   can be shared seamlessly between VMs. What this amounts to in practise
+   is that an application running on a VM is displayed in another VM, and
+   appears and can interacted with as if it was running in that VM.
+  </para>
+  
+  <para>From a security point of view, although the application is shared,
+   keystrokes and mouse movements are forwarded directly to the &PB;
+   hypervisor and the VM that is displaying the application is never aware
+   of them. Also, the VM that is actually running the application is
+   simply sending the graphical display via the &PB; hypervisor.
+  </para>
+
+   <warning>
+    <para>Please ensure that you have installed all available Windows
+     updates before installing &PORTICA;.
+    </para>
+   </warning>
+
+  <procedure>
+   <title>Installing &PORTICA;</title>
+
+   <step>
+    <para>Ensure that the &PV_TOOLS; are installed on each VM you wish to
+     use with &PORTICA;.
+    </para>
+   </step>
+
+   <step>
+    <para>
+     Ensure that you have selected <literal>Attached</literal> for
+     the <guilabel>XenClient Tools</guilabel> option in VM details, for
+     the VM you wish to use to display Seamless applications.
+    </para>
+   </step>
+
+   <step>
+    <para>Boot the VM if it is not already running.</para>
+   </step>
+
+   <step>
+    <para>Open the <filename>Seamless</filename> directory in the
+    attached &PV_TOOLS; optical disk.</para> 
+    </step>
+
+   <step>
+    <para>
+     Double-click to install <filename>Receiver</filename>.
+    </para>
+   </step>
+
+   <step>
+    <para>
+     Double-click to install <filename>CitrixOnlinePluginFull</filename>.
+    </para>
+   </step>
+
+   <step>
+    <para>
+     Double-click to install <filename>Dazzle</filename>.
+    </para>
+   </step>
+
+   <step>
+    <para>Verify the installation by browsing the list of applications in
+    the <guilabel>Dazzle Apps</guilabel> section of the Start menu.</para>
+   </step>
+
+  </procedure>
+ </chapter>
+
+
+ 
+ <chapter>
+  <title>&BACKEND;</title>
+  
+  <para>&BACKEND; is the central backend management service that allows
+   you to create virtual images, manage virtual image deployments and
+   configure user access. This chapter explains the key concepts involved
+   in working with &BACKEND;.
+  </para>
+  
+  
+  
+  <section>
+   <title>Devices</title>
+   
+   <para>
+    A <emphasis>device</emphasis> is a computer that has the &PB;
+    hypervisor installed on it. A device is registered with a &BACKEND;.
+    &BACKEND; maintains asset records of the device, and 
+    credentials are retained to allow secure communication between the
+    device and &BACKEND;.
+   </para>
+   
+   
+   
+  </section>
+  
+  <section>
+   <title>Users</title>
+   
+   <para>
+    A <emphasis>user</emphasis> is assigned one or more &PB;-based
+    devices. &BACKEND;. A registered device is bound
+    to a specific user, allowing that user to install VMs on the device.
+    The system facilitates large-scale management of users and devices.
+   </para>
+   
+  </section>
+  
+  <section>
+   <title>Desktops</title>
+   
+   <para>
+    An <emphasis>desktop</emphasis> is a template of a VM that can be
+    installed onto devices. Desktops are composed of:
+   </para>
+   
+   
+   
+   <itemizedlist>
+    <listitem>
+     <para>Image files stored in the Microsoft Virtual Hard Disk (VHD)
+      format. &PB; makes use of VHD chaining to allow VHDs to be used as 
+      <emphasis>gold masters</emphasis>, where a single large VHD may 
+      act as a parent to a large set of copy
+      on write (CoW) children. This approach is also used to efficiently
+      store subsequent versions of VM image files and backups of user
+      data.
+     </para>
+    </listitem>
+    
+    <listitem>
+     <para>Policy and configuration describing how the VM should act when
+      it is deployed on the client device. This information includes
+      details such as whether the VM is allowed to use USB devices, or
+      whether it can share a unified copy and paste buffer (clipboard)
+      with other VMs.
+     </para>
+    </listitem>
+    
+   </itemizedlist>
+   
+   <para>Desktops are versioned. &BACKEND; hosts multiple
+    
+    immutable versions of an desktop. New versions are generated when
+    changes are made to an desktop image. An administrator can, for
+    example, create a new desktop containing a simple Windows XP
+    installation and publish this from &BACKEND; as version 1. They can later take the image, install some new software and release it as version 2. 
+    &PB; manages deploying this update to users.
+   </para>
+  </section>
+  
+  <section>
+   <title>Publications</title>
+   
+   <para>
+    <emphasis>Publications</emphasis> are relationships between specific
+    desktop versions and specific users or groups of users. A
+    publication allows a user to instantiate a specific desktop version
+    on their device. When connected to &BACKEND; users can request a list
+    of available desktops, which is provided by querying for desktop
+    versions that have been published to that user.
+   </para>
+   
+   <para>By publishing specific versions of desktops to users, &PB;
+    
+    allows new versions to be tested on specific (small) groups of
+    
+    users before being widely published. This also allows updates to
+    
+    desktop versions to be staged across different groups of users.
+   </para>
+   
+   <para>Using &PB; with &BACKEND; involves the four stages described
+    below to create new desktop VMs, and deploy them onto client devices.
+   </para>
+   
+   <informalfigure>
+    
+    <mediaobject>
+     
+     <imageobject>
+      
+      <imagedata fileref="images/transmitter_provisioning.png" width="6.02in" />
+      
+     </imageobject>
+     
+    </mediaobject>
+    
+   </informalfigure>
+   
+   <para>
+    &PB; supports two types of desktops, <emphasis>private mode</emphasis>
+    and <emphasis>shared mode</emphasis>. Private mode desktops are
+    desktop images that are managed centrally and deployed to users, but
+    the images are not updated over time. Deployed images can, however, be
+    transparently backed up to &BACKEND; to ensure that data on devices
+    remains protected.
+   </para>
+   
+   <para>Shared mode desktops isolate user data from the system disk of
+    the desktop VM. The system disk is reset to a known-good configuration
+    on reboot. Shared mode desktops allow administrators to "patch"
+    desktop VMs, installing new versions of software, for instance, and
+    push these patches out to &PB; users in the background.
+   </para>
+   
+   <para>To begin using &BACKEND;, you should first have at least one &PB;
+    notebook configured, and have installed at least one desktop VM from
+    vendor media that you would like to share with other &PB;-based
+    notebooks in your organization. Refer to <olink targetdoc="installation" targetptr="installation" />
+     for details on how to install the client software and VMs.
+   </para>
+   
+  </section>
+  
+  <section>
+   <title>Managing desktops using &BACKEND;</title>
+   
+   <para>&BACKEND; is responsible for managing the deployment of a set of
+    independently authored desktop VM images (or desktops) to a large
+    number of users, each with one or more &PB; devices. As devices may be
+    lost or stolen, it also provides facilities to protect data (such as
+    backup), and support for tracking device hardware assets that are
+    owned by the organization. To achieve these goals, XenClient devices
+    can operate in one of three modes: <literal>Unregistered</literal>, <literal>
+     Registered
+    </literal>
+    ,and <literal>Bound</literal> to a specific user.
+   </para>
+   
+   <informalfigure>
+    
+    <mediaobject>
+     
+     <imageobject>
+      
+      <imagedata fileref="images/transmitter_desktop_modes.png" width="5.99in" />
+      
+     </imageobject>
+     
+    </mediaobject>
+    
+   </informalfigure>
+   
+   <para>Breaking this process into three stages has a number of benefits.
+    Firstly, &PB; may run as a stand-alone client virtualization
+    platform in unregistered mode with no requirement to deploy a
+    &BACKEND; instance.
+   </para>
+   
+   <para>Second, registration, which allows device hardware to be tracked
+    using lightweight asset-management support in &BACKEND;, can be
+    performed at installation time, and is decoupled from a user
+    interacting with the device. An IT administrator may then receive
+    shipment of, and register, a group of new notebooks with &BACKEND; 
+    before giving them out to users, and may tag the group with an invoice
+    number that describes the order. In the future, this registration
+    stage will be extended to allow client devices to be preloaded with
+    common gold master VM images while they are connected on a high-speed
+    corporate network, prior to them being given to users who may then log
+    in from outside the enterprise.
+   </para>
+   
+   <para>Finally, the binding stage of &PB; devices establishes a
+    permanent link between that installation of &PB; on that piece of
+    hardware, and a specific user. Once bound to a user, the &BC;
+    interface will display the list of desktop VMs that have been assigned
+    to that user as available for installation. VMs may be backed up to
+    &BACKEND; in the background, and associated with that specific user.
+    In the event that a device is lost, backups of a user's VMs may be
+    used to recover their &PB; installation on a new computer.
+   </para>
+   
+  </section>
+  
+ </chapter>
+
+
+<!--
+Should add a section about adding a new NFS Image Repository in the XT Admin UI Configuration Panel
+
+-->
+
+ <chapter id="install_transmitter">
+  <title>Installing &BACKEND;</title>
+  <para>&BACKEND; provides user and desktop provisioning services to
+   &PB; users. &BACKEND; also provides a user interface for managing
+   users, virtual desktops and devices.
+  </para>
+  <para>&BACKEND; is provided as a XenServer Virtual Appliance (XVA) file.
+   &BACKEND; is based on a virtual machine template that does not require
+   any installation procedures and can be imported into any XenServer 5.5
+   environment. To use &BACKEND; you need to deploy a XenServer
+   installation onto a new physical server. Alternately you can use an
+   existing XenServer 5.5 installation.
+  </para>
+  <procedure>
+   <title>Installing &BACKEND; on XenServer</title>
+   
+   <step>
+    <para>Download the &BACKEND; appliance from the &COMPANY_NAME_SHORT;
+     website.
+    </para>
+   </step>
+   <step>
+    <para>
+     The compressed archive contains a <literal>.xva</literal> file.
+     Uncompress the file and double-click on it to import it into
+     XenCenter.
+    </para>
+   </step>
+   <step>
+    <para>Create a new VM from the imported template by double-clicking on
+     the template in XenCenter and completing the steps of the New VM
+     wizard. See the XenCenter online help for assistance if required.
+    </para>
+   </step>
+   <step>
+    <para>Configure your network to assign the IP or hostname to this
+     virtual machine that you intend to be visible in URLs that will be
+     used by &PB; users and administrators. By default, the system will
+     use whatever numeric IP address is assigned to the host by DHCP. If
+     you desire to configure your DNS to assign a hostname to the
+     &BACKEND; VM, do that now.
+    </para>
+   </step>
+   <step>
+    <para>Once the VM is booted, log into the VM using the XenCenter
+     console, with the username <literal>root</literal> and you will be
+     prompted to set a password for this account. 
+     The &BACKEND; installer is displayed.
+    </para>
+  <mediaobject>
+   <imageobject>
+    <imagedata fileref="images/transmitter_install.png"/>
+   </imageobject>
+   
+  </mediaobject>
+
+
+   </step>
+   <step>
+    <para>Configure the installer according to your environment.
+     &COMPANY_NAME_SHORT; recommends that you enable mount permissions
+     for the webserver user. This is enabled by default and is
+     controlled the <literal>Give Mount Privileges</literal>
+    </para>
+    <para>The options available to you are:</para>
+    <variablelist>
+     <varlistentry>
+      <term>Change Virtual Hostname</term>
+      <listitem>
+       <para>allows you to configure the hostname to be used in XenClient
+        Transmitter URLs and certificates. It defaults to the systems
+        numeric IP address, but may be changed at this point to be a
+        textual host name.
+       </para>
+      </listitem>
+     </varlistentry>
+     
+     <varlistentry>
+      <term>Give mount privileges</term>
+      <listitem>
+       <para> allows an external image repository to be configured later,
+        so that Desktop VM images may be stored outside of the &BACKEND;
+        VM, on an NFS server.
+       </para>
+      </listitem>
+     </varlistentry>
+     
+     <varlistentry>
+      <term>SSL Certificate Settings</term>
+      <listitem>
+       <para> allows you to generate or install an SSL certificate to be
+        used by &BACKEND; for HTTPS connections.
+       </para>
+      </listitem>
+     </varlistentry>
+    </variablelist>
+   </step>
+   <step>
+    <para>When you have finished configuring the initial installation,
+     select <guilabel>Perform install</guilabel> to complete the
+     customization of &BACKEND; for your environment. If you quit the
+     installer to inspect the VM environment, you can restart the
+     installation by logging in again and running the <filename>
+      /root/install.sh
+     </filename>
+     script.
+    </para>
+   </step>
+  </procedure>
+  <note>
+   <para>For security reasons, SSH is disabled by default in the VM hosting
+   the &BACKEND;. You may enable it by running <filename>/etc/init.d/ssh
+     start
+    </filename>
+    .To persist this across reboots, run the following command as <literal>
+     root
+    </literal>
+    :
+   </para>
+   <!-- FIXME: use update-rc.d! -->
+   <screen>ln -s /etc/init.d/ssh /etc/rc2.d/S20ssh</screen>
+  </note>
+ </chapter>
+
+
+ <chapter id="transmitter">
+  <title>&BACKEND; Administration</title>
+  
+  <para>This chapter contains the procedures required for administering
+   &BACKEND;, using the web-based &BACKEND; UI, which can be accessed by
+   pointing a web browser at the &BACKEND; server URL. The steps involved
+   in making a VM image available to a user are:
+  </para>
+  
+  <orderedlist>
+   
+   <listitem>
+    <para>Use a web browser to access the URL reported by
+     &BACKEND; in the XenCenter console, and log in as <literal>admin</literal> with the password <literal>admin</literal>.
+    </para>
+   </listitem>
+   
+   <listitem>
+    <para>In the &BACKEND; UI, create an activation ID. This ID identifies
+     one or many computers. The activation ID is entered on a &PB;
+     computer either during installation of when  first attempting to
+     connect to &BACKEND;. &BACKEND; then automatically registers the
+     computer in the &BACKEND; database.
+    </para>
+   </listitem>
+   
+   <listitem>
+    <para>Create a user using the &BACKEND; interface.</para>
+   </listitem>
+   
+   <listitem>
+    <para>Use &BC; to create the VM.</para>
+   </listitem>
+   
+   <listitem>
+    <para>
+     Using &BC;, publish an existing VM to &BACKEND; by clicking the <guilabel>
+      Publish Desktop
+     </guilabel>
+     button.
+    </para>
+   </listitem>
+   
+   <listitem>
+    <para>
+     Click the <guilabel>Publish Transmitter Desktop</guilabel> button,
+     and log in as the user created in the first step. The VM starts to
+     upload to &BACKEND;.
+    </para>
+   </listitem>
+   
+   <listitem>
+    <para>Once the VM upload is complete, use &BACKEND; to deploy desktop
+     instances to users.
+    </para>
+    
+    <para>Once a VM has been made available, communicate the activation
+     URL to the user. The user can then use &BC; to connect to &BACKEND;
+     and download the VM.
+    </para>
+   </listitem>
+   
+  </orderedlist>
+  
+  <procedure>
+   <title>Creating a &BACKEND; activation ID</title>
+   
+   <para>An activation ID is required for each user to connect to
+    &BACKEND; from &BC; and either access provisioned desktops or upload a
+    VM image.
+   </para>
+   
+   <step>
+    <para>
+     On the &BACKEND; UI <guilabel>Welcome</guilabel> tab, click <guilabel>
+      Devices
+     </guilabel>
+     .
+    </para>
+   </step>
+   
+   
+   
+   <step>
+    <para>
+     On the <guilabel>Devices</guilabel> tab, scroll down to the <guilabel>
+      Device Activation Batches
+     </guilabel>
+     section and click <guilabel>New</guilabel>. The <guilabel>Create New
+      Activation
+     </guilabel>
+     screen is displayed.
+    </para>
+   </step>
+   
+   
+   
+   <step>
+    <para>Enter an activation ID and a description. The activation ID can
+     be anything.
+    </para>
+   </step>
+   
+   
+   
+   <step>
+    <para>
+     Create and select <guilabel>Tags</guilabel> to identify this
+     activation, or this batch of activations.
+    </para>
+   </step>
+   
+   
+   
+   <step>
+    <para>
+     Click the <guilabel>Create</guilabel> button.
+    </para>
+   </step>
+   
+   
+   
+   <step>
+    <para>
+     Click the <guilabel>Close</guilabel> button.
+    </para>
+   </step>
+   
+  </procedure>
+  
+  <procedure>
+   <title>Creating a &BACKEND; user</title>
+   
+   <step>
+    <para>
+     On the &BACKEND; UI <guilabel>Welcome</guilabel> tab, click <guilabel>
+      Users
+     </guilabel>
+     .
+    </para>
+   </step>
+   
+   
+   
+   <step>
+    <para>
+     On the <guilabel>Users</guilabel> tab, click <guilabel>New</guilabel>. The <guilabel>
+      Create New User
+     </guilabel>
+     screen is displayed.
+    </para>
+   </step>
+   
+   
+   
+   <step>
+    <para>Enter the user details.</para>
+   </step>
+   
+   
+   
+   <step>
+    <para>
+     To grant the user <literal>Administrator</literal> access check the <guilabel>
+      Administrator
+     </guilabel>
+     checkbox.
+    </para>
+   </step>
+   
+   
+   
+   <step>
+    <para>
+     Click the <guilabel>Save</guilabel> button. The <guilabel>User
+      Creation
+     </guilabel>
+     dialog is displayed with a status message.
+    </para>
+   </step>
+   
+   
+   
+   <step>
+    <para>
+     Click the <guilabel>Close</guilabel> button.
+    </para>
+   </step>
+   
+   
+   
+  </procedure>
+  
+  
+  
+  <procedure>
+   <title>Assigning a desktop to a user</title>
+   
+   <para>
+    Once a VM has been published to &BACKEND;, it is shown in the <guilabel>
+     Desktops
+    </guilabel>
+    tab. You can now assign this desktop to users, which allows them to
+    install it on their devices.
+   </para>
+   
+   <step>
+    <para>
+     On the <guilabel>Desktops</guilabel> tab, use the <guilabel>Search</guilabel> box to find the desktop you want to publish, then double click it to view its details in a new tab.
+    </para>
+   </step>
+   
+   <step>
+    <para>
+     Select the version to be published, and click the <guilabel>Assign</guilabel> button.
+    </para>
+   </step>
+   
+   <step>
+    <para>A dialog box is displayed  with the desktop and version that you
+     have selected. Choose the user that you would like to assign it to,
+     and customize the configuration or policy settings.
+    </para>
+   </step>
+   
+   <step>
+    <para>
+     Click the <guilabel>Assign</guilabel> button to assign the desktop to
+     a user. The new assignment appears in the <guilabel>Desktop
+      Assignment
+     </guilabel>
+     table.
+    </para>
+   </step>
+   
+  </procedure>
+  
+  
+  
+ </chapter>
+
+
+</book>

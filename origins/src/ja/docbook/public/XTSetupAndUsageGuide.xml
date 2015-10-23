@@ -1,0 +1,737 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+  <!ENTITY colophon PUBLIC "colophon" "../../../../shared/xml/colophon.ent">
+  <!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+  
+    <!ENTITY view_details PUBLIC "view_details" "../shared/view_details.ent">
+  <!ENTITY shared_upgrade_and_install_steps PUBLIC "shared_upgrade_and_install_steps" "../shared/shared_upgrade_and_install_steps.ent">
+  <!ENTITY % local PUBLIC "local" "../shared/local.ent">
+  %local;
+]><book id="XTSetupAndUsageGuide" lang="en"><?dbhtml dir="XTSetupAndUsageGuide"?>
+ <bookinfo id="bookinfo_titlestuff" role="die">
+  <title>&COMPANY_NAME_SHORT;<trademark class="registered" role="die"/> &PB; &XT_PRODUCT_VERSION; Setup and Usage Guide</title>
+  <pubdate><?dbtimestamp format="d B Y"?></pubdate>
+  &legal;
+  <releaseinfo/> 
+ </bookinfo>
+ <chapter><title>Overview and System Setup</title>
+
+ <para>Citrix &PRODUCT_BRAND; provides a virtualized desktop with enhanced isolation of mutually distrusting virtual machines (VMs). It improves VM isolation while retaining the industry-leading user experience of XenClient on COTS desktop hardware. &PRODUCT_BRAND; supports the customization of isolation policies for a variety of enterprise mobile and desktop use cases. &PRODUCT_BRAND; extends the capabilities of XenClient with the following features:</para>
+ <itemizedlist>
+ <listitem><para>Multiple GPU and seamless mouse support, allowing you to run multiple &HDX; VMs on separate monitors.</para></listitem>
+ <listitem><para>Measured secure boot using Intel TXT.</para></listitem>
+ <listitem><para>Encrypted VM disks.</para></listitem>
+<listitem><para>SE Linux and XSM (Xen Security Modules) policy enforcement.</para></listitem>
+<listitem><para>Network Driver Virtual Machine (NDVM) that provides an isolated networking service for VMs.</para></listitem>
+<listitem><para>VM reset-on-boot for returning a VM to its original state on each reboot.</para></listitem>
+ </itemizedlist>
+ 
+<para>&PRODUCT_BRAND; is licensed, distributed and installed separately from XenClient.</para>
+
+<section><title>Packaging</title>
+<para>The &PB; software consists of the following packages:</para>
+<orderedlist>
+ <listitem><para>Installer ISO (&PRODUCT_BRAND;)</para></listitem>
+ <listitem><para>Open-source ISO which contains the open-source code used by &PB;.</para></listitem>
+</orderedlist>
+</section>
+<section><title>Hardware Compatibility</title>
+
+<para>&PRODUCT_BRAND; supports the following systems and devices:</para>
+
+<section><title>Desktop Systems</title>
+<itemizedlist>
+<listitem><para>Dell 980 mini-tower</para></listitem>
+<listitem><para>Dell 980 small form factor (SFF)</para></listitem>
+<listitem><para>HP 8100 mini-tower</para></listitem>
+<listitem><para>HP 8100 small form factor (SFF)</para></listitem>
+</itemizedlist>
+</section>
+
+<section><title>Add-On Devices</title>
+<itemizedlist>
+<listitem><para>ATI HD 4550 PCI Express Graphics Card</para></listitem>
+<listitem><para>PCI Express Network Interface Card (NIC), e.g. Broadcom NetExtreme II 5722</para></listitem>
+</itemizedlist>
+</section>
+	
+<section><title>Intel TXT and Intel AMT</title>
+
+<para>For &PB; use cases which require Intel Trusted Execution Technology (TXT), but not Intel Active Management Technology (AMT), the following options are available from system manufacturers and are supported by &COMPANY_NAME_SHORT;:</para>
+<orderedlist>
+<listitem><para>Please contact your system manufacturer to purchase a non-vPro SKU variant of a supported desktop and an Intel CPU that supports TXT and VT-d.</para></listitem>
+<listitem><para>Please purchase and install a third-party PCI Express network interface card (NIC) in a supported desktop. Use the System BIOS to disable the onboard, integrated Intel NIC. AMT must remain enabled in the System BIOS.</para></listitem>
+</orderedlist>
+</section>
+
+</section>
+
+<section><title>Device Preparation before &PB; Installation</title>
+
+<procedure><title>Before Installing &PB; on All Devices</title>
+<step><para>In most cases, install the most recent BIOS available from the system manufacturer. In some cases the most recent BIOS may be incompatible with &PB;. See the <citetitle>Citrix XenClient XT &PRODUCT_VERSION; Release Notes</citetitle> for details.</para></step>
+<step><para>Enable the following Intel vPro features in the system BIOS:</para>
+<substeps>
+ <step><para>VT-x</para></step>
+ <step><para>VT-d</para></step>
+ <step><para>TPM</para></step>
+ <step><para>TXT</para></step>
+</substeps>
+</step>
+</procedure>
+
+<procedure><title>Before Installing &PB; on a Dell or HP Desktop With an Nvidia or ATI Video Card</title>
+<step><para>Install the video card in PCI Express slot 4.</para></step>
+<step><para>In the BIOS video configuration menu:</para>
+<substeps>
+<step><para>Enable the Intel integrated video adapter</para></step>
+<step><para>Specify the primary video adapter as Intel</para></step>
+</substeps>
+</step>
+</procedure>
+
+
+
+<procedure><title>Before Installing &PB; on a Dell 980</title>
+<step><para>Disable unused devices in the BIOS to reduce interrupt conflicts:</para>
+
+<substeps>
+ <step><para>Set <guilabel>System Configuration &gt; Serial Port #2</guilabel> to <guilabel>Disabled</guilabel>.</para></step>
+ <step><para>Set <guilabel>System Configuration &gt; Parallel</guilabel> to <guilabel>Disabled</guilabel>.</para></step>  
+ <step><para>Set <guilabel>Drives &gt; SATA-2</guilabel> to <guilabel>Disabled</guilabel>.</para></step>
+ <step><para>Set <guilabel>Drives &gt; SATA-3</guilabel> to <guilabel>Disabled</guilabel>.</para></step>
+  <step><para>Set <guilabel>Drives &gt; External SATA</guilabel> to <guilabel>Disabled</guilabel>.</para></step>
+ <step><para>Set <guilabel>Miscellaneous Devices &gt; WiFI NIC Slot</guilabel> to <guilabel>Disabled</guilabel>.</para></step>
+<step><para>Set <guilabel>Miscellaneous Devices &gt; Optiplex ON Reader</guilabel> to <guilabel>Disabled</guilabel>.</para></step>
+ </substeps>
+</step>
+</procedure>
+</section>
+
+<section><title>Setup Instructions</title>
+
+
+<para>After you have updated and configured your BIOS, &COMPANY_NAME_SHORT; recommends the following procedure for preparing your &PB; device:</para>
+<orderedlist>
+<listitem><para>Install &PB; on the target device using the install CD. For more information about installing &PB;, see <olink targetdoc="XenClientAdvancedUserGuide" targetptr="quick_install"/>.</para></listitem>
+<listitem><para>Create a VM. See <olink targetdoc="XenClientAdvancedUserGuide" targetptr="installing_vms" /> for more information.</para></listitem>
+<listitem><para>Enable VHD encryption for the VM. See <olink targetdoc="XTSetupAndUsageGuide" targetptr="enable_vhd_encryption" /> for more information.</para></listitem>
+<listitem><para>Install an operating system on the VM. See <olink targetdoc="XenClientAdvancedUserGuide" targetptr="install_os" /> for more information.</para></listitem>
+<listitem><para>Install the &PV_TOOLS; on the VM. See  <olink targetdoc="XTSetupAndUsageGuide" targetptr="install_pv_tools"/> for more information.</para></listitem>
+<listitem><para>Install any other VMs in the same manner.</para></listitem>
+<listitem><para>Perform any optional VM and platform configuration required. See <olink targetdoc="XTSetupAndUsageGuide" targetptr="vm_configuration"/> and <olink targetdoc="txt_setup" targetptr="platform_configuration"/> for more information.</para></listitem>
+<listitem><para>Enable TXT measured launch of the control domain. See <olink targetdoc="XTSetupAndUsageGuide" targetptr="enable_txt"/> for more information.</para></listitem>
+<listitem><para>Enable the enforcement of SE Linux and XSM policy. See <olink targetdoc="XTSetupAndUsageGuide" targetptr="enable_selinux"/> for more information.</para></listitem>
+</orderedlist>
+
+ <xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="installing_xc" xmlns:xi="http://www.w3.org/2001/XInclude" /> 
+<!--
+   
+-->
+<section id="enable_vhd_encryption"><title>Installing a VM With Encrypted VHD</title>
+
+<procedure><title>To Enable VHD Encryption</title>
+ <step><para>Create a VM in the &PB; UI but do not start it. To do this, check <guilabel>Create VM &amp; Install OS later</guilabel> on the final screen of VM creation wizard.</para></step>
+ <step><para>Press <keycap>Ctrl+Shift+t</keycap> to obtain a console window.</para></step>
+ <step><para>Log in to the control domain (dom0).</para></step>
+<step><para>Run the following command to create a key named after the disk UUID in the platform cryptography key directory and set up encryption for the VHD.</para>
+<screen>key_dir=`xec get platform-crypto-key-dirs`
+mkdir -p ${key_dir}
+vm_vhd_path=`xec-vm -n <replaceable>vm_name</replaceable> --disk 1 get phys-path` 
+vm_vhd_uuid=`basename ${vm_vhd_path} .vhd`
+key_file=${key_dir}/${vm_vhd_uuid},aes-xts-plain,256.key
+dd if=/dev/urandom of=${key_file} bs=1 count=32
+vhd-util key -n ${vm_vhd_path} -k ${key_file} -s</screen>
+<!--<note><para>Reads from <command>/dev/random</command> may block if the Linux entropy pool is empty. If this happens, press random alphanumeric keys on the keyboard to generate more entropy. When the <command>dd</command> command completes, use <keycap>Backspace</keycap> to delete the extra characters, to avoid the remote possibility that the random characters constituted a Linux command.</para></note>-->
+</step>
+
+<!-- <step><para>Reboot your &PB; device. If you are using an external USB optical drive, unplug it and then plug it in again after the platform has booted.</para></step> -->
+<step><para>Start the VM and install the operating system from the optical drive media.</para></step></procedure>
+
+</section>
+
+
+
+<section id="install_pv_tools"><title>Installing the &PB; Tools</title>
+
+<para>Because &PRODUCT_BRAND; uses a network driver domain, there is no network connectivity available until the &PV_TOOLS; (which include the network PV driver) have been installed in the VM. The &PV_TOOLS; installer requires Microsoft .NET, which is not included in Windows XP. For this reason the &PV_TOOLS; are installed in two stages: basic paravirtualized drivers first, followed by the remaining tools.</para>
+
+<procedure><title>To Install the &PV_TOOLS;</title>
+<!-- TODO: claen up -->
+<step><para>Connect &PB; device to a wired network with Internet access (to allow the .NET download).</para></step>
+<step><para>Use &BC; to install a Windows XP VM from physical vendor media.</para></step>
+<step><para>In Windows XP VM, explore (don't autorun) the Tools CD.</para></step>
+<step><para>Enable viewing of hidden files.</para></step>
+<step><para>Navigate to the hidden Packages directory.</para></step>
+<step><para>Run <filename>xensetup.exe</filename> to install paravirtualized I/O drivers.</para></step>
+<step><para>Reboot the VM and follow prompts to install PV devices.</para></step>
+<step><para>Confirm network connectivity from VM to off-host IP address.</para></step>
+<step><para>In Windows XP VM, explore (don't autorun) the Tools CD.</para></step>
+<step><para>Install &PB; Tools, this will automatically download .NET.</para></step>
+<step><para>Reboot the VM.</para></step>
+</procedure>
+
+</section>
+
+
+
+
+</section>
+<section id="enable_txt"><title>Enabling TXT Measured Launch for the Control Domain</title>
+<para>For detailed information about the &PB; TXT implemenation, see <xref linkend="txt_trusted_boot" />.</para>
+
+<procedure><title>To Enable TXT</title>
+ <step><para>Update system BIOS to the latest version available from OEM.</para></step>
+ <step><para>Enable TPM and TXT in the system BIOS, save your changes, reboot as prompted by BIOS.</para></step>
+ <step><para>Hard power off.</para></step>
+ <step><para>Boot &PB;.</para></step>
+ <step><para>Run the following commands after boot:</para>
+ <screen>tpm-setup
+reboot</screen>
+ </step>
+ <step><para>On the initial boot after running <command>tpm-setup</command>, the control domain filesystem is inspected and the results stored in the TPM. After boot, it is necessary to reboot immediately, either using the &BC; <guilabel>Power</guilabel> menu, or by running the <command>reboot</command> command in a control domain console window.</para></step>
+
+</procedure>
+<para>On subsequent boots, any changes to the control domain file system or the boot options will result in a prompt for the root password to authorize resealing.</para>
+</section>
+
+<section id="enable_selinux"><title>Enabling Enforcement of SE Linux and XSM Policy for the Control Domain</title>
+
+<para>By default, SE Linux and XSM (Xen Security Modules) policy in the control domain is not enforced.</para>
+
+<procedure><title>To Enable Enforcement of SE Linux and XSM Policy</title>
+
+ <step><para>&OPEN_CONSOLE;</para></step>
+ <step><para>Run the following command:</para>
+	 <screen>sed -i &quot;s/SELINUX=.*/SELINUX=enforcing/&quot; /etc/selinux/config</screen></step>
+<step><para> Reboot.</para></step>
+</procedure>
+<para>There are 3 possible values for SELINUX:</para>
+<itemizedlist>
+<listitem><para><literal>disabled</literal>, which disables SE Linux in the kernel.</para></listitem>
+<listitem><para><literal>permissive</literal>, which allows operations but creates a log of operations that would be denied if SE Linux was set to <literal>enforcing</literal>.</para></listitem>
+<listitem><para><literal>enforcing</literal>, which enables all SE Linux functionality.</para></listitem>
+</itemizedlist>
+ <para>Many control domain command line operations will not be possible when SE Linux policy is enforced. To disable enforcement on subsequent boots, edit the grub command
+before booting as described in <xref linkend="edit_grub_command"/>.</para>
+
+<procedure id="edit_grub_command"><title>Editing the Grub Command to Disable SE Linux Policy Enforcement</title>
+<step><para>Edit the <filename>grub.cfg</filename> file to allow the editing of the grub command line by running the following command:</para>
+<screen>sed '1i\set edit_and_shell=1' /boot/system/grub/grub.cfg</screen></step>
+<step><para>Reboot the &PB; device.</para></step>
+<step><para>Press <keycap>Esc</keycap> immediately after the &PB; splash screen appears.</para></step>
+<step><para>Press <keycap>e</keycap> to edit the grub command.</para></step>
+<step><para>Change the instances of <literal>enforcing</literal> and <literal>flask_enforcing</literal> from 1 to 0.</para></step>
+<step><para>Press <keycap>Ctrl+x</keycap> to boot immediately with the edited grub configuration.</para></step>
+</procedure>
+
+
+</section>
+</chapter>
+
+<chapter id="vm_configuration"><title>VM Configuration</title>
+<section><title>Configuring &HDX; VM With an Nvidia or ATI GPU</title>
+<procedure><title>To Enable &HDX; on a VM With Direct Access to the GPU Video Hardware</title>
+ <step><para>Install all VM software updates, ensure that the &PV_TOOLS; are installed, and confirm working network connectivity.</para></step>
+ <step><para>Shutdown the VM.</para></step>
+ <step><para>&view_details;</para></step>
+ <step><para>Click the <guilabel>Hardware</guilabel> tab.</para></step>
+ 
+ <step><para>From the <guilabel>3D Graphics Support</guilabel> dropdown list, select the GPU you want to assign to the VM and click <guilabel>Save</guilabel>.</para></step>
+ <step><para>Start the VM. Do not use the automated Windows driver install functionality for the newly detected GPU.</para></step>
+ <step><para>If the GPU is a ATI GPU, deactivate it before installing the driver:</para>
+<substeps><!-- TODO: clean up -->
+  <step><para>Open Device Manager.</para></step>
+  <step><para>Under Display Adaptors, identify the ATI device.</para></step>
+  <step><para>Right click on the ATI device and select Disable.</para></step>
+  <step><para>Reboot the VM.</para></step>
+</substeps>
+  </step>
+
+ <step><para>Download and install the  Windows XP Nvidia Quadro Driver 259.12 or later (Nvidia GPU) or the Catalyst driver 10.9 or later (ATI GPUs).</para></step>
+  <step><para>Do <emphasis>not</emphasis> reboot when prompted by the Nvidia or ATI driver installation.</para></step>
+ <step><para>Open Windows XP Device Manager.</para></step>
+
+  <step><para>Select <guilabel>Display Adapters &gt; Citrix Xen Display Driver</guilabel>.</para></step>
+  <step><para>Right-click on device and select <guilabel>Disable</guilabel>.</para></step>
+  <step><para>Confirm that the device should be disabled.</para></step>
+  <step><para>Accept the prompt to restart the device.</para></step>
+  <step><para>After the VM restarts, the VM boot screen will be shown on the Intel display, but the desktop (after boot) will be shown on the Nvidia or ATI display.</para></step>
+
+</procedure>
+</section>
+<section><title>Enabling Audio Device Assignment to One VM</title>
+<para>This functionality only be used for a single VM, which must be the first VM started after boot. This command enables VT-d passthrough of the audio device to a single VM. It is necessary to reboot the VM twice, before installing the audio driver.</para> 
+<para>After dedicating the audio device to a single VM, please remove audio emulation from the remaining VMs.</para>
+
+<procedure><title>To Assign the Audio Device to a VM</title>
+<step><para>&OPEN_CONSOLE;</para></step>
+<step><para>Add a rule to give this device to the VM:</para>
+<screen>xec-vm -n <replaceable>vm_name</replaceable> add-pt-rule 0x0403 any any</screen></step>
+<step><para>Check that the device that will be assigned to the VM is the correct one:</para>
+<screen>xec-vm -n <replaceable>vm_name</replaceable> list-pt-pci-devices</screen></step>
+</procedure>
+
+<procedure><title>To Remove Audio Emulation from a VM</title>
+<step><para>&OPEN_CONSOLE;</para></step>
+<step><para>Run the following command:</para>
+<screen>xec-vm -n <replaceable>vm_name</replaceable> set-db-key config/sound &quot;&quot;</screen></step>
+</procedure>
+
+</section>
+
+<section><title>Configuring Optical Disk Writing</title>
+
+<procedure><title>To Disable Writing to an Optical Disk for a VM</title>
+<step><para>&OPEN_CONSOLE;</para></step>
+<step><para>Run the following command:</para>
+<screen>xec-vm -n <replaceable>vm_name</replaceable> set-db-key policies/cd-rec false</screen></step>
+</procedure>
+
+</section>
+
+
+<section><title>Enabling USB Controller Assignment to One VM</title>
+<procedure><title>To Assign a USB Controller to a Single VM</title>
+
+<step><para>&OPEN_CONSOLE;</para></step>
+ <step><para>Run the following command to discover the device ID of the USB controllers:</para>
+      <screen>lspci -nn | grep '\[0c03\]'</screen>
+<para>The command output resembles the following:</para>
+<screen>00:1a.0 USB Controller [0c03]: Intel Corporation 5 Series/3400 Series \
+Chipset USB2 Enhanced Host Controller [8086:3b3c] (rev 05)
+00:1d.0 USB Controller [0c03]: Intel Corporation 5 Series/3400 Series \
+Chipset USB2 Enhanced Host Controller [8086:3b34] (rev 05)</screen>
+	  
+	  <para>The numbers in square brackets near the end of the line describe the vendor id and the device id in the format <literal>[vendor_id:device_id]</literal>. For example the first line of the example output describes a USB device controller with a vendor ID of 8086 and a device ID of 3b3c.</para>
+  </step>
+
+<step><para>Run the following command:</para>
+<screen>xec-vm -n <replaceable>vm_name</replaceable> add-pt-rule 0x0c03 0x<replaceable>usb_vendor_id</replaceable> 0x<replaceable>usb_device_id</replaceable></screen></step>
+<step><para>Start the VM.</para></step>
+ <step><para>Open device manager and ensure that there is no problem reported with the <literal>Universal Serial Bus controllers</literal>.</para></step>
+ <step><para>Press <keycap>Ctrl+0</keycap> to switch back to &BC;.</para></step>
+ <step><para>Plug a USB device into one of the USB ports assigned to the VM.</para></step>
+ <step><para>In the control domain console window, run the <command>lsusb</command> command. Check that the device is <emphasis>not</emphasis> listed in the output of the command. If the device <emphasis>is</emphasis> listed, check to see if the USB device is plugged in to the USB port with the specified USB bus ID.</para></step>
+ <step><para>Switch back to the guest VM. The USB device should be present.</para></step>
+</procedure>
+
+<para>On some models of supported hardware USB devices may share the same USB bus. In this case all USB devices on the specified bus will be passed through to the VM.</para>
+
+</section>
+<section><title>Preventing Physical CD Assignment to a Specific VM</title>
+<para>&OPEN_CONSOLE;</para>
+<para>Run the command:</para>
+
+<screen>xec-vm -n <replaceable>vm_name</replaceable> set-db-key policies/cd-access false</screen>
+</section>
+
+
+<section><title>Preventing use of Print Screen Key Inside a Specific VM</title>
+<para>&OPEN_CONSOLE;</para>
+<para>Run the command:</para>
+<screen>xec-vm -n <replaceable>vm_name</replaceable> set-db-key policies/print-screen-disallowed true</screen>
+</section>
+
+<!--
+<section><title>Prevent use of Print Screen key inside all VMs</title>
+<para>Press Ctrl-Shift-T in the UIVM to obtain a dom0 console window.</para>
+<screen>db-write /print-screen-disallowed true</screen>
+</section>
+
+
+-->
+<section><title>Preventing Editing of VM Properties in &BC;</title>
+<para>&OPEN_CONSOLE;</para>
+<para>Run the command:</para>
+
+
+
+
+<screen>xec-vm -n <replaceable>vm_name</replaceable> set-db-key policies/modify-vm-settings false</screen>
+
+</section>
+
+<section><title>Allowing Editing of VM Properties in &BC;</title>
+<para>&OPEN_CONSOLE;</para>
+<para>Run the command:</para>
+
+
+<screen>xec-vm -n <replaceable>vm_name</replaceable> set-db-key policies/modify-vm-settings true</screen>
+
+</section>
+</chapter>
+
+<chapter id="platform_configuration"><title>Platform Configuration</title>
+
+<section><title>Enabling Control Domain Network Access</title>
+<para>In &PB; EIP the Network Driver Virtual Machine (NDVM) provides network connectivity to other VMs, and by default the control domain does not have network access.</para>
+
+<procedure><title>To Enable Control Domain Network Access</title>
+<step><para>&OPEN_CONSOLE;</para></step>
+<step><para>Run the following commands:</para>
+<screen>xec set enable-ssh true
+reboot</screen>
+</step>
+</procedure>
+
+
+<procedure><title>To Disable Control Domain Network Access</title>
+<step><para>&OPEN_CONSOLE;</para></step>
+<step><para>Run the following commands:</para>
+<screen>xec set enable-ssh false
+reboot</screen>
+</step>
+</procedure>
+
+
+</section>
+<section><title>Enabling User VM Reset-On-Boot</title>
+<note><para>Please ensure that you have installed the &PV_TOOLS; in the VM and performed all VM configuration before enabling reset-on-boot.</para></note>
+<para>&OPEN_CONSOLE;</para>
+<para>Run the following commands:</para>
+<screen>xec-vm -n <replaceable>vm_name</replaceable> --disk 1 set snapshot scripted
+vm_uuid=`xec-vm -n <replaceable>vm_name</replaceable> get uuid`
+ruby /usr/lib/backend/ruby/instance_customizations_cache.rb -u ${vm_uuid} \
+create</screen>
+<note><para>Some Windows registry keys, specifically those related to Active Directory (AD), are maintained and not reset.</para></note>
+</section>
+
+<section><title>Enabling Mouse Switching Between Dual-monitor VMs</title>
+
+<para>To implement alternate physical layouts of the two displays, change the VM slot number (0, 1, 2, etc) and edge (left, right) definitions. The VM slot number (N) is the <keycap>Ctrl+<replaceable>N</replaceable></keycap> keyboard sequence used to switch the input context to that VM. The syntax of the command is <command>xec-vm -n <replaceable>vm_name</replaceable> set seamless-mouse-[left|right] <replaceable>slot_number</replaceable></command>. For example, to set the VM with switcher key 2 to move to switch to the VM with switcher key 3 when the mouse is moved over the right border of the screen, run the command:</para>
+<screen>xec-vm -n <replaceable>name_of_vm_with_switcher_key_2</replaceable> set seamless-mouse-right 3</screen>
+
+
+<para>The following example configuration implements switching for a display layout with:</para>
+<itemizedlist>
+ <listitem><para>4 non-HDX VMs (including UIVM) on the left monitor</para></listitem>
+ <listitem><para>1 HDX VM (e.g. using Nvidia GPU) on the right monitor</para></listitem>
+</itemizedlist>
+<para>Press <keycap>Ctrl+Shift+t</keycap> in &BC; to obtain a control domain console window.</para>
+<screen>db-write /switcher/self-switch-disabled ""
+xec-vm -n <replaceable>vm1_name</replaceable> set seamless-mouse-left prev
+xec-vm -n <replaceable>vm0_name</replaceable> set seamless-mouse-right 1
+xec-vm -n <replaceable>vm2_name</replaceable> set seamless-mouse-right 1
+xec-vm -n <replaceable>vm3_name</replaceable> set seamless-mouse-right 1
+xec-vm -n <replaceable>vm4_name</replaceable> set seamless-mouse-right 1</screen>
+<para>To remove a boundary switch, for example for <replaceable>vm2_name</replaceable>, set the <literal>seamless-mouse-right</literal> property to an empty string:</para>
+<screen>xec-vm -n <replaceable>vm2_name</replaceable> set seamless-mouse-right ""</screen>
+<para>To see the current state of the boundary switch for a VM, run the command using <literal>get</literal> instead of <literal>set</literal>:</para>
+<screen>xec-vm -n <replaceable>vm0_name</replaceable> get seamless-mouse-right</screen>
+<para>This command outputs the switcher key of the VM that the right boundary of <replaceable>vm0_name</replaceable> switches to.</para>
+
+<!-- <screen>xec-vm -n <replaceable>vm_name</replaceable> set seamless-mouse-left [ <replaceable>slot_number</replaceable> | prev ]</screen>
+ -->
+</section>
+<section><title>Changing the Seamless Application Sharing Border Color</title>   
+<para>In the &PORTICA_VIEW; VM, there is a colored border around application windows that are shared by the &PORTICA_SHARE; VM. This color can be changed for each
+publishing VM. After the &PORTICA; tools have been installed and verified as working, the following registry edits will change the border color:</para>
+<orderedlist>
+ <listitem><para>Open the Windows registry editor in the application sharing VM.</para></listitem>
+ <listitem><para>Create the key <literal>HKLM\Software\Citrix\PortICA\Border</literal>.</para></listitem>
+ <listitem><para>Create the following DWORD values:</para>
+ <orderedlist>
+  <listitem><para>Blue (default is 0)</para></listitem>
+  <listitem><para>Green (default is FF)</para></listitem>
+  <listitem><para>Red (default is 0)</para></listitem>
+  <listitem><para>Width (default is 4)</para></listitem>
+ </orderedlist>
+</listitem>
+<listitem><para>Edit the RGB values and the width to match your desired result.</para></listitem>
+ <listitem><para>Reboot VM.</para></listitem>
+</orderedlist>
+</section>
+
+</chapter>
+
+<chapter><title>Networking Configuration</title>
+<section><title>&PB; Service VM Example</title>
+
+<procedure><title>To Create a Service VM</title>
+<step><para>Copy <filename>vpnvm-rootfs.i686.ext3.gz</filename> (provided by your &COMPANY_NAME_SHORT; representative) into the <filename>/storage/vpnvm</filename> directory and gunzip it, for example:</para>
+<screen>mkdir /storage/vpnvm
+cd /storage/vpnvm
+gunzip vpnvm-rootfs.i686.ext3.gz</screen></step>
+<step><para>Rename the file system:</para>
+<screen>mv vpnvm-rootfs.i686.ext3 vpnvm.ext3</screen></step>
+<step><para>Copy the file <filename>service-vpnvm</filename> into the <filename>/usr/share/xenmgr-1.0/templates/kent</filename> directory and reboot the &PB; device.</para></step>
+</procedure>
+
+<section><title>Creating Additional Service VMs</title>
+<procedure><title>To Create a Second VPNVM</title>
+
+<step><para>Run the following command to shut down the existing VPNVM:</para>
+<screen>xen-vm -n <replaceable>vpnvm_name</replaceable> shutdown</screen></step>
+<step><para>Make a copy of the existing VPNVM folder and rename the partition file:</para>
+<screen>cp -r /storage/vpnvm /storage/vpn2vm
+mv /storage/vpn2vm/vpnvm.ext3 /storage/vpn2vm/vpn2vm.ext3</screen></step>
+
+<step><para>Copy the VPNVM templates and replace key values to make the configuration and name of the new VPNVM unique.</para>
+<screen>cp /usr/share/xenmgr-1.0/templates/kent/service-vpnvm \
+/usr/share/xenmgr-1.0/templates/kent/service-vpn2vm
+sed -i 's/vpn/vpn2/g' /usr/share/xenmgr-1.0/templates/kent/service-vpn2vm
+sed -i 's/<replaceable>existing_vpnvm_uuid</replaceable>/<replaceable>any_unused_uuid</replaceable>/' \
+/usr/share/xenmgr-1.0/templates/kent/service-vpn2vm</screen>
+</step>
+<step><para>Follow <olink targetdoc="VPNVM_setup" targetptr="attach_vm_to_vpnvm" />.</para></step>
+</procedure>
+
+</section>
+
+
+<section id="attach_to_VPNVM"><title>Attaching a User VM to the Service VM Network</title>
+<para>Use the following procedure to attach a VM to the VPNVM network.</para>
+<procedure id="attach_vm_to_vpnvm"><title>To attach a VM to the VPNVM Network</title>
+<note><para>Please ensure that the &PV_TOOLS; are installed on the VM to be attached to the VPNVM network.</para></note>
+<step><para>&OPEN_CONSOLE;</para></step>
+<step><para>Run the command:</para>
+<screen>xec-vm</screen>
+<para>This command prints the UUIDs of all installed VMs. Note the UUID of the relevant VM.</para></step>
+<step><para>Run the following commands:</para>
+<screen>xec-vm -u <replaceable>user_vm_uuid</replaceable> set track-dependencies true
+db-write /vm/<replaceable>user_vm_uuid</replaceable>/config/nic/0/backend-uuid <replaceable>vpnvm_vm_uuid</replaceable></screen>  
+</step>
+</procedure>
+</section>
+<section><title>Network Interfaces</title>
+<para>You can ssh to any VPNVM using <command>sshv4v <replaceable>vm_name</replaceable></command> to browse the root file system or make changes to it. By default, the VPNVM file system is read-only, so you need to run the command <command>mount -o remount,rw /</command> to be able to make any changes.</para>
+<para>When the VPNVM is started, the following sequence of events occurs:</para>
+<orderedlist>
+
+<listitem><para>The VPNVM gets a pv network interface, <literal>eth0</literal>, whose backend is the Network Driver Domain VM (NDVM).</para></listitem>
+<listitem><para><literal>eth0</literal> is automatically added to a new network bridge called <literal>brbridged</literal>.</para></listitem>
+<listitem><para>When a VM is started, it gets a pv network interface, whose backend is VPNVM.</para></listitem>
+<listitem><para>In accordance with the udev rule located in <filename>/etc/udev/rules.d/xen-backend</filename>, the backend is automatically added to <literal>brbridged</literal>.</para></listitem>
+<listitem><para>When a VM performs an internet network request, the packets are routed as follows: VM &lt;-&gt; VPNVM &lt;-&gt; NDVM &lt;-&gt; Internet.</para></listitem>
+</orderedlist>
+
+<para>The intention is to modify VPNVM to use some sort of filtering, such as VPN, instead of using the dummy bridge.</para>
+
+<note><para>The VPNVM kernel has been modified to force packets to be passed by copy, which is required when packets go through more than one bridge. When the dummy bridge is replaced with a VPN this modification is not required.</para></note>
+</section>
+</section>
+<section><title>VM Firewall Configuration</title>
+
+<para>You can configure firewall rules using the <command>viptables</command> command to create rules about what communication is allowed between VMs. Each rules specifies whether to accept or reject communication originating from a VM on a port bound for another VM on another port. For example:</para>
+<screen>viptables -A -d 1 -e 2 -j REJECT</screen>
+<para>creates a new rule that forbids communication between the VM with domain ID 1 and the VM with domain ID 2. The <command>viptables</command> command uses the following syntax:</para>
+<screen>viptables --help
+Usage: viptables command [rule]
+Commands :
+   --append		-A					Append rule
+   --insert		-I &lt;n&gt;		Insert rule before rule &lt;n&gt;
+   --list		-L					List rules
+   --delete		-D[&lt;n&gt;]		Delete rule &lt;n&gt; or the following rule
+   --flush		-F					Flush rules
+   --help		-h					Help
+Rule options:
+   --dom-in		-d &lt;n&gt;		Client domid
+   --dom-out	-e &lt;n&gt;		Server domid
+   --port-in	-p &lt;n&gt;		Client port
+   --port-out	-q &lt;n&gt;		Server port
+   --jump		-j {ACCEPT|REJECT}	What to do</screen>
+<note>
+   <itemizedlist>
+   <listitem><para>Running <command>viptables -L</command> prints the current set of <command>viptable</command> rules to the Xen message buffer. To view this buffer, run the command <command>xenops dmesg</command>.</para></listitem>
+   <listitem><para><command>viptables</command> can only be run in the control domain (dom0) as <literal>root</literal>.</para></listitem>
+   <listitem><para><command>viptables</command> rules do not persist across device reboot.</para></listitem>
+   
+   </itemizedlist>
+</note>   
+
+</section>
+</chapter>
+
+<xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="using_bc" xmlns:xi="http://www.w3.org/2001/XInclude" />
+<xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="resource_allocation" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+<chapter>
+
+<title>Other Administrative Tasks</title>
+
+<section><title>Database Access Control</title>
+<para>You can access the control domain database using <command>db-*-dom0</command> commands in the VPNVM. This can be useful for creating persistent data, for example VPN certificates, in a secure location in the control domain. To be able to do database requests, you have to add the corresponding rules in <filename>/etc/rpc-proxy.rules</filename> on the control domain file system. For example to allow read access from a VM with the UUID <literal>00000000-0000-0000-0000-000000000003</literal>:</para>
+<screen>echo "allow dom-uuid 00000000-0000-0000-0000-000000000003 \
+destination org.freedesktop.DBus interface \
+org.freedesktop.DBus" >> /etc/rpc-proxy.rules
+
+echo "allow dom-uuid 00000000-0000-0000-0000-000000000003 \
+destination com.citrix.xenclient.db \
+interface com.citrix.xenclient.db read" >> /etc/rpc-proxy.rules
+
+echo "allow dom-uuid 00000000-0000-0000-0000-000000000003 \
+destination com.citrix.xenclient.db \
+interface com.citrix.xenclient.db read_binary" >> /etc/rpc-proxy.rules
+</screen>
+<para>To enable write access, replace <literal>read</literal> with <literal>write</literal> and <literal>read_binary</literal> with <literal>write_binary</literal> in the preceding example.</para>
+
+</section>
+
+
+
+
+<!--
+<section><title>&PRODUCT_BRAND; Configuration Automation</title>
+
+<procedure><title>To Create a Tap Device for Encrypted VHD</title>
+<step><para>Create a key in a key store directory with the following name:</para>
+<screen><replaceable>vhd_uuid</replaceable>,aes-xts-plain,256.key</screen>
+<para>The <replaceable>vhd_uuid</replaceable> is the UUID of the VHD to be created, for example <literal>7313383c-98db-4770-9a50-64a38ba5ee96</literal>.</para></step>
+<step><para>Run the following command to create the encrypted VHD:</para>
+<screen>TAPDISK2_CRYPTO_KEYDIR=<replaceable>key_directory_location</replaceable> tap-ctl create \
+ -a vhd:<replaceable>vhd location</replaceable></screen>
+<para>Following on from the previous example, an example of this command would be:</para>
+<screen>TAPDISK2_CRYPTO_KEYDIR=/config/sec/s-remoteuser-436...c453 \
+tap-ctl create \
+-a vhd:/storage/disks/7313383c-98db-4770-9a50-64a38ba5ee96.vhd</screen></step>
+</procedure>
+<note><para>The key directory name in the previous example has been shortened as indicated by the <literal>...</literal> ellipsis.</para></note>
+</section>
+-->
+</chapter>
+<!-- <xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="experimental_features" xmlns:xi="http://www.w3.org/2001/XInclude" />  -->
+
+
+ <xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="troubleshooting" xmlns:xi="http://www.w3.org/2001/XInclude" /> 
+
+<appendix><title>Implementation Notes</title>
+<section id="txt_trusted_boot"><title>TXT Trusted Boot Process</title>
+<para>&PB; uses Intel TXT for hardware-based, dynamic root of trust (DRTM) measurement and verification of the &PB; launch environment. TXT is invoked prior to &PB; boot, suspend, restart and shutdown. TXT uses open-source (tboot) and closed-source (SINIT) chipset-specific software that is developed and maintained by Intel. Successful functioning of TXT also depends on processor support, the quality of an OEM's BIOS implementation and Trusted Platform Module (TPM) firmware.</para>  
+<section><title>TXT Initial Setup Process</title>
+<para>The following diagram shows the initial TXT  setup process.</para>
+<informalfigure>
+<mediaobject>
+<imageobject>
+
+<imagedata align="center" fileref="images/trusted_boot_process_setup.png" width="75%" />
+</imageobject>
+</mediaobject>
+</informalfigure>	
+ <!--
+<screen>administrator executes /usr/bin/tpm-setup
+if BIOS version is earlier than minimum version requirement
+    prompt user to update BIOS
+    exit tpm-setup script
+if TPM is not already owned with well known SRK password
+    if error is "Authentication failed", set well known password
+    if error is "No SRK", take ownership of TPM
+        if error message is "No EK"
+            create TPM EK
+            prompt user to restart script
+            exit tpm-setup script
+    repeat test to confirm that TPM is owned with well known SRK password 
+    store list of PCRs to be sealed in /config/config.pcrs if 
+    /config/config.key does not exist
+create key by getting 32 bytes from /dev/random
+set LUKs slot 1 of the config value to use this key</screen>
+-->
+</section>
+<section><title>Trusted Boot Process: Verification on Boot</title>
+<para>The following diagram shows the verification process that occurs at device boot time.</para>
+<informalfigure>
+<mediaobject>
+<imageobject>
+
+<imagedata align="center" fileref="images/trusted_boot_process_verify_on_boot.png" width="75%" />
+</imageobject>
+</mediaobject>
+</informalfigure>	
+<!--
+<screen>if tpm is enabled (admin previously executed the tpm-setup process)
+    if txt-stat | grep 'TXT measured launch' | awk '{print $4}' == TRUE
+    the system was booted securely
+        is it the first boot after tpm-setup?
+            use the old device key to unseal the /config partition
+            reseal the /config partition
+        else if  (cannot mount /config, i.e. config changed and this is not 
+        first boot after tpm-setup)
+			Print "Unauthorized system modification detected"
+            prompt user for the recovery password
+            offer the option of resealing the system
+            reseal if requested by admin
+        else
+            the system was not booted securely, TXT measured launch failed
+            warn admin that BIOS could be incompatible
+            ask admin to create a status report
+            prompt admin for password to mount /config partition
+            do not offer to reseal the /config partition</screen>
+			
+			-->
+</section>  
+<section><title>Implementation Notes</title>      
+<para>The following TXT components are measured and verified on boot:</para>
+<itemizedlist>
+<listitem><para>Control Domain (dom0) - sha1sum of root file system</para></listitem>
+<listitem><para>User Interface Service VM - sha1sum of root file system</para></listitem>
+<listitem><para>Network Driver Service VM - sha1sum of root file system</para></listitem>
+<listitem><para>Command line of the grub2 bootloader</para></listitem>
+</itemizedlist>
+<section><title>Measurements from tboot</title>
+<variablelist>
+<varlistentry><term>PCR 15</term><listitem><para role="die">Used to store dom0 filesystem hash (done in initramfs)</para></listitem></varlistentry>
+
+<varlistentry><term>PCR 17</term><listitem><para role="die">Used by TBOOT (documentation from <filename>TXT_Architecture_31516804_2008.pdf</filename>, section 1.9.1)</para>
+<itemizedlist>
+<listitem><para role="die">SHA-1 hash of BIOS ACM: SinitMleData.BiosAcmID (20 bytes)</para></listitem>
+<listitem><para role="die">STM opt-in indicator: SinitMleData.MsegValid (8 bytes)</para></listitem>
+<listitem><para role="die">SHA-1 hash of the STM (or all 0s if opt-out): SinitMleData.StmHash (20 bytes)</para></listitem>
+<listitem><para role="die">LCP Control Field of used policy (PD or PO): SinitMleData.PolicyControl (4 bytes)</para></listitem>
+<listitem><para role="die">SHA-1 hash of used policy (or all 0s if chosen not to be extended): SinitMleData.LcpPolicyHash (20 bytes)</para></listitem>
+<listitem><para role="die">MLE-chosen Capabilities (or all 0s if chosen not to be extended): OsSinitData.Capabilities (4 bytes)</para></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+
+
+
+<varlistentry><term>PCR 18</term><listitem><para>Used by TBOOT, signature of tboot.gz (documentation from <filename role="die">TXT_Architecture_31516804_2008.pdf</filename>, section 1.9.2)</para></listitem></varlistentry>
+
+<varlistentry><term>PCR 19</term><listitem><para>Used by TBOOT, signature of the other multiboot modules and boot command line option (xen, dom0 kernel, initramfs, selinux policy).</para></listitem></varlistentry>
+
+</variablelist>
+</section>
+<section><title>Measurement from initramfs</title>
+<itemizedlist>
+<listitem><para>Compute sha1sum of root partition.</para></listitem>
+<listitem><para role="die">Extend PCR 15 using the computed sha1sum: echo $s | tpm_extendpcr_sa -p 15</para></listitem>
+</itemizedlist>
+</section>
+<section><title>Quote</title>
+<itemizedlist>
+<listitem><para>Use <command>TPM_Quote2</command> to get a TPM quote on the requested PCRs and with the supplied nonce.</para></listitem>
+<listitem><para>Output is a signature and the data block that has been signed.</para></listitem>
+<listitem><para>Data block contains the list of PCRs, the locality and a digest of the PCR values.</para></listitem>
+<listitem><para>Quote file also includes PCR values but those are not signed and cannot be verified other than by computing the digest.</para></listitem>
+</itemizedlist>
+</section>
+<section><title>Verify</title>
+<itemizedlist>
+<listitem><para>Use openssl <command>rsa_verify</command> to check the signature of the data block.</para></listitem>
+<listitem><para>Compare nonce if supplied.</para></listitem>
+<listitem><para>Output list of PCRs and locality.</para></listitem>
+<listitem><para>Also output nonce, if not supplied.</para></listitem>
+<listitem><para>Output digest of the PCR values.</para></listitem>
+</itemizedlist> 
+</section>
+</section>
+<section><title>Password Handling</title>
+<para>Changes made to the configuration partition cause the system to prompt for the passphrase set in the TPM setup process. Run the following command to change this passphrase if required:</para>
+<screen>openssl rsa -des3 -in /boot/system/install/data/recovery-private-key.conf \
+-passin stdin -out /boot/system/install/data/recovery-private-key.conf \
+-passout stdin</screen>
+<para>Enter the old passphrase and press <keycap>Enter</keycap>. Then enter the new passphrase and press <keycap>Enter</keycap>. The following output is written to the console:</para> 
+<screen>writing RSA key</screen>
+</section> 
+
+</section>
+
+</appendix>
+  <xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="pxe_install" xmlns:xi="http://www.w3.org/2001/XInclude" /> 
+  <xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="licenses" xmlns:xi="http://www.w3.org/2001/XInclude" /> 
+
+<!-- <chapter role="NotInToc"><title role="invisible"></title>
+&colophon;
+</chapter> -->
+<index />
+</book>

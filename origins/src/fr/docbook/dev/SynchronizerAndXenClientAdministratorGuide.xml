@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+  <!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+  <!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+  <!ENTITY shared_upgrade_and_install_steps PUBLIC "shared_upgrade_and_install_steps" "../shared/shared_upgrade_and_install_steps.ent">
+  <!ENTITY % local PUBLIC "local" "../shared/local.ent">
+  %local;
+]>
+<book lang="en" id="user_guide"><?dbhtml dir="out/html/SynchronizerAndXenClientAdministratorGuide"?>
+ <bookinfo id="bookinfo_titlestuff" role="die">
+  <title>&COMPANY_NAME_SHORT;<trademark class="registered" role="die" /> &BACKEND;<trademark class="trade" role="die" /> and &PB; &PRODUCT_VERSION; Administrator Guide</title>
+
+  <pubdate><?dbtimestamp format="d B Y"?></pubdate>
+  
+  &legal;
+  <releaseinfo>This document serves as a guide for system administrators to the &COMPANY_NAME_SHORT;<trademark class="registered" role="die" /> &BACKEND;<trademark class="trade" role="die" /> and &PB; &PRODUCT_VERSION; release.</releaseinfo> 
+
+ </bookinfo>
+	<chapter><title>Planning your &PB;deployment</title>
+		
+	<para>HCL, scalability information, .</para>
+	</chapter>
+	
+	<chapter><title>Preparing a &PB; device and installing &PB;</title>
+		<section><title>Setting up network boot</title>
+		</section>	
+	
+	</chapter>
+	
+	<chapter><title>Configuring a &PB; device</title>
+		
+	
+	</chapter>
+	
+	<chapter><title>Creating and deploying VM images</title>
+	</chapter>
+	
+	
+<index/>
+&colophon;
+</book>	

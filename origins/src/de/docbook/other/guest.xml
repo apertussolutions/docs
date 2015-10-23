@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[<!ENTITY % local SYSTEM "../local.ent">  %local;]>
+<book lang="en">
+	<bookinfo id="bookinfo_titlestuff">
+		<title>Virtual Machine Installation Guide</title>
+		<subtitle>&COMPANY_NAME_SHORT; &PRODUCT_BRAND; &PRODUCT_VERSION;</subtitle>
+		<pubdate><?dbtimestamp format="d B Y"?></pubdate>
+		<copyright>
+			<year>&COPYRIGHT_YEARS;</year>
+			<holder>&COMPANY_NAME_LEGAL;</holder>
+		</copyright>
+			<mediaobject>
+	  <imageobject>
+		<imagedata fileref="images/XenClient.png"/>
+		</imageobject>
+		</mediaobject>
+	</bookinfo>
+	<chapter><title>VMs dude!</title>
+	<para>yeah baby</para></chapter>
+	
+
+
+</book>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+<!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+<!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+<!ENTITY xc_relnotes_shared PUBLIC "xc_relnotes_shared" "../shared/xc_relnotes_shared.ent">
+<!ENTITY % local PUBLIC "local" "../shared/local.ent">
+
+  %local;
+]><article lang="en"><?dbhtml dir="XenClientLocalVHDCache"?>
+	<articleinfo id="bookinfo_titlestuff" role="die">
+		<title>&COMPANY_NAME_SHORT;<trademark class="registered"/> &PB;<trademark class="trade"/> &PRODUCT_VERSION; Local VHD Cache</title>
+		<pubdate><?dbtimestamp format="d B Y"?></pubdate>
+  &legal;
+		<releaseinfo>&COMPANY_NAME_SHORT;<trademark class="registered"/> &PB; <trademark class="trade"/> &PRODUCT_VERSION; release.</releaseinfo>
+
+	</articleinfo>
+<?hard-pagebreak?>
+
+	<section id="local_vhd_cache"><title>Using a Local VHD Cache to Accelerate VM Download from &BACKEND;</title>
+	<para>When a VM download from &BACKEND; is initiated, &PB; attempts to locate VHDs in an attached optical disk or USB drive which would otherwise have to be downloaded from &BACKEND;. Using a local VHD cache in this manner can greatly speed up the installation of a VM image onto a device. Use the following procedure to create a local VHD cache:</para>
+	
+	<procedure><title>To Prepare a Local VHD Cache</title>
+	
+	<step><para>Create, prepare, and upload a VM to &BACKEND;.</para></step>
+<!--	<step><para>Run the following command on your &BACKEND; server to enable <command>ssh</command>:</para>
+	<screen>dpkg-reconfigure openssh-server</screen>
+	</step> -->
+	
+	<step><para>To identify which VHD files are used by the VM, open the local command shell in the console on your &BACKEND; appliance, then run the following command:</para>
+	<screen>get_vm_disks -n "<replaceable>vm_name</replaceable>" -v <replaceable>version</replaceable></screen>
+	<note><para>Use double quotes around <replaceable>vm_name</replaceable> if it contains whitespace.</para></note>
+	<para>The paths to all the VHDs associated with the specified VM are displayed.</para>
+	</step>
+	
+	<step><para>Copy the VHDs to a USB drive or burn them to an optical disk. The USB drive must be formatted with an NTFS filesystem. For DVDs, please burn the VHDs to a UDF filesystem. Ensure that:</para>
+	<itemizedlist>
+	<listitem><para>The VHD filenames are not changed.</para></listitem>
+	<listitem><para>The VHD files are present in the root folder of the medium.</para></listitem>
+
+
+	
+	</itemizedlist>
+<para>It is also possible to cache a portion of a VHD file if it is too large for the cache medium. For example, if you have a 4.3 GB VHD file and a 4 GB USB drive, you can use the <command>split</command> command in a console on your &BACKEND; server:</para>
+<screen>split -b 4000M <replaceable>vhd_filename</replaceable> xenclient</screen>
+<para>to split the VHD into two files, <filename>xenclientaa</filename> and <filename>xenclientbb</filename>:</para>
+<screen>ls -lh
+total 8.6G
+-rwxr-xr-x 1 hsimpson xeneng 4.3G Dec 14  2010 example.vhd
+-rw-r--r-- 1 hsimpson xeneng 4.0G Jul 13 15:47 xenclientaa
+-rw-r--r-- 1 hsimpson xeneng 356M Jul 13 15:48 xenclientab
+</screen>
+<para>You can then rename <filename>xenclientaa</filename> to <filename>example.vhd</filename> and put it on the cache medium. When a download is initiated, &PB; first searches for a USB drive that contains a portion or all of the required VHD(s), then for a optical media drive, and then that falls back to downloading any remaining VHDs or portions thereof from &BACKEND;.</para>
+<note><para>For successful VHD cache reading, it is essential that the first portion of any VHD is present on the cache medium. For example, putting the <filename>xenclientab</filename> file only onto the cache medium will cause the image transfer to fail.</para></note>
+	</step>
+	
+	<step><para>Assign the VM image to a user.</para></step>
+	
+	<step><para>Insert the USB device or optical disk into the user's &PB; device, and initiate the VM image download.</para></step>
+	
+	
+	</procedure>
+	
+	
+
+</section>
+</article>
