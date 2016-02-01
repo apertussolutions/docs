@@ -1,0 +1,2081 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+
+<!--
+  Copyright 2014 by Citrix Systems, Inc.  Created by Gordon Stretch <Gordon.Stretch@citrix.com>. This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+-->
+
+
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+  <!ENTITY colophon PUBLIC "colophon" "../../../../shared/xml/colophon.ent">
+  <!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+  
+    <!ENTITY view_details PUBLIC "view_details" "../shared/view_details.ent">
+  <!ENTITY shared_upgrade_and_install_steps PUBLIC "shared_upgrade_and_install_steps" "../shared/shared_upgrade_and_install_steps.ent">
+  <!ENTITY % local PUBLIC "local" "../shared/local.ent">
+  %local;
+]>
+<book id="XTSetupAndUsageGuide" lang="es">
+  <bookinfo id="bookinfo_titlestuff" role="die">
+    <title>
+      <trademark class="registered" role="die">
+      </trademark>
+      Guía de instalación y uso
+    </title>
+    <pubdate>
+    </pubdate>
+    <releaseinfo>
+    </releaseinfo>
+  </bookinfo>
+  <chapter>
+    <title>
+      Descripción y configuración del sistema
+    </title>
+    <para>
+      Citrix
+      proporciona un escritorio virtual con aislamiento mejorado de desconfiar mutuamente máquinas virtuales (VM). Se mejora el aislamiento de máquina virtual, manteniendo la líder de la industria de la experiencia del usuario XenClient en COTS hardware de escritorio.
+      soporta la personalización de las políticas de aislamiento para una variedad de empresas móviles y de escritorio de los casos su uso.
+      amplía las capacidades de XenClient con las siguientes características:
+    </para>
+    <itemizedlist>
+      <listitem>
+        <para>
+          Múltiples GPU del ratón y sin apoyo, lo que le permite ejecutar múltiples
+          Máquinas virtuales en monitores separados.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Medida de arranque de seguridad utilizando la tecnología Intel TXT.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Los discos cifrados VM.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          SE Linux y XSM (Xen módulos de seguridad) la aplicación de políticas.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Red Máquina Virtual Driver (NDVM) que proporciona un servicio de redes aisladas para las máquinas virtuales.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          VM-reset en el arranque para el retorno de una máquina virtual a su estado original en cada reinicio.
+        </para>
+      </listitem>
+    </itemizedlist>
+    <para>
+      tiene licencia, distribuir e instalar por separado de XenClient.
+    </para>
+    <section>
+      <title>
+        Embalaje
+      </title>
+      <para>
+        La
+        software consta de los siguientes paquetes:
+      </para>
+      <orderedlist>
+        <listitem>
+          <para>
+            Instalador de ISO (
+            )
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            De código abierto ISO que contiene el código de fuente abierta utilizada por
+            .
+          </para>
+        </listitem>
+      </orderedlist>
+    </section>
+    <section>
+      <title>
+        De compatibilidad de hardware
+      </title>
+      <para>
+        soporta los siguientes sistemas y dispositivos:
+      </para>
+      <section>
+        <title>
+          Sistemas de escritorio
+        </title>
+        <itemizedlist>
+          <listitem>
+            <para>
+              Dell 980 mini-torre
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Dell 980 factor de forma pequeño (SFF)
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              HP 8100 Mini-torre
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              HP 8100 factor de forma pequeño (SFF)
+            </para>
+          </listitem>
+        </itemizedlist>
+      </section>
+      <section>
+        <title>
+          Dispositivos adicionales
+        </title>
+        <itemizedlist>
+          <listitem>
+            <para>
+              ATI HD 4550 tarjeta gráfica PCI Express
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              PCI Express Tarjeta de interfaz de red (NIC), por ejemplo, Broadcom NetExtreme II 5722
+            </para>
+          </listitem>
+        </itemizedlist>
+      </section>
+      <section>
+        <title>
+          Intel TXT e Intel AMT
+        </title>
+        <para>
+          Para
+          los casos de uso que requieren Intel Trusted Execution Technology (TXT), pero no Intel Active Management Technology (AMT), las siguientes opciones están disponibles de fabricantes de sistemas y son apoyados por
+          :
+        </para>
+        <orderedlist>
+          <listitem>
+            <para>
+              Por favor, póngase en contacto con el fabricante del sistema para comprar una variante no vPro SKU de una computadora de escritorio compatible y una CPU Intel compatible con TXT y VT-d.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Por favor, compra e instalación de una tercera parte de interfaz de red PCI Express de la tarjeta (NIC) en una computadora de escritorio compatibles. Utilice el BIOS del sistema para desactivar la tarjeta de red de a bordo, integrada Intel. AMT debe permanecer habilitado en el BIOS del sistema.
+            </para>
+          </listitem>
+        </orderedlist>
+      </section>
+    </section>
+    <section>
+      <title>
+        Dispositivo de preparación antes de
+        Instalación
+      </title>
+      <procedure>
+        <title>
+          Antes de la instalación
+          en todos los dispositivos
+        </title>
+        <step>
+          <para>
+            En la mayoría de los casos, instalar el BIOS más reciente disponible del fabricante del sistema. En algunos casos, el BIOS más reciente puede ser incompatible con
+            . Ver el
+            <citetitle>
+              Citrix XenClient XT
+              Notas de la versión
+            </citetitle>
+            para más detalles.
+          </para>
+        </step>
+        <step>
+          <para>
+            Habilitar las siguientes características de Intel ® vPro ™ en la BIOS del sistema:
+          </para>
+          <substeps>
+            <step>
+              <para>
+                VT-x
+              </para>
+            </step>
+            <step>
+              <para>
+                VT-d
+              </para>
+            </step>
+            <step>
+              <para>
+                TPM
+              </para>
+            </step>
+            <step>
+              <para>
+                TXT
+              </para>
+            </step>
+          </substeps>
+        </step>
+      </procedure>
+      <procedure>
+        <title>
+          Antes de la instalación
+          en un escritorio Dell o HP con una Nvidia o ATI Tarjeta de Video
+        </title>
+        <step>
+          <para>
+            Instalación de la tarjeta de vídeo en la ranura PCI Express 4.
+          </para>
+        </step>
+        <step>
+          <para>
+            En el menú de configuración del BIOS de vídeo:
+          </para>
+          <substeps>
+            <step>
+              <para>
+                Activar el adaptador de vídeo integrado Intel
+              </para>
+            </step>
+            <step>
+              <para>
+                Especificar el adaptador de vídeo principal como Intel
+              </para>
+            </step>
+          </substeps>
+        </step>
+      </procedure>
+      <procedure>
+        <title>
+          Antes de la instalación
+          en un 980 Dell
+        </title>
+        <step>
+          <para>
+            Desactivar los dispositivos utilizados en la BIOS para reducir los conflictos de interrupción:
+          </para>
+          <substeps>
+            <step>
+              <para>
+                Conjunto
+                <guilabel>
+                  Sistema de configuración del puerto&gt; serie # 2
+                </guilabel>
+                a
+                <guilabel>
+                  Discapacitado
+                </guilabel>
+                .
+              </para>
+            </step>
+            <step>
+              <para>
+                Conjunto
+                <guilabel>
+                  Configuración del sistema&gt; Parallel
+                </guilabel>
+                a
+                <guilabel>
+                  Discapacitado
+                </guilabel>
+                .
+              </para>
+            </step>
+            <step>
+              <para>
+                Conjunto
+                <guilabel>
+                  Unidades&gt; SATA-2
+                </guilabel>
+                a
+                <guilabel>
+                  Discapacitado
+                </guilabel>
+                .
+              </para>
+            </step>
+            <step>
+              <para>
+                Conjunto
+                <guilabel>
+                  Unidades&gt; SATA-3
+                </guilabel>
+                a
+                <guilabel>
+                  Discapacitado
+                </guilabel>
+                .
+              </para>
+            </step>
+            <step>
+              <para>
+                Conjunto
+                <guilabel>
+                  Unidades&gt; SATA externo
+                </guilabel>
+                a
+                <guilabel>
+                  Discapacitado
+                </guilabel>
+                .
+              </para>
+            </step>
+            <step>
+              <para>
+                Conjunto
+                <guilabel>
+                  Dispositivos Varios&gt; WiFi NIC Slot
+                </guilabel>
+                a
+                <guilabel>
+                  Discapacitado
+                </guilabel>
+                .
+              </para>
+            </step>
+            <step>
+              <para>
+                Conjunto
+                <guilabel>
+                  Varios dispositivos&gt; Optiplex en el Reader
+                </guilabel>
+                para
+                <guilabel>
+                  Discapacitado
+                </guilabel>
+                .
+              </para>
+            </step>
+          </substeps>
+        </step>
+      </procedure>
+    </section>
+    <section>
+      <title>
+        Instrucciones de configuración
+      </title>
+      <para>
+        Después de actualizar y configurar su BIOS,
+        recomienda el siguiente procedimiento para la preparación de su
+        dispositivo:
+      </para>
+      <orderedlist>
+        <listitem>
+          <para>
+            Instalar
+            en el dispositivo de destino mediante el CD de instalación. Para obtener más información acerca de la instalación
+            , Consulte
+            <olink targetdoc="XenClientAdvancedUserGuide" targetptr="quick_install">
+            </olink>
+            .
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Crea una máquina virtual. Ver
+            <olink targetdoc="XenClientAdvancedUserGuide" targetptr="installing_vms">
+            </olink>
+            para más información.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Habilitar el cifrado de disco duro virtual para la máquina virtual. Ver
+            <olink targetdoc="XTSetupAndUsageGuide" targetptr="enable_vhd_encryption">
+            </olink>
+            para más información.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Instalar un sistema operativo en la máquina virtual. Ver
+            <olink targetdoc="XenClientAdvancedUserGuide" targetptr="install_os">
+            </olink>
+            para más información.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Instale el
+            en la máquina virtual. Ver
+            <olink targetdoc="XTSetupAndUsageGuide" targetptr="install_pv_tools">
+            </olink>
+            para más información.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Instalar cualquier otras máquinas virtuales de la misma manera.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Realizar cualquier máquina virtual opcional y configuración de la plataforma requerida. Ver
+            <olink targetdoc="XTSetupAndUsageGuide" targetptr="vm_configuration">
+            </olink>
+            y
+            <olink targetdoc="txt_setup" targetptr="platform_configuration">
+            </olink>
+            para más información.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            TXT permiten medir el lanzamiento del dominio de control. Ver
+            <olink targetdoc="XTSetupAndUsageGuide" targetptr="enable_txt">
+            </olink>
+            para más información.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Permitir la aplicación de SE Linux y la política de XSM. Ver
+            <olink targetdoc="XTSetupAndUsageGuide" targetptr="enable_selinux">
+            </olink>
+            para más información.
+          </para>
+        </listitem>
+      </orderedlist>
+      <xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="installing_xc" xmlns:xi="http://www.w3.org/2001/XInclude">
+      </xi:include>
+      <section id="enable_vhd_encryption">
+        <title>
+          Instalación de una máquina virtual encriptado con VHD
+        </title>
+        <procedure>
+          <title>
+            Para activar la encriptación VHD
+          </title>
+          <step>
+            <para>
+              Crea una máquina virtual en el
+              Interfaz de usuario, pero no lo inicie. Para ello, compruebe
+              <guilabel>
+                Crear VM e instalar OS tarde
+              </guilabel>
+              en la pantalla final del asistente de creación de VM.
+            </para>
+          </step>
+          <step>
+            <para>
+              Prensa
+              <keycap>
+                Ctrl + Mayúsculas + t
+              </keycap>
+              para obtener una ventana de la consola.
+            </para>
+          </step>
+          <step>
+            <para>
+              Inicie sesión en el dominio de control (dom0).
+            </para>
+          </step>
+          <step>
+            <para>
+              Ejecute el siguiente comando para crear una clave el nombre del disco UUID en el directorio de la plataforma la criptografía de clave y configurar el cifrado de disco duro virtual.
+            </para>
+            <screen>
+              key_dir = `XEC obtener la plataforma de cifrado de clave-dirs &#39;mkdir-p $ {} key_dir vm_vhd_path =` XEC-vm-n
+              <replaceable>
+                vm_name
+              </replaceable>
+              - El disco 1 se phys-path `vm_vhd_uuid =` basename $ {} vm_vhd_path vhd `key_file = $ {key_dir} / $ {} vm_vhd_uuid, AES-XTS-llano, 256.key dd if = / dev / urandom of =. $ {} key_file bs = 1 count = 32 vhd-util clave-n $ {} vm_vhd_path-k $ {} key_file-s
+            </screen>
+          </step>
+          <step>
+            <para>
+              Inicia la máquina virtual e instalar el sistema operativo de los medios de comunicación de la unidad óptica.
+            </para>
+          </step>
+        </procedure>
+      </section>
+      <section id="install_pv_tools">
+        <title>
+          Instalación de la
+          Instrumentos
+        </title>
+        <para>
+          Porque
+          utiliza un controlador de red de dominio, no hay conexión a la red hasta que el
+          (Que incluye el controlador de red PV) se han instalado en la máquina virtual. La
+          instalador obliga a Microsoft. NET, que no está incluido en Windows XP. Por esta razón, la
+          se instalan en dos etapas: básica drivers paravirtualizados primer lugar, seguido por el resto de herramientas.
+        </para>
+        <procedure>
+          <title>
+            Para instalar el
+          </title>
+          <step>
+            <para>
+              Conectar
+              dispositivo a una red cableada con acceso a Internet (para permitir la descarga. NET).
+            </para>
+          </step>
+          <step>
+            <para>
+              Uso
+              para instalar una máquina virtual de Windows XP a partir de los medios de comunicación proveedor física.
+            </para>
+          </step>
+          <step>
+            <para>
+              En Windows XP VM, explorar (no autorun) el CD de herramientas.
+            </para>
+          </step>
+          <step>
+            <para>
+              Permitir la visualización de archivos ocultos.
+            </para>
+          </step>
+          <step>
+            <para>
+              Navegue hasta el directorio de paquetes ocultos.
+            </para>
+          </step>
+          <step>
+            <para>
+              Ejecutar
+              <filename>
+                xensetup.exe
+              </filename>
+              para instalar los controladores para-virtualizados de E / S.
+            </para>
+          </step>
+          <step>
+            <para>
+              Reinicie la máquina virtual y seguir las instrucciones para instalar dispositivos fotovoltaicos.
+            </para>
+          </step>
+          <step>
+            <para>
+              Confirmar la conectividad de red de máquina virtual a una dirección IP fuera del host.
+            </para>
+          </step>
+          <step>
+            <para>
+              En Windows XP VM, explorar (no autorun) el CD de herramientas.
+            </para>
+          </step>
+          <step>
+            <para>
+              Instalar
+              Herramientas, este se descargará automáticamente. NET.
+            </para>
+          </step>
+          <step>
+            <para>
+              Reinicie la máquina virtual.
+            </para>
+          </step>
+        </procedure>
+      </section>
+    </section>
+    <section id="enable_txt">
+      <title>
+        Permitiendo TXT medida de lanzamiento para el Control de Dominio
+      </title>
+      <para>
+        Para obtener información detallada acerca de la
+        Implemenation TXT, ver
+        <xref linkend="txt_trusted_boot">
+        </xref>
+        .
+      </para>
+      <procedure>
+        <title>
+          Que permita a TXT
+        </title>
+        <step>
+          <para>
+            Actualización del sistema BIOS a la última versión disponible de OEM.
+          </para>
+        </step>
+        <step>
+          <para>
+            Activar TPM y TXT en el BIOS del sistema, guarde los cambios, reinicie cuando se le solicite por la BIOS.
+          </para>
+        </step>
+        <step>
+          <para>
+            El apagado.
+          </para>
+        </step>
+        <step>
+          <para>
+            Bota
+            .
+          </para>
+        </step>
+        <step>
+          <para>
+            Ejecute los siguientes comandos después del arranque:
+          </para>
+          <screen>
+            tpm-configuración de reinicio
+          </screen>
+        </step>
+        <step>
+          <para>
+            En el arranque inicial después de correr
+            <command>
+              tpm-setup
+            </command>
+            , El sistema de archivos de control de dominio es inspeccionado y los resultados almacenados en la TPM. Tras el arranque, es necesario reiniciar el sistema inmediatamente, ya sea usando el
+            <guilabel>
+              Poder
+            </guilabel>
+            menú, o mediante la ejecución del
+            <command>
+              reiniciar
+            </command>
+            comando en una ventana de la consola de control de dominio.
+          </para>
+        </step>
+      </procedure>
+      <para>
+        En los arranques posteriores, los cambios en el sistema de control de archivos de dominio o las opciones de arranque se traducirá en un mensaje para la contraseña de root para autorizar el resellado.
+      </para>
+    </section>
+    <section id="enable_selinux">
+      <title>
+        Aplicación de la habilitación de SE Linux y Política XSM para el Control de Dominio
+      </title>
+      <para>
+        Por defecto, SE Linux y XSM (Xen módulos de seguridad) en el dominio de la política de control no se cumple.
+      </para>
+      <procedure>
+        <title>
+          Para permitir la aplicación de la SE Linux y Política XSM
+        </title>
+        <step>
+          <para>
+          </para>
+        </step>
+        <step>
+          <para>
+            Ejecute el siguiente comando:
+          </para>
+          <screen>
+            sed-i &quot;s / selinux =.* / selinux = enforcing /&quot; / etc / selinux / config
+          </screen>
+        </step>
+        <step>
+          <para>
+            Reiniciar el sistema.
+          </para>
+        </step>
+      </procedure>
+      <para>
+        Hay tres posibles valores de SELinux:
+      </para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            <literal>
+              discapacitado
+            </literal>
+            , Lo que deshabilita SE Linux en el kernel.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <literal>
+              permisivo
+            </literal>
+            , Que permite a las operaciones, pero crea un registro de las operaciones que se negaría si SE Linux fue creado para
+            <literal>
+              la aplicación de
+            </literal>
+            .
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <literal>
+              la aplicación de
+            </literal>
+            , Que permite a todas las funciones de SE Linux.
+          </para>
+        </listitem>
+      </itemizedlist>
+      <para>
+        Muchos de control de las operaciones de línea de comandos de dominio no será posible cuando la política de SE Linux se hace cumplir. Para desactivar la aplicación en los arranques posteriores, edite el comando de grub antes de arrancar como se describe en
+        <xref linkend="edit_grub_command">
+        </xref>
+        .
+      </para>
+      <procedure id="edit_grub_command">
+        <title>
+          La edición del comando de grub para deshabilitar SE aplicación de políticas Linux
+        </title>
+        <step>
+          <para>
+            Editar el
+            <filename>
+              grub.cfg
+            </filename>
+            archivo para permitir la edición de la línea de comando de grub ejecutando el siguiente comando:
+          </para>
+          <screen>
+            sed &#39;1 i \ conjunto edit_and_shell = 1 &#39;/ boot / system / grub / grub.cfg
+          </screen>
+        </step>
+        <step>
+          <para>
+            Reinicie el
+            dispositivo.
+          </para>
+        </step>
+        <step>
+          <para>
+            Prensa
+            <keycap>
+              Esc
+            </keycap>
+            inmediatamente después de la
+            pantalla de presentación.
+          </para>
+        </step>
+        <step>
+          <para>
+            Prensa
+            <keycap>
+              e
+            </keycap>
+            para editar el comando de grub.
+          </para>
+        </step>
+        <step>
+          <para>
+            Cambiar las instancias de
+            <literal>
+              la aplicación de
+            </literal>
+            y
+            <literal>
+              flask_enforcing
+            </literal>
+            1 a 0.
+          </para>
+        </step>
+        <step>
+          <para>
+            Prensa
+            <keycap>
+              Ctrl + x
+            </keycap>
+            para arrancar de inmediato con la configuración de GRUB editado.
+          </para>
+        </step>
+      </procedure>
+    </section>
+  </chapter>
+  <chapter id="vm_configuration">
+    <title>
+      VM configuración
+    </title>
+    <section>
+      <title>
+        Configuración
+        VM con una Nvidia o ATI GPU
+      </title>
+      <procedure>
+        <title>
+          Que permita a
+          en una máquina virtual con acceso directo al hardware de video GPU
+        </title>
+        <step>
+          <para>
+            Instalar todas las actualizaciones de software de máquina virtual, asegúrese de que la
+            están instalados, y confirmar la conectividad de red de trabajo.
+          </para>
+        </step>
+        <step>
+          <para>
+            Apagar la máquina virtual.
+          </para>
+        </step>
+        <step>
+          <para>
+          </para>
+        </step>
+        <step>
+          <para>
+            Haga clic en el
+            <guilabel>
+              Hardware
+            </guilabel>
+            ficha.
+          </para>
+        </step>
+        <step>
+          <para>
+            Desde el
+            <guilabel>
+              Gráficos 3D de apoyo
+            </guilabel>
+            lista desplegable, seleccione la GPU que desea asignar a la máquina virtual y haga clic en
+            <guilabel>
+              Ahorrar
+            </guilabel>
+            .
+          </para>
+        </step>
+        <step>
+          <para>
+            Inicia la máquina virtual. No utilizar el conductor automatizados funcionalidad de Windows de instalación para el GPU detectadas recientemente.
+          </para>
+        </step>
+        <step>
+          <para>
+            Si la GPU es una GPU ATI, desactivarlo antes de instalar el driver:
+          </para>
+          <substeps>
+            <step>
+              <para>
+                Abra el Administrador de dispositivos.
+              </para>
+            </step>
+            <step>
+              <para>
+                En Adaptadores de pantalla, la identificación del dispositivo ATI.
+              </para>
+            </step>
+            <step>
+              <para>
+                Haga clic derecho sobre el dispositivo de ATI y seleccione Deshabilitar.
+              </para>
+            </step>
+            <step>
+              <para>
+                Reinicie la máquina virtual.
+              </para>
+            </step>
+          </substeps>
+        </step>
+        <step>
+          <para>
+            Descargar e instalar el Windows XP Nvidia Quadro conductor 259,12 o posterior (GPU Nvidia) o el conductor del catalizador 10.9 o posterior (ATI GPU).
+          </para>
+        </step>
+        <step>
+          <para>
+            Hacer
+            <emphasis>
+              no
+            </emphasis>
+            reiniciar el sistema cuando se le solicite por la Nvidia o ATI de instalación del controlador.
+          </para>
+        </step>
+        <step>
+          <para>
+            Abra el Administrador de dispositivos de Windows XP.
+          </para>
+        </step>
+        <step>
+          <para>
+            Seleccionar
+            <guilabel>
+              Adaptadores de pantalla&gt; Citrix Xen Display Driver
+            </guilabel>
+            .
+          </para>
+        </step>
+        <step>
+          <para>
+            Haga clic derecho en el dispositivo y seleccione
+            <guilabel>
+              Inhabilitar
+            </guilabel>
+            .
+          </para>
+        </step>
+        <step>
+          <para>
+            Confirme que el dispositivo debe estar deshabilitada.
+          </para>
+        </step>
+        <step>
+          <para>
+            Aceptar el sistema para reiniciar el dispositivo.
+          </para>
+        </step>
+        <step>
+          <para>
+            Una vez reiniciado el VM, la pantalla de inicio VM se mostrará en la pantalla de Intel, pero el escritorio (después del arranque) se mostrará en la pantalla de Nvidia o ATI.
+          </para>
+        </step>
+      </procedure>
+    </section>
+    <section>
+      <title>
+        Habilitación de Asignación de dispositivos de audio de una máquina virtual
+      </title>
+      <para>
+        Esta funcionalidad sólo se puede utilizar para una sola máquina virtual, que debe ser la primera máquina virtual se inició después de arrancar. Este comando permite VT-d pasarela del dispositivo de audio a una máquina virtual única. Es necesario reiniciar la máquina virtual de dos veces, antes de instalar el controlador de audio.
+      </para>
+      <para>
+        Después de dedicar el dispositivo de audio a una sola máquina virtual, por favor, elimine la emulación de audio de los fabricantes de vehículos restantes.
+      </para>
+      <procedure>
+        <title>
+          Para asignar el dispositivo de audio a una máquina virtual
+        </title>
+        <step>
+          <para>
+          </para>
+        </step>
+        <step>
+          <para>
+            Agregar una regla de dar a este dispositivo a la máquina virtual:
+          </para>
+          <screen>
+            XEC-vm-n
+            <replaceable>
+              vm_name
+            </replaceable>
+            add-pt-0x0403 cualquier regla alguna
+          </screen>
+        </step>
+        <step>
+          <para>
+            Compruebe que el dispositivo que se asignará a la máquina virtual es la correcta:
+          </para>
+          <screen>
+            XEC-vm-n
+            <replaceable>
+              vm_name
+            </replaceable>
+            lista-pt-pci-dispositivos
+          </screen>
+        </step>
+      </procedure>
+      <procedure>
+        <title>
+          Para quitar la emulación de audio de una máquina virtual
+        </title>
+        <step>
+          <para>
+          </para>
+        </step>
+        <step>
+          <para>
+            Ejecute el siguiente comando:
+          </para>
+          <screen>
+            XEC-vm-n
+            <replaceable>
+              vm_name
+            </replaceable>
+            set-db-key config / sonido &quot;&quot;
+          </screen>
+        </step>
+      </procedure>
+    </section>
+    <section>
+      <title>
+        Configuración de la escritura de disco óptico
+      </title>
+      <procedure>
+        <title>
+          Para deshabilitar la escritura en un disco óptico de una máquina virtual
+        </title>
+        <step>
+          <para>
+          </para>
+        </step>
+        <step>
+          <para>
+            Ejecute el siguiente comando:
+          </para>
+          <screen>
+            XEC-vm-n
+            <replaceable>
+              vm_name
+            </replaceable>
+            db-set-políticas clave / cd-rec falsa
+          </screen>
+        </step>
+      </procedure>
+    </section>
+    <section>
+      <title>
+        Habilitación de Asignación de controlador USB a una máquina virtual
+      </title>
+      <procedure>
+        <title>
+          Para asignar un controlador de USB a una máquina virtual única
+        </title>
+        <step>
+          <para>
+          </para>
+        </step>
+        <step>
+          <para>
+            Ejecute el siguiente comando para descubrir el ID de dispositivo de los controladores USB:
+          </para>
+          <screen>
+            lspci-nn | grep &#39;\ [0c03 \]&#39;
+          </screen>
+          <para>
+            La salida del comando similar al siguiente:
+          </para>
+          <screen>
+            00:1 A.0 USB Controller [0c03]: Intel Corporation 5 Series/3400 Series \ chipset controlador de host mejorado USB2 [8086:3 B3c] (rev 05) 00:1 D.0 USB Controller [0c03]: Intel Corporation 5 Series/3400 Series \ Chipset USB2 Enhanced Host Controller [8086:3 B34] (rev 05)
+          </screen>
+          <para>
+            Los números entre corchetes al final de la línea de describir la Identificación del vendedor y la identificación del dispositivo en el formato
+            <literal>
+              [Vendor_id: device_id]
+            </literal>
+            . Por ejemplo, la primera línea de la salida de ejemplo se describe un controlador de dispositivo USB con un ID de los fabricantes de 8086 y un ID de dispositivo de 3b3c.
+          </para>
+        </step>
+        <step>
+          <para>
+            Ejecute el siguiente comando:
+          </para>
+          <screen>
+            XEC-vm-n
+            <replaceable>
+              vm_name
+            </replaceable>
+            add-pt-regla 0x0c03 0x
+            <replaceable>
+              usb_vendor_id
+            </replaceable>
+            0x
+            <replaceable>
+              usb_device_id
+            </replaceable>
+          </screen>
+        </step>
+        <step>
+          <para>
+            Inicia la máquina virtual.
+          </para>
+        </step>
+        <step>
+          <para>
+            Abra el Administrador de dispositivos y asegurarse de que no hay ningún problema reportado con el
+            <literal>
+              Universal Serial Bus controllers
+            </literal>
+            .
+          </para>
+        </step>
+        <step>
+          <para>
+            Prensa
+            <keycap>
+              Ctrl + 0
+            </keycap>
+            para volver a
+            .
+          </para>
+        </step>
+        <step>
+          <para>
+            Conecte un dispositivo USB en uno de los puertos USB asignado a la máquina virtual.
+          </para>
+        </step>
+        <step>
+          <para>
+            En la ventana de la consola de control de dominio, ejecute el
+            <command>
+              lsusb
+            </command>
+            comandos. Compruebe que el dispositivo es
+            <emphasis>
+              no
+            </emphasis>
+            aparece en la salida del comando. Si el dispositivo
+            <emphasis>
+              es
+            </emphasis>
+            en la lista, compruebe si el dispositivo USB está conectado al puerto USB con el ID especificado bus USB.
+          </para>
+        </step>
+        <step>
+          <para>
+            Volver a la máquina virtual invitada. El dispositivo USB debe estar presente.
+          </para>
+        </step>
+      </procedure>
+      <para>
+        En algunos modelos de hardware soportado dispositivos USB pueden compartir el mismo bus USB. En este caso todos los dispositivos USB en el bus especificado se pasan a la máquina virtual.
+      </para>
+    </section>
+    <section>
+      <title>
+        La prevención de Asignación de CD físico a una máquina virtual específica
+      </title>
+      <para>
+      </para>
+      <para>
+        Ejecutar el comando:
+      </para>
+      <screen>
+        XEC-vm-n
+        <replaceable>
+          vm_name
+        </replaceable>
+        db-set-políticas clave / cd de acceso falsos
+      </screen>
+    </section>
+    <section>
+      <title>
+        La prevención del uso de la tecla Imprimir pantalla dentro de una máquina virtual específica
+      </title>
+      <para>
+      </para>
+      <para>
+        Ejecutar el comando:
+      </para>
+      <screen>
+        XEC-vm-n
+        <replaceable>
+          vm_name
+        </replaceable>
+        db-set-políticas clave / impresión de pantalla-no reconocidos verdadera
+      </screen>
+    </section>
+    <section>
+      <title>
+        Edición de la prevención de las propiedades de VM
+      </title>
+      <para>
+      </para>
+      <para>
+        Ejecutar el comando:
+      </para>
+      <screen>
+        XEC-vm-n
+        <replaceable>
+          vm_name
+        </replaceable>
+        set-db-políticas clave / modificar-vm-valores falsos
+      </screen>
+    </section>
+    <section>
+      <title>
+        Edición de las propiedades que permite VM en
+      </title>
+      <para>
+      </para>
+      <para>
+        Ejecutar el comando:
+      </para>
+      <screen>
+        XEC-vm-n
+        <replaceable>
+          vm_name
+        </replaceable>
+        db-set-políticas clave / modificar-vm-configuración de verdad
+      </screen>
+    </section>
+  </chapter>
+  <chapter id="platform_configuration">
+    <title>
+      Plataforma de configuración
+    </title>
+    <section>
+      <title>
+        Dominio de Activación del control de acceso a la red
+      </title>
+      <para>
+        En
+        EIP el controlador de red de máquina virtual (NDVM) proporciona conectividad de red a otras máquinas virtuales, y por defecto el dominio de control no tiene acceso a la red.
+      </para>
+      <procedure>
+        <title>
+          Para habilitar el dominio de Network Access Control
+        </title>
+        <step>
+          <para>
+          </para>
+        </step>
+        <step>
+          <para>
+            Ejecute los siguientes comandos:
+          </para>
+          <screen>
+            XEC conjunto habilitar ssh reiniciar verdad
+          </screen>
+        </step>
+      </procedure>
+      <procedure>
+        <title>
+          Para desactivar el dominio de Network Access Control
+        </title>
+        <step>
+          <para>
+          </para>
+        </step>
+        <step>
+          <para>
+            Ejecute los siguientes comandos:
+          </para>
+          <screen>
+            XEC conjunto habilitar ssh reiniciar falsa
+          </screen>
+        </step>
+      </procedure>
+    </section>
+    <section>
+      <title>
+        El usuario que permite restablecer VM-On-Boot
+      </title>
+      <note>
+        <para>
+          Por favor, asegúrese de haber instalado el
+          en la máquina virtual y realizar toda la configuración de máquina virtual antes de activar el reset en el arranque.
+        </para>
+      </note>
+      <para>
+      </para>
+      <para>
+        Ejecute los siguientes comandos:
+      </para>
+      <screen>
+        XEC-vm-n
+        <replaceable>
+          vm_name
+        </replaceable>
+        - El disco 1 vm_uuid instantánea conjunto guión = `XEC-vm-n
+        <replaceable>
+          vm_name
+        </replaceable>
+        obtener uuid &#39;ruby / usr / lib / backend / ruby ​​/ instance_customizations_cache.rb-u $ {vm_uuid} \ crear
+      </screen>
+      <note>
+        <para>
+          Algunas claves de registro de Windows, específicamente los relacionados con Active Directory (AD), se mantienen y no se restablece.
+        </para>
+      </note>
+    </section>
+    <section>
+      <title>
+        Ratón que permite cambiar entre doble monitor de máquinas virtuales
+      </title>
+      <para>
+        Para poner en práctica alternativas diseños físicos de las dos pantallas, cambiar el número de ranura VM (0, 1, 2, etc) y las definiciones de borde (izquierda, derecha). El número de ranura VM (N) es el
+        <keycap>
+          Ctrl +
+          <replaceable>
+            N
+          </replaceable>
+        </keycap>
+        secuencia de teclas se utiliza para cambiar el contexto de entrada a la máquina virtual. La sintaxis del comando es
+        <command>
+          XEC-vm-n
+          <replaceable>
+            vm_name
+          </replaceable>
+          conjunto sin fisuras del ratón [left | right]
+          <replaceable>
+            Slot_Number
+          </replaceable>
+        </command>
+        . Por ejemplo, para configurar la máquina virtual con selector de llave 2 para mover para cambiar a la máquina virtual con el conmutador de llave 3, cuando el ratón se mueve sobre el borde derecho de la pantalla, ejecute el comando:
+      </para>
+      <screen>
+        XEC-vm-n
+        <replaceable>
+          name_of_vm_with_switcher_key_2
+        </replaceable>
+        conjunto sin fisuras del ratón a la derecha 3
+      </screen>
+      <para>
+        La configuración de ejemplo siguiente se implementa el cambio de un diseño de pantalla con:
+      </para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            4 no HDX máquinas virtuales (incluyendo UIVM) en el monitor de la izquierda
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            1 HDX VM (por ejemplo, con Nvidia GPU) en el monitor de la derecha
+          </para>
+        </listitem>
+      </itemizedlist>
+      <para>
+        Prensa
+        <keycap>
+          Ctrl + Mayúsculas + t
+        </keycap>
+        en
+        para obtener un dominio de control de ventana de la consola.
+      </para>
+      <screen>
+        db-escritura / selector / auto-switch-discapacitados &quot;,&quot; XEC-vm-n
+        <replaceable>
+          vm1_name
+        </replaceable>
+        conjunto sin fisuras-izquierdo del ratón prev XEC-vm-n
+        <replaceable>
+          vm0_name
+        </replaceable>
+        conjunto sin fisuras del ratón a la derecha una XEC-vm-n
+        <replaceable>
+          vm2_name
+        </replaceable>
+        conjunto sin fisuras del ratón a la derecha una XEC-vm-n
+        <replaceable>
+          vm3_name
+        </replaceable>
+        conjunto sin fisuras del ratón a la derecha una XEC-vm-n
+        <replaceable>
+          vm4_name
+        </replaceable>
+        conjunto sin fisuras del ratón a la derecha un
+      </screen>
+      <para>
+        Para eliminar un interruptor límite, por ejemplo, para
+        <replaceable>
+          vm2_name
+        </replaceable>
+        , Establecer el
+        <literal>
+          sin el ratón a la derecha
+        </literal>
+        propiedad de una cadena vacía:
+      </para>
+      <screen>
+        XEC-vm-n
+        <replaceable>
+          vm2_name
+        </replaceable>
+        conjunto sin fisuras del ratón a la derecha &quot;&quot;
+      </screen>
+      <para>
+        Para ver el estado actual del interruptor de límite de una máquina virtual, ejecute el comando con
+        <literal>
+          obtener
+        </literal>
+        en lugar de
+        <literal>
+          conjunto
+        </literal>
+        :
+      </para>
+      <screen>
+        XEC-vm-n
+        <replaceable>
+          vm0_name
+        </replaceable>
+        obtener sin problemas el ratón a la derecha
+      </screen>
+      <para>
+        Este comando muestra la clave del conmutador de la máquina virtual que el límite derecho del
+        <replaceable>
+          vm0_name
+        </replaceable>
+        cambia.
+      </para>
+    </section>
+    <section>
+      <title>
+        Modificar el reparto transparente de aplicación Color del borde
+      </title>
+      <para>
+        En el
+        VM, hay un borde de color alrededor de las ventanas de aplicaciones que son compartidos por los
+        VM. Este color se puede cambiar para cada máquina virtual de publicación. Después de la
+        herramientas se han instalado y verificado como el trabajo, el siguiente registro ediciones va a cambiar el color del borde:
+      </para>
+      <orderedlist>
+        <listitem>
+          <para>
+            Abra el Editor del Registro de Windows en la máquina virtual de intercambio de aplicaciones.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Cree la clave
+            <literal>
+              HKLM \ Software \ Citrix \ Portica \ Frontera
+            </literal>
+            .
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Crear los valores DWORD siguientes:
+          </para>
+          <orderedlist>
+            <listitem>
+              <para>
+                Azul (por defecto es 0)
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Verde (por defecto es FF)
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Rojo (por defecto es 0)
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Ancho (por defecto es 4)
+              </para>
+            </listitem>
+          </orderedlist>
+        </listitem>
+        <listitem>
+          <para>
+            Editar los valores RGB y el ancho para que coincida con el resultado deseado.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Reinicie VM.
+          </para>
+        </listitem>
+      </orderedlist>
+    </section>
+  </chapter>
+  <chapter>
+    <title>
+      Configuración de red
+    </title>
+    <section>
+      <title>
+        Ejemplo de servicio de VM
+      </title>
+      <procedure>
+        <title>
+          Para crear una máquina virtual de servicio
+        </title>
+        <step>
+          <para>
+            Copia
+            <filename>
+              vpnvm-rootfs.i686.ext3.gz
+            </filename>
+            (Proporcionado por el
+            representante) en la
+            <filename>
+              / Storage / vpnvm
+            </filename>
+            directorio y gunzip que, por ejemplo:
+          </para>
+          <screen>
+            mkdir / storage / vpnvm cd / storage / vpnvm gunzip vpnvm-rootfs.i686.ext3.gz
+          </screen>
+        </step>
+        <step>
+          <para>
+            Cambie el nombre del sistema de archivos:
+          </para>
+          <screen>
+            mv vpnvm-rootfs.i686.ext3 vpnvm.ext3
+          </screen>
+        </step>
+        <step>
+          <para>
+            Copie el archivo
+            <filename>
+              servicio vpnvm
+            </filename>
+            en la
+            <filename>
+              / Usr/share/xenmgr-1.0/templates/kent
+            </filename>
+            directorio y reinicie el
+            dispositivo.
+          </para>
+        </step>
+      </procedure>
+      <section>
+        <title>
+          La creación de máquinas virtuales de servicios adicionales
+        </title>
+        <procedure>
+          <title>
+            Para crear un segundo VPNVM
+          </title>
+          <step>
+            <para>
+              Ejecute el siguiente comando para apagar el VPNVM existentes:
+            </para>
+            <screen>
+              xen-vm-n
+              <replaceable>
+                vpnvm_name
+              </replaceable>
+              cierre
+            </screen>
+          </step>
+          <step>
+            <para>
+              Haga una copia de la carpeta VPNVM existentes y cambiar el nombre del archivo de la partición:
+            </para>
+            <screen>
+              cp-r / storage / vpnvm / storage/vpn2vm mv / storage/vpn2vm/vpnvm.ext3 / storage/vpn2vm/vpn2vm.ext3
+            </screen>
+          </step>
+          <step>
+            <para>
+              Copie las plantillas VPNVM y reemplazar los valores clave para realizar la configuración y el nombre del nuevo VPNVM único.
+            </para>
+            <screen>
+              cp / usr/share/xenmgr-1.0/templates/kent/service-vpnvm \ / usr/share/xenmgr-1.0/templates/kent/service-vpn2vm sed-i &#39;s/vpn/vpn2/g&#39; / usr / share / xenmgr-1.0/templates/kent/service-vpn2vm sed-i &#39;s /
+              <replaceable>
+                existing_vpnvm_uuid
+              </replaceable>
+              /
+              <replaceable>
+                any_unused_uuid
+              </replaceable>
+              / &#39;\ / Usr/share/xenmgr-1.0/templates/kent/service-vpn2vm
+            </screen>
+          </step>
+          <step>
+            <para>
+              Seguir
+              <olink targetdoc="VPNVM_setup" targetptr="attach_vm_to_vpnvm">
+              </olink>
+              .
+            </para>
+          </step>
+        </procedure>
+      </section>
+      <section id="attach_to_VPNVM">
+        <title>
+          Colocación de una máquina virtual del usuario a la Red de Servicio de VM
+        </title>
+        <para>
+          Utilice el siguiente procedimiento para conectar una máquina virtual a la red VPNVM.
+        </para>
+        <procedure id="attach_vm_to_vpnvm">
+          <title>
+            Para conectar una máquina virtual a la red de VPNVM
+          </title>
+          <note>
+            <para>
+              Por favor, asegúrese de que el
+              se instalan en la máquina virtual que se conecta a la red VPNVM.
+            </para>
+          </note>
+          <step>
+            <para>
+            </para>
+          </step>
+          <step>
+            <para>
+              Ejecutar el comando:
+            </para>
+            <screen>
+              XEC-vm
+            </screen>
+            <para>
+              Este comando imprime el UUID de todas las máquinas virtuales instaladas. Tenga en cuenta el UUID de la VM pertinentes.
+            </para>
+          </step>
+          <step>
+            <para>
+              Ejecute los siguientes comandos:
+            </para>
+            <screen>
+              XEC-vm-u
+              <replaceable>
+                user_vm_uuid
+              </replaceable>
+              conjunto de seguimiento de las dependencias cierto db-escritura / vm /
+              <replaceable>
+                user_vm_uuid
+              </replaceable>
+              / Config/nic/0/backend-uuid
+              <replaceable>
+                vpnvm_vm_uuid
+              </replaceable>
+            </screen>
+          </step>
+        </procedure>
+      </section>
+      <section>
+        <title>
+          Interfaces de red
+        </title>
+        <para>
+          Usted puede ssh a cualquier VPNVM utilizando
+          <command>
+            sshv4v
+            <replaceable>
+              vm_name
+            </replaceable>
+          </command>
+          para examinar el sistema de archivos raíz o hacer cambios en él. Por defecto, el sistema de archivos VPNVM es de sólo lectura, por lo que necesita para ejecutar el comando
+          <command>
+            mount-o remount, rw /
+          </command>
+          ser capaz de hacer cualquier cambio.
+        </para>
+        <para>
+          Cuando el VPNVM se inicia la siguiente secuencia de eventos:
+        </para>
+        <orderedlist>
+          <listitem>
+            <para>
+              El VPNVM obtiene una interfaz de red pv,
+              <literal>
+                eth0
+              </literal>
+              , Cuyo servidor está la Red de Controladores de dominio VM (NDVM).
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <literal>
+                eth0
+              </literal>
+              se agrega automáticamente a un puente de red nueva llamada
+              <literal>
+                brbridged
+              </literal>
+              .
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Cuando una máquina virtual se inicia, se pone un pv de interfaz de red, cuyo servidor está VPNVM.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              De acuerdo con la regla de udev ubicado en
+              <filename>
+                / Etc / udev / rules.d / xen-backend
+              </filename>
+              , El servidor se añade automáticamente a
+              <literal>
+                brbridged
+              </literal>
+              .
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Cuando una máquina virtual realiza una solicitud de red de Internet, los paquetes se envían el siguiente: VM &lt;-&gt; VPNVM &lt;-&gt; NDVM &lt;-&gt; Internet.
+            </para>
+          </listitem>
+        </orderedlist>
+        <para>
+          La intención es modificar VPNVM a utilizar algún tipo de filtrado, como VPN, en lugar de utilizar el puente ficticio.
+        </para>
+        <note>
+          <para>
+            El núcleo VPNVM ha sido modificado para obligar a los paquetes que pasan por copia, lo que se requiere cuando los paquetes pasan por más de un puente. Cuando el puente ficticio se sustituye por una VPN esta modificación no es necesaria.
+          </para>
+        </note>
+      </section>
+    </section>
+    <section>
+      <title>
+        VM Configuración del Firewall
+      </title>
+      <para>
+        Puede configurar reglas de firewall usando el
+        <command>
+          viptables
+        </command>
+        comando para crear reglas sobre lo que se permite la comunicación entre máquinas virtuales. Cada normativa especifica si se acepta o rechaza la comunicación procedentes de una máquina virtual en un puerto con destino a otra máquina virtual en otro puerto. Por ejemplo:
+      </para>
+      <screen>
+        viptables-A-d 1-e 2-j REJECT
+      </screen>
+      <para>
+        crea una nueva regla que prohíbe la comunicación entre la máquina virtual con el dominio y la identificación de una máquina virtual con el dominio ID 2. La
+        <command>
+          viptables
+        </command>
+        comando utiliza la siguiente sintaxis:
+      </para>
+      <screen>
+        viptables - help Usage: comando viptables [Artículo] Comandos: - append-Una regla Append - insertar-I regla Insertar &lt;n&gt; antes &lt;n&gt; regla - L lista las reglas de la lista - delete-D [&lt;n &gt;] Eliminar &lt;n&gt; regla o la regla siguiente - flush-F normas Flush - help-h opciones de la Regla Ayuda: - Dom-en-d &lt;n&gt; cliente domid - Dom-a-servidor e &lt;n&gt; domid - Port-en-p &lt;n&gt; cliente del puerto - puerto de salida de la q &lt;n&gt; puerto del servidor - salto-j ACCEPT {| REJECT} Qué hacer
+      </screen>
+      <note>
+        <itemizedlist>
+          <listitem>
+            <para>
+              Funcionamiento
+              <command>
+                viptables-L
+              </command>
+              imprime el conjunto actual de
+              <command>
+                viptable
+              </command>
+              reglas para el búfer de mensajes Xen. Para ver este buffer, ejecute el comando
+              <command>
+                Xenops dmesg
+              </command>
+              .
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <command>
+                viptables
+              </command>
+              sólo se puede ejecutar en el dominio de control (dom0) como
+              <literal>
+                raíz
+              </literal>
+              .
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <command>
+                viptables
+              </command>
+              las reglas no se mantienen a través de reiniciar el dispositivo.
+            </para>
+          </listitem>
+        </itemizedlist>
+      </note>
+    </section>
+  </chapter>
+  <xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="using_bc" xmlns:xi="http://www.w3.org/2001/XInclude">
+  </xi:include>
+  <xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="resource_allocation" xmlns:xi="http://www.w3.org/2001/XInclude">
+  </xi:include>
+  <chapter>
+    <title>
+      Otras tareas administrativas
+    </title>
+    <section>
+      <title>
+        Base de datos de control de acceso
+      </title>
+      <para>
+        Puede acceder a la base de datos de dominio de control mediante
+        <command>
+          db-*- dom0
+        </command>
+        comandos en el VPNVM. Esto puede ser útil para la creación de datos persistentes, por ejemplo, certificados de VPN, en un lugar seguro en el ámbito de control. Para ser capaz de hacer peticiones de base de datos, hay que añadir las correspondientes normas en
+        <filename>
+          / Etc / rpc proxy.rules-
+        </filename>
+        en el sistema de control de archivos de dominio. Por ejemplo, para permitir el acceso de lectura a partir de una máquina virtual con el UUID
+        <literal>
+          00000000-0000-0000-0000-000000000003
+        </literal>
+        :
+      </para>
+      <screen>
+        echo &quot;permitir libertad-uuid 00000000-0000-0000-0000-000000000003 \ destino org.freedesktop.DBus interfaz \ org.freedesktop.DBus&quot;&gt;&gt; / etc / rpc-proxy.rules echo &quot;permitir libertad-uuid 0-0000 - 0000-0000-000000000003 \ destino com.citrix.xenclient.db \ interfaz com.citrix.xenclient.db leer &quot;&gt;&gt; / etc / rpc-proxy.rules echo&quot; permitir libertad-uuid 00000000-0000-0000-0000-000000000003 \ destino com.citrix.xenclient.db \ interfaz com.citrix.xenclient.db READ_BINARY &quot;&gt;&gt; / etc / rpc-proxy.rules
+      </screen>
+      <para>
+        Para habilitar el acceso, reemplace
+        <literal>
+          leer
+        </literal>
+        con
+        <literal>
+          escribir
+        </literal>
+        y
+        <literal>
+          READ_BINARY
+        </literal>
+        con
+        <literal>
+          write_binary
+        </literal>
+        en el ejemplo anterior.
+      </para>
+    </section>
+  </chapter>
+  <xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="troubleshooting" xmlns:xi="http://www.w3.org/2001/XInclude">
+  </xi:include>
+  <appendix>
+    <title>
+      Notas de aplicación
+    </title>
+    <section id="txt_trusted_boot">
+      <title>
+        TXT proceso de arranque de confianza
+      </title>
+      <para>
+        utiliza la tecnología Intel TXT para el hardware basado en la raíz dinámica de confianza (DRTM) de medición y verificación de la
+        lanzamiento de medio ambiente. TXT es invocado antes de
+        de arranque, suspender, reiniciar y apagar. TXT utiliza código abierto (tboot) y de código cerrado (SINIT) chipset específico de software que es desarrollado y mantenido por Intel. Buen funcionamiento de TXT también depende del soporte de procesadores, la calidad de un firmware BIOS OEM de ejecución y Trusted Platform Module (TPM).
+      </para>
+      <section>
+        <title>
+          TXT proceso de configuración inicial
+        </title>
+        <para>
+          El siguiente diagrama muestra el proceso inicial de configuración de TXT.
+        </para>
+        <informalfigure>
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center" fileref="images/trusted_boot_process_setup.png" width="75%">
+              </imagedata>
+            </imageobject>
+          </mediaobject>
+        </informalfigure>
+      </section>
+      <section>
+        <title>
+          Proceso de arranque de confianza: Verificación en el arranque
+        </title>
+        <para>
+          El siguiente diagrama muestra el proceso de verificación que se produce en el momento de dispositivo de arranque.
+        </para>
+        <informalfigure>
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center" fileref="images/trusted_boot_process_verify_on_boot.png" width="75%">
+              </imagedata>
+            </imageobject>
+          </mediaobject>
+        </informalfigure>
+      </section>
+      <section>
+        <title>
+          Notas de aplicación
+        </title>
+        <para>
+          Los siguientes componentes de TXT son medidas y verificadas en el arranque:
+        </para>
+        <itemizedlist>
+          <listitem>
+            <para>
+              Control de Dominio (dom0) - sha1sum de sistema de archivos raíz
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Interfaz de usuario de servicio VM - sha1sum de sistema de archivos raíz
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Controlador de red de servicio VM - sha1sum de sistema de archivos raíz
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              De línea de comandos del gestor de arranque grub2
+            </para>
+          </listitem>
+        </itemizedlist>
+        <section>
+          <title>
+            Las mediciones de tboot
+          </title>
+          <variablelist>
+            <varlistentry>
+              <term>
+                PCR 15
+              </term>
+              <listitem>
+                <para role="die">
+                  Se utiliza para almacenar hachís dom0 sistema de archivos (hecho en initramfs)
+                </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>
+                PCR 17
+              </term>
+              <listitem>
+                <para role="die">
+                  Utilizado por TBOOT (documentación de
+                  <filename>
+                    TXT_Architecture_31516804_2008.pdf
+                  </filename>
+                  , Punto 1.9.1)
+                </para>
+                <itemizedlist>
+                  <listitem>
+                    <para role="die">
+                      Hash SHA-1 de la BIOS ACM: SinitMleData.BiosAcmID (20 bytes)
+                    </para>
+                  </listitem>
+                  <listitem>
+                    <para role="die">
+                      Opt-in STM indicador: SinitMleData.MsegValid (8 bytes)
+                    </para>
+                  </listitem>
+                  <listitem>
+                    <para role="die">
+                      Hash SHA-1 de la STM (o todos los 0 si opt-out): SinitMleData.StmHash (20 bytes)
+                    </para>
+                  </listitem>
+                  <listitem>
+                    <para role="die">
+                      LCP campo de control de la política utilizada (PD o PO): SinitMleData.PolicyControl (4 bytes)
+                    </para>
+                  </listitem>
+                  <listitem>
+                    <para role="die">
+                      Hash SHA-1 de la política utilizada (o todos los 0 si no es elegido para ser extendida): SinitMleData.LcpPolicyHash (20 bytes)
+                    </para>
+                  </listitem>
+                  <listitem>
+                    <para role="die">
+                      MLE-elegido capacidades (o todos los 0 si no es elegido para ser extendida): OsSinitData.Capabilities (4 bytes)
+                    </para>
+                  </listitem>
+                </itemizedlist>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>
+                PCR 18
+              </term>
+              <listitem>
+                <para>
+                  Utilizado por TBOOT, la firma de tboot.gz (documentación de
+                  <filename role="die">
+                    TXT_Architecture_31516804_2008.pdf
+                  </filename>
+                  , Sección 1.9.2)
+                </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>
+                PCR 19
+              </term>
+              <listitem>
+                <para>
+                  Utilizado por TBOOT, la firma de los otros módulos de arranque múltiple y el comando de arranque la opción de línea (xen, dom0 kernel, initramfs, la política de SELinux).
+                </para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </section>
+        <section>
+          <title>
+            Medición de initramfs
+          </title>
+          <itemizedlist>
+            <listitem>
+              <para>
+                Calcular sha1sum de la partición raíz.
+              </para>
+            </listitem>
+            <listitem>
+              <para role="die">
+                PCR se extienden 15 utilizando el sha1sum computarizada: echo $ s | tpm_extendpcr_sa-p 15
+              </para>
+            </listitem>
+          </itemizedlist>
+        </section>
+        <section>
+          <title>
+            Cita
+          </title>
+          <itemizedlist>
+            <listitem>
+              <para>
+                Uso
+                <command>
+                  TPM_Quote2
+                </command>
+                para obtener una cotización TPM en la PCR solicitado y con el nonce suministrado.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                La salida es una firma y el bloque de datos que ha sido firmado.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Bloque de datos contiene la lista de PCR, la localidad y un resumen de los valores de PCR.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Cita archivo también incluye los valores de PCR, pero aquellos que no están firmados y no se puede verificar que no sea mediante el cálculo de la digestión.
+              </para>
+            </listitem>
+          </itemizedlist>
+        </section>
+        <section>
+          <title>
+            Verificar
+          </title>
+          <itemizedlist>
+            <listitem>
+              <para>
+                Use openssl
+                <command>
+                  rsa_verify
+                </command>
+                para comprobar la firma del bloque de datos.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Comparar nonce si se suministra.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Salida de la lista de PCR y de la localidad.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                También nonce salida si no se suministra.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Salida de resumen de los valores de PCR.
+              </para>
+            </listitem>
+          </itemizedlist>
+        </section>
+      </section>
+      <section>
+        <title>
+          Manejo de contraseñas
+        </title>
+        <para>
+          Los cambios realizados en la partición de configuración que el sistema solicitará la contraseña establecidos en el proceso de instalación de TPM. Ejecute el comando siguiente para cambiar esta contraseña si es necesario:
+        </para>
+        <screen>
+          openssl rsa-des3 en / boot / system / install / data / recuperación y el privado-key.conf \-Passin stdin-out / boot / system / install / data / recuperación y el privado-key.conf stdin \-passout
+        </screen>
+        <para>
+          Introduzca la contraseña antigua y la prensa
+          <keycap>
+            Entrar
+          </keycap>
+          . A continuación, introduzca la contraseña nueva y pulse
+          <keycap>
+            Entrar
+          </keycap>
+          . La siguiente salida se escribe en la consola:
+        </para>
+        <screen>
+          la escritura de claves RSA
+        </screen>
+      </section>
+    </section>
+  </appendix>
+  <xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="pxe_install" xmlns:xi="http://www.w3.org/2001/XInclude">
+  </xi:include>
+  <xi:include href="XenClientSetupAndUsageGuide.xml" xpointer="licenses" xmlns:xi="http://www.w3.org/2001/XInclude">
+  </xi:include>
+  <index>
+  </index>
+</book>

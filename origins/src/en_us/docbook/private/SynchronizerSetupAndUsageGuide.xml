@@ -1,0 +1,1807 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+  Copyright 2014 by Citrix Systems, Inc.  Created by Gordon Stretch <Gordon.Stretch@citrix.com>. This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+-->
+
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+  <!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+  <!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+  <!ENTITY shared_upgrade_and_install_steps PUBLIC "shared_upgrade_and_install_steps" "../shared/shared_upgrade_and_install_steps.ent">
+  <!ENTITY view_details PUBLIC "view_details" "../shared/view_details.ent">
+  <!ENTITY % local PUBLIC "local" "../shared/local.ent">
+  %local;
+]><book id="user_guide" lang="en"><?dbhtml dir="SynchronizerSetupAndUsageGuide"?>
+ <bookinfo id="bookinfo_titlestuff" role="die">
+  <title>&COMPANY_NAME_SHORT;<trademark class="registered" role="die"/> &PRODUCT_VERSION; &BACKEND;<trademark class="trade" role="die"/> Setup and Usage Guide</title>
+
+  <pubdate><?dbtimestamp format="d B Y"?></pubdate>
+  
+  &legal;
+  <releaseinfo>This document serves as a guide for &BACKEND; system administrators for the &COMPANY_NAME_SHORT; &PB; &PRODUCT_VERSION; release.</releaseinfo>  
+ </bookinfo>
+	<chapter><title>&BACKEND; Overview</title>
+
+
+<para><indexterm><primary>&BACKEND;</primary><secondary>overview</secondary></indexterm>&COMPANY_NAME_SHORT; &BACKEND; for &PB; is the server-based application for IT administrators to manage <indexterm><primary>&PB;</primary><secondary>VM images</secondary></indexterm>&PB; virtual machine (VM) images, users, and their &PB; devices. It:</para>
+<itemizedlist>
+<listitem><para>Stores &PB; VM images.</para></listitem>
+<listitem><para>Provides secure backup facilities.</para></listitem>
+<listitem><para>Offers management capability of users and their &PB; devices.</para></listitem>
+<listitem><para>Allows you to set policy about how a VM image can be used, for example, which USB devices can be used with the VM on a &PB; device.</para></listitem>
+<listitem><para>Simplifies the maintenance and secure distribution of VM images and applications to users.</para></listitem>
+</itemizedlist>
+<para>You can register a &PB; device with a &BACKEND; instance during &PB; installation, or in &BC; after installation. Registering with a &BACKEND; instance creates a record of the &PB; device in the &BACKEND; database. Once the device is registered the user can:</para>
+<itemizedlist>
+<listitem><para>Download VM images that have been assigned to them.</para></listitem>
+<listitem><para>Back up VMs if policy allows. VM backup can also be set to occur automatically at fixed intervals.</para></listitem>
+<listitem><para>Upload new VMs or new VM versions to &BACKEND;.</para>
+<note><para>Users cannot upload new versions of a VM unless they are explicitly enabled to do so by a &BACKEND; <literal>Admin</literal> user.</para></note></listitem>
+
+</itemizedlist>
+
+<para>The rest of this chapter defines &BACKEND; terms and concepts.</para>
+<section><title>Devices</title>
+<para><indexterm><primary>&PB;</primary><secondary>devices</secondary></indexterm><indexterm><primary>Devices</primary><secondary>definition</secondary></indexterm>A device is a laptop or desktop that has &PB; installed on it. &BACKEND; keeps track of the relationship between devices and users, and enables secure communications between devices and &BACKEND;.</para>
+</section>
+
+<section><title>Users</title>
+<para><indexterm><primary>Users</primary><secondary>definition</secondary></indexterm>A &BACKEND; user is an individual with a &PB; device. &BACKEND; enables you to create users locally, or link in existing <indexterm><primary>Active Directory (AD)</primary></indexterm>Microsoft Active Directory (AD) users.</para>
+<para>When a user registers with &BACKEND; for the first time, a record of their &PB; device is created and they are registered as the owner of the device.</para>
+<para>VM images managed by &BACKEND; can be assigned to a user for use on any registered device.</para>
+
+<section><title><indexterm><primary>User groups</primary><secondary>definition</secondary></indexterm>User Groups</title>
+<para>&BACKEND; enables you to create groups of users locally, or link in existing AD user groups. This allows you to assign a VM image to a number of users with similar application needs. As an example, you might want to create a VM image for all the users in the accounting department that contains the particular applications they need to do their work.</para>
+</section>
+
+<section><title><indexterm><primary>Users</primary><secondary>roles</secondary></indexterm>User Roles</title>
+<para>You can assign either a <literal>Standard</literal> role or an <literal>Admin</literal> role to a &BACKEND; user. A user with <literal>Admin</literal> rights can:</para>
+<itemizedlist>
+<listitem><para>Upload VMs to &BACKEND;, creating a new VM image</para></listitem>
+<listitem><para>Log in to and use the &BACKEND; web interface</para></listitem>
+</itemizedlist>
+<para>Users assigned the <literal>Standard</literal> role cannot log in to the &BACKEND; web interface and can only work with VM images that have been assigned to them.</para>
+</section>
+</section>
+
+<section><title>VM Images</title>
+<para><indexterm><primary>&BACKEND;</primary><secondary>VM images</secondary></indexterm>
+<indexterm><primary>VM images</primary><secondary>definition</secondary></indexterm>A VM image consists of files stored in the <indexterm><primary>Virtual Hard Disk (VHD)</primary></indexterm>Microsoft Virtual Hard Disk (VHD) format. &PB; makes use of VHD chaining to allow a single large VHD to act as a parent to a large set of <indexterm><primary>Copy-on-write (CoW)</primary></indexterm>copy-on-write (CoW) children. This approach is also used to efficiently store subsequent versions of VM image files and backups of user data. <indexterm><primary>VM image repository</primary></indexterm>By default, the image files are stored in an image repository that is created when &BACKEND; is installed. You can change the image repository to a network directory exported by NFS using the &BACKEND; web interface.</para>
+
+<para>A VM image does not run on &BACKEND;. When you run a VM on your device, it runs locally on the &PB; hypervisor from the &PB; device hard disk. When a VM is backed up or uploaded to &BACKEND;, the VM image data is encrypted using AES CBC 128-bit encryption. A new key is created each time an upload is initialized. The client keys are stored in a secure user key store, protected by the device key and the user passphrase. A copy of the keys is also kept securely in &BACKEND;.</para>
+
+<section id="vm_image_modes"><title>VM Image Modes</title>
+
+<para>When you create a new VM image, you set the VM Image mode. This can be either &VM_PRIVATE_MODE;, &VM_PRIVATE_MODE; with the user profile only backed up, or &VM_SHARED_MODE;.</para>
+<indexterm><primary>VM images</primary><secondary>&VM_PRIVATE_MODE;</secondary></indexterm><indexterm><primary>&VM_PRIVATE_MODE;</primary></indexterm>
+<indexterm><primary>VM images</primary><secondary>&VM_PRIVATE_MODE; with user profile only backed up</secondary></indexterm><indexterm><primary>&VM_PRIVATE_MODE;</primary></indexterm>
+<indexterm><primary>VM images</primary><secondary>&VM_SHARED_MODE;</secondary></indexterm><indexterm><primary>&VM_SHARED_MODE;</primary></indexterm>
+<itemizedlist>
+<listitem>&VM_PRIVATE_MODE; VM images are stored by the &BACKEND; as a distinct set of VHDs. On your &PB; device, this VM runs like a traditional laptop would. In &VM_PRIVATE_MODE;, you can make changes, for example, installing software or updating your operation system, without affecting other users, and your changes remain when you reboot the device.</listitem>
+
+<listitem>&VM_PRIVATE_MODE; VM images with the user profile only backed up splits the system part of the image (operating system and applications) from the user part of the image, again storing them on the &BACKEND; as a distinct set of VHDs. On your &PB; device, this VM also runs like a traditional laptop would. In this mode, you can make changes, for example, installing software or updating your operation system, without affecting other users, and your changes remain when you reboot the device. This allows you to use &BACKEND; to back up user data and to use traditional Windows distribution tools for handling updates to the operating system and application layer.</listitem>
+
+<listitem>&VM_SHARED_MODE; VM images in this mode have their system and application files maintained as one set of VHDs which is shared by multiple users. Each user assigned one of these VMs gets an additional VHD with their own user data, but the system and applications are left intact. If a user runs a VM created from such an image, only changes made to their user folders remain after a reboot. All other changes, for example any software they might have installed, are lost because the changes are never made to the system part of the image. This allows IT to provide VM images which retain their integrity over time, which of course prevents users from being able to alter their systems. &BACKEND; is used instead of traditional Windows distribution tools for handling updates to the operating system and application layer as well as the user data.</listitem>
+</itemizedlist>
+
+</section>
+<section><title>VM Image Assignments</title>
+<?dbfo-need height="4in" ?><para><indexterm><primary>VM images</primary>
+<secondary>assigning</secondary></indexterm>When you assign a VM image to a user, this enables the user to download a specific VM image version to their registered &PB; device and run it there.</para>
+<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata align="center" fileref="images/deployment.png" width="4in" />
+</imageobject>
+</mediaobject>
+</informalfigure>
+<para>When creating an assignment, you can specify policy and configuration settings that describe what the VM is capable of when it is running on a client device. You can control:</para>
+<itemizedlist>
+<listitem><para>Whether the user can manually backup the VM.</para></listitem>
+<listitem><para>How long the user can use the VM for before contacting &BACKEND;. (This functionality automatically disables a lost or stolen device after the allocated time expires without contact with &BACKEND;.)</para></listitem>
+<listitem><para>How often the &PB; device will automatically check to see if there is updated VM policy, disk, or version available for them.</para></listitem>
+<listitem><para>Whether the user can change VM properties.</para></listitem>
+<listitem><para>The allocation of device resources, for example, how much RAM the VM should use.</para></listitem>
+<listitem><para>If the VM disk image should be encrypted.</para></listitem>
+<listitem><para>The types of USB devices that can be used with the VM.</para></listitem>
+<listitem><para>Whether the VM can access a wired or wireless network.</para></listitem>
+<listitem><para>How the user can use system audio and optical media devices.</para></listitem>
+<listitem><para>Whether the user can upload a new, modified version of the VM to &BACKEND;. This option allows the user to maintain the VM image. For example, you might want one software engineer to maintain a VM with the optimum settings and software for software development, which can then be assigned to other software engineers in the team.</para></listitem>
+</itemizedlist>
+<para>You can, for example, disallow the connection of external USB hard drives, optical media, and wireless networking to inhibit the user installing unauthorized software. Similarly if the user device comes with a built-in optical media device with write capacity, VM policy can be used to disable the ability to write to optical media, thus ensuring that sensitive data does not leave the network.</para>
+</section>
+
+ <section><title><indexterm><primary>Backing up VM images</primary></indexterm>VM Image Backup</title>
+
+	<para>The object of VM backup is to ensure that, should a device be lost, a new device can be obtained and the VM image downloaded on to it, ensuring that significant data loss is avoided. Backups are not versioned; they are simply a record of the VM state at the time that the last backup was performed.</para>
+	<para>You can set the frequency of automatic VM backup during VM image assignment. You can also enable users to make manual backups if desired.</para>
+	<para>For a Windows VM in &VM_PRIVATE_MODE;, you can also choose during VM image assignment whether a backup should back up both user data and system data or only the user data. For Windows in &VM_SHARED_MODE;, only the user data is backed up, as the system data is already backed up automatically due to the nature of &VM_SHARED_MODE;.</para>
+	
+</section>
+
+<section>
+<title>Creating and Deploying VM Images</title>
+<para><indexterm><primary>VM images</primary>
+<secondary>deploying</secondary></indexterm>Using &PB; with &BACKEND; involves the five stages described below to create new VM images, and deploy them onto client devices.</para>
+
+
+<procedure>
+<title>To Create and Deploy a VM Image</title>
+<step><para>Register the &PB; device with &BACKEND;. See <olink targetdoc="SynchronizerSetupAndUsageGuide" targetptr="to_connect_a_device_to" /> for more information.</para></step>
+<step><para>Install and configure an operating system and a set of applications in a VM on the &PB; device. See the <citetitle>&PB; Setup and Usage Guide</citetitle> for information about how to do this.</para></step>
+<step><para>Using &BC;, upload the VM to &BACKEND;. This creates a VM image that can be assigned to multiple users. See <olink targetdoc="SynchronizerSetupAndUsageGuide" targetptr="to_upload_a_vm_to" />  for more information.</para></step>
+<step><para>Using the &BACKEND; web interface, assign a VM image version to a user or user group. See <olink targetdoc="SynchronizerSetupAndUsageGuide" targetptr="to_assign_a_vm_image" /> for more information.</para></step>
+<step><para>The &PB; user can download VM images to create new VMs from the set of VM images that have been assigned to them. See the <citetitle>&PB; Setup and Usage Guide</citetitle> for information about how to do this.</para></step>
+
+</procedure>
+
+</section>
+
+<section><title>VM Image Versions</title>
+<para>VM images are versioned sequentially. The procedure for creating a new VM image version is:</para>
+<procedure><title>To Create a new VM Image Version</title>
+<step><para><indexterm><primary>Authoring VM images</primary></indexterm>Assign the VM image to a user or administrator, ensuring that you set the assignment policy to <literal>Allow users to author new versions of this image</literal> and <literal>Allow user(s) to change properties</literal>.</para></step>
+<step><para>The user then downloads the assigned VM image to a &PB; device.</para></step>
+<step><para>Once the new VM version is prepared, the user uploads the new VM version to &BACKEND;, keeping the same VM name.</para></step>
+</procedure>
+<para>You can then trial the new VM versions with a select group before editing the assignment of users still using the old version and assigning them the tested version.</para>
+</section>
+
+
+<!--
+<para>By publishing specific versions of VM images to users, &BACKEND; allows new versions to be tested on specific (small) groups of users before being widely published. This also allows updates to VM images to be staged across different groups of users.</para> -->
+
+
+</section>
+
+<!--
+<section><title>Batch management</title>
+<para>and optionally an activation ID. An activation ID can be used to identify a batch of devices, so that when the user registers their &PB; device with &BACKEND; their device can be managed in &BACKEND; as part of the batch. The activation ID is entered on a &PB; device when  first connecting to &BACKEND;. With or without an activation ID, &BACKEND; automatically registers a device in the &BACKEND; database when a user first registers with &BACKEND;.</para></section>
+-->
+<!--
+<section><title>Managing devices using &BACKEND;</title>
+<para><indexterm><primary>&PB; Devices</primary>
+<secondary>managing</secondary></indexterm>&BACKEND; is responsible for managing the deployment of a set of independently-authored VM images to a large number of users, each with one or more &PB; devices. As devices may be lost or stolen, it also provides a backup and restore facility, and remote device locking capability.</para>
+
+<variablelist>
+<varlistentry><term>Unregistered</term><listitem><para>Unregistered devices have no relationship with &BACKEND;.</para></listitem></varlistentry>
+<varlistentry><term>Registered</term><listitem><para>A &PB; device becomes registered when the user successfully connects to &BACKEND;. At this point &BACKEND; collects and registers various information about the device hardware.</para></listitem></varlistentry>
+<varlistentry><term>Bound</term><listitem><para>In bound mode, the device is registered and the user has assigned managed desktops.</para></listitem></varlistentry>
+</variablelist>
+ 
+<para>Breaking this process into three stages has a number of benefits. First of all, &PB; can run as a stand-alone client virtualization platform in unregistered mode with no requirement to deploy a &BACKEND; instance.</para>
+<para>Secondly registration, which allows device hardware to be tracked using lightweight asset-management support in &BACKEND;, can be performed at &PB; installation time, and is decoupled from a user interacting with the device. An IT administrator can, for example, receive shipment of a number of devices and register them with &BACKEND; before giving them out to users, and can tag the group with an invoice number, for example, that describes the order. 
+-->
+
+<!--
+In the future, this registration stage will be extended to allow client devices to be preloaded with common gold master VM images while they are connected on a high-speed corporate network, prior to them being given to users who may then log in from outside the enterprise.</para>
+<para>Finally, the binding stage of &PB; devices establishes a permanent link between that installation of &PB; on that piece of hardware, and a specific user. Once bound to a user, &BC; displays the list of desktop VMs that have been assigned to that user as available for installation. VMs can be backed up to &BACKEND; in the background, and associated with a specific user. In the event that a device is lost or stolen, VM backups can be used to recreate the &PB; installation on a new device.</para>
+-->
+
+	</chapter>
+	
+	<chapter><title>Planning your &BACKEND; Deployment</title>
+	<para><indexterm><primary>Planning &BACKEND; deployment</primary></indexterm><indexterm><primary>&BACKEND;</primary><secondary>Planning deployment</secondary></indexterm>This chapter discusses some of the considerations involved in planning a successful &BACKEND; deployment. The number of users that a &BACKEND; server can support with reasonable quality of service depends on a number of factors, including:</para>
+	
+	<itemizedlist>
+		<listitem><para>Frequency of image backup</para></listitem>
+		<listitem><para>Average size of VM images</para></listitem>
+		<listitem><para>&BACKEND; VM memory assigned</para></listitem>	
+		<listitem><para>The availability of VM image repository space, either local storage or NFS storage</para></listitem>
+		<listitem><para>Internal network speed</para></listitem>	
+	</itemizedlist>
+	<para>There is no theoretical limit on the number of users that can be supported by any given &BACKEND; instance. There is however a hard limit set on the maximum number of current transfers of VM image data between &BACKEND; and &PB; devices, which is calculated as a function of the available amount of RAM. This is because the encryption and decryption of VM images is computationally expensive, so that to ensure reasonable transfer speeds for connected users, users attempting to exchange data with &BACKEND; are put into a queue after the hard limit of concurrent transfers has been reached.</para>
+	<para>To increase the number of allowed concurrent transfers, increase the RAM allocated to the &BACKEND; VM. It may also be useful to maintain separate &BACKEND; instances, each supporting types of &PB; user with similar VM image and backup needs. If you allow connections from outside the internal network (for example to support remote backup for mobile workers) it may also be sensible to maintain separate &BACKEND; instances for such users, where typically the bottleneck of transfer speeds will be the upload speed of the user connection. Such a &BACKEND; instance may well therefore be able to support more concurrent transfers than the limit calculated by &BACKEND;.</para>
+	
+	
+	<section><title>Network and Firewall Configuration</title>
+		<para><indexterm><primary>&BACKEND;</primary><secondary>Network and firewall configuration</secondary></indexterm>
+		<indexterm><primary>Network and firewall configuration</primary></indexterm>
+		<indexterm><primary>Configuration</primary><secondary>Network and firewall</secondary></indexterm>
+		The following figure illustrates the ports that are used for communication between the &BACKEND; server, &PB; devices, and the &BACKEND; web interface. From within the local network, the &BACKEND; web interface connects to the &BACKEND; server over port 8443 (by default; if this has been reconfigured, use the appropriate port in the discussion below), and &PB; users connect to the &BACKEND; server over port 80 or port 443. From outside the local network, &PB; users connect to &BACKEND; over port 443 (if you choose to allow connections from outside the network).</para>
+			<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata align="center" fileref="images/synchronizer_networking_configuration.png" width="75%" />
+</imageobject>
+</mediaobject>
+</informalfigure>
+
+<!--
+<para>Additionally if you are using Active Directory for &BACKEND; authentication in a DMZ, the following ports are used for communication:</para>
+<variablelist>
+
+<varlistentry><term>TCP/UDP 53</term><listitem><para> for the DNS server that is authoritative for the AD domain</para></listitem></varlistentry>
+ 
+<varlistentry><term>TCP/UDP 88</term><listitem><para> for Kerberos</para></listitem></varlistentry>
+
+<varlistentry><term>TCP/UDP 389</term><listitem><para> for LDAP and CLDAP</para></listitem></varlistentry>
+ 
+<varlistentry><term>TCP 445</term><listitem><para> for CIFS</para></listitem></varlistentry>
+ 
+<varlistentry><term>UDP 123 </term><listitem><para> for NTP</para></listitem></varlistentry>
+
+<varlistentry><term>TCP/UDP 464</term><listitem><para> for Kerberos password</para></listitem></varlistentry>
+ 
+<varlistentry><term>TCP 3268</term><listitem><para> for Microsoft LDAP Global Catalog</para></listitem></varlistentry>
+ 
+</variablelist>
+<para>You will need to open these ports to all of the Domain Controllers which support the DMZ's subnet.</para>
+-->
+</section>
+
+<section><title>VM Image Repository Storage</title>
+<para><indexterm><primary>&BACKEND;</primary><secondary>VM image repository</secondary></indexterm>VM images data is stored either in a local VM disk or an NFS repository. By default a small, approximately 20GB disk is provisioned during &BACKEND; installation. To increase the amount of available storage, either increase the size of the virtual disk of the <indexterm><primary>XenServer</primary></indexterm>XenServer host server using the <indexterm><primary>XenCenter</primary></indexterm>XenCenter management interface, or use the &BACKEND; web interface to provision NFS storage instead. See <olink targetdoc="SynchronizerSetupAndUsageGuide" targetptr="adding_an_nfs_image_repository" /> for information about how to use an NFS storage repository for VM image storage.</para>
+
+</section>
+<!--	<para>
+	* If remote users find communication with Synchronizer too slow
+			- Check CPU usage and assign more vCPUs if required
+			- If using HTTPS for bulk transfer consider using HTTP instead to reduce CPU load
+			- Check if the bottleneck is not on the pipe into your org from outside
+	* If users directly on the network find communication with Synchronizer too slow
+			- Possible bottlenecks:
+				= Network speed (XC device to network)
+				= Network speed (Synchronizer to network)	
+	</para>
+	
+	<informaltable>
+		<tgroup cols='2'>
+			<colspec colwidth='2in'/>
+			<colspec colwidth='*'/>
+			<thead>
+				<row>
+					<entry>Item</entry>
+					<entry>Consideration</entry>
+				</row>
+			</thead>
+			<tbody>
+				<row>
+					<entry><para>&BACKEND; RAM</para></entry>
+					<entry><para>Effects encryption speed</para></entry>
+				</row>
+				<row>
+					<entry><para>&BACKEND; VCPUs</para></entry>
+					<entry><para>How many?</para></entry>
+				</row>
+				<row>
+					<entry><para>&BACKEND; Storage</para></entry>
+					<entry><para>NFS? Which filer?</para></entry>
+				</row>
+				<row>
+					<entry><para>Network Speed</para></entry>
+					<entry><para>Wired / Wireless + From outside the org</para></entry>
+				</row>
+				<row>
+					<entry><para>Number of &BACKEND; Users</para></entry>
+					<entry><para>The more users, the more RAM, although this can be mitigated by HTTP bulk transfer. Acts in conjunction with the next 5 items</para></entry>
+				</row>
+				<row>
+					<entry><para>Frequency of Backup</para></entry>
+					<entry><para>More frequent backups and Image size interacts.</para></entry>
+				</row>
+				<row>
+					<entry><para>Frequency of Updates</para></entry>
+					<entry><para>Once again, factors with number of users. Wait. How about: </para>
+					<para>Ave Size of Image * Number of Images * Frequency of Backups * Frequency of Updates = trouble?</para>
+					</entry>
+				</row>
+				<row>
+					<entry><para>Static or Dynamic images?</para></entry>
+					<entry><para>(Size of VHD?)</para></entry>
+				</row>
+				<row>
+					<entry><para>Size of VM Images</para></entry>
+					<entry><para></para></entry>
+				</row>
+				<row>
+					<entry><para>Number of Mobile Users</para></entry>
+					<entry><para>Contact Synch over VPN / </para></entry>
+				</row>
+				<row>
+					<entry><para>&PB; Device RAM</para></entry>
+					<entry><para></para></entry>
+				</row>
+				<row>
+					<entry><para>&PB; Device Disk Size</para></entry>
+					<entry><para></para></entry>
+				</row>
+				<row>
+					<entry><para>Encryption Options for Bulk Transfer</para></entry>
+					<entry><para></para></entry>
+				</row>
+				
+				</tbody>
+</tgroup>
+	</informaltable>
+	
+
+	-->	
+	
+	
+	</chapter>
+
+	<chapter id="install_pb"><title>Installation and Upgrade</title>
+		<para><indexterm><primary>&BACKEND;</primary><secondary>installing</secondary></indexterm><indexterm><primary>Installation</primary></indexterm>This chapter explains how to install or upgrade &BACKEND;. See <olink role="die" targetdoc="SynchronizerReleaseNotes" targetptr="known_issues"/> for any known issues that might affect your installation.</para>
+			
+		<para>&BACKEND; is provided as a <indexterm><primary>Xen Virtual Appliance (XVA)</primary></indexterm>Xen Virtual Appliance (XVA) file, which can be <indexterm><primary>Importing &BACKEND; xva</primary></indexterm>imported into <indexterm><primary>XenServer</primary></indexterm>XenServer. If you do not already have XenServer in your environment, you will need to install XenServer onto a physical server to host your &BACKEND;. You can download XenServer for free from <ulink url="http://www.citrix.com/lang/English/lp/lp_1688615.asp">www.citrix.com</ulink>.</para>
+		<note><para>&BACKEND; is supported on XenServer 5.6 or later.</para></note>
+
+		<section><title>Installing &BACKEND;</title>
+			<note><para>The following installation and upgrade procedures might differ depending on which version of XenServer you are using. This procedure is relevant for XenServer 5.6.</para></note>
+			<para>Before you begin, please ensure that:</para>
+			<orderedlist>
+				<listitem><para>You have a username and password of an Administrator user of Active Directory, if you are going to link to an Active Directory server for user authentication.</para></listitem>
+				<listitem><para>You have some idea of how much storage space will be needed for VM images, and set up sufficient storage in an NFS share, or in the case of local storage, ensure that there is sufficient free space.</para></listitem>
+				<listitem><para>You have decided on an FQDN for your &BACKEND; server, whether to use a static IP address or DHCP, and configured your DNS appropriately.</para>
+				<note><para>Due to a limitation in third-party software used by &PB;, the FQDN must start with a letter character. Number or symbols are not allowed at the beginning of a &BACKEND; FQDN.</para></note></listitem>
+			</orderedlist> 
+
+			<procedure id="install-beginning"><title>To Download, Import, and Prepare the Virtual Appliance</title>
+				<para>The following procedure assumes that you are working on a Windows machine that has <indexterm><primary>XenCenter</primary></indexterm>XenCenter installed.</para>
+
+				<step><para>Download the &BACKEND; appliance from <ulink url="http://www.citrix.com/xenclient/tryit">http://www.citrix.com/xenclient/tryit</ulink>. This is a compressed archive which contains a <literal>.xva</literal> file.</para></step>
+
+				<step><para>Uncompress the file and double-click the <filename>.xva</filename> file to import it into XenCenter.</para></step>
+
+				<step><para>XenCenter launches, and the <guilabel>Import Source</guilabel> page of the <guilabel>Import</guilabel> wizard is displayed. </para></step>
+<step><para>Click the <guilabel>Next</guilabel> button. The <guilabel>Home server</guilabel> page is displayed.</para></step>
+
+				<step><para>Choose a pool or a server on which to start the &BACKEND; VM, then click <guibutton>Next</guibutton>.</para>
+<para>The <guilabel>Storage</guilabel> page is displayed.</para></step>
+
+				<step><para>Choose a storage repository on which the imported virtual disks of the VM will be created, then click <guibutton>Import</guibutton>.</para>
+<para>The <guilabel>Importing VM...</guilabel> progress bar is displayed. After a short time, the <guilabel>Network</guilabel> page of the <guilabel>Import</guilabel> wizard is displayed.</para></step>
+
+				<step><para>Select the network that you want the VM to have access to, then click <guibutton>Next</guibutton>.</para>
+<para>The <guilabel>Finish</guilabel> page is displayed.</para></step>
+
+				<step><para>At the bottom of the <guilabel>Finish</guilabel> page is a checkbox labeled <guilabel>Start VM after import</guilabel> which is checked by default. Uncheck this if you want to increase the size of the virtual disk assigned to hold your VM images (which is 18GB by default). You can then choose to increase the size of the virtual disk before starting the VM and stepping through the various steps of the &BACKEND; installation.</para>
+
+					<para>You can also change the virtual CPU properties and virtual memory assigned to the appliance at this point (the default RAM assigned is 1 GB).</para>
+
+					<para>If you do start the VM automatically after the import operation is finished, you can always shut it down to resize the virtual disk and change CPU and memory properties afterwards.</para></step>
+
+				<step><para>Click <guibutton>Finish</guibutton> to exit the wizard.</para>
+
+					<para>The import process begins. This can take several minutes. When the VM is finished being imported, it will appear under the selected host node, or under the node of the host which the system chose if you selected a pool to import it into rather than a specific host.</para></step>
+
+				<step><para><indexterm><primary>Resizing &BACKEND; VM image storage virtual disk</primary></indexterm>
+				<indexterm><primary>&BACKEND;</primary><secondary>Resizing VM image storage virtual disk</secondary>
+				</indexterm>
+				<indexterm><primary>Changing &BACKEND; VM properties</primary></indexterm>
+				<indexterm><primary>&BACKEND;</primary><secondary>Changing VM properties</secondary></indexterm>
+				If you want to change the properties of the &BACKEND; VM or resize the virtual disk to be used for VM image storage, complete the following steps. If not you can continue to the next step.</para>
+
+					<substeps>
+						<step><para>If you do want to resize the virtual disk for the VM, select it on the left pane, then click the <guilabel>Storage</guilabel> tab, then select the virtual disk named <guilabel>xt-data-vol</guilabel> and click the <guibutton>Properties</guibutton> button.</para></step>
+						<step><para>The <guilabel>Properties</guilabel> dialog box is displayed for the selected virtual disk.</para></step>
+						<step><para>Click <guilabel>Size and Location</guilabel> on the left side, and use the <guilabel>Size</guilabel> control to set the disk size to the desired value.</para></step>
+						<step><para>Click the <guibutton>OK</guibutton> button.</para>
+							<para>The dialog box closes and, after a few moments, the <guilabel>Size</guilabel> column in the <guilabel>Storage</guilabel> tab is updated to the new size.</para></step>
+						<step><para>If you do want to modify the CPU properties, select the VM on the left pane, then click the <guilabel>General</guilabel> tab.</para></step>
+						<step><para>Click the <guibutton>Properties</guibutton> button at the top of the window. The <guilabel>Properties</guilabel> dialog box of the selected VM is displayed.</para></step>
+						<step><para>Click <guilabel>CPU and Memory</guilabel> on the left side.</para>
+							<para>Use the <guilabel>Number of VCPUs</guilabel> control to set the number of virtual CPUs to the desired value. You can also set the <guilabel>VCPU priority</guilabel> and the amount of RAM to be assigned to the &BACKEND; VM on this page.</para>
+							<note><para>1024 MB is the default amount of memory, but &BACKEND; can work with as little as 256 MB, so you can reduce the amount of RAM if desired.</para></note>
+						</step>
+
+						<step><para>Click <guibutton>OK</guibutton>.</para></step>
+						<step><para>If you changed the <guilabel>VM memory</guilabel> or the <guilabel>Number of VCPUs</guilabel> setting the <guilabel>VM General Changes</guilabel> dialog box is displayed, stating that the VM must be restarted for the new settings to take effect. Click the <guilabel>OK</guilabel> button to dismiss this dialog box.</para></step>
+						<step><para>If required, right-click on the VM and select <guilabel>Reboot</guilabel>, then click <guilabel>Yes</guilabel> to confirm the reboot action.</para></step>
+					</substeps>
+				</step>
+
+				<step><para>If your VM is not already started, right-click on the VM and select <guilabel>Start</guilabel>.</para></step>
+
+				<step><para>Once the &BACKEND; VM has started, click the <guilabel>Console</guilabel> tab to access the command line console.</para></step>
+
+				<step><para>Initial installation steps are performed and the VM boots. Once the VM has booted the <guilabel>&BACKEND; for &PB;</guilabel> console is displayed, which guides you through the rest of the &BACKEND; installation process.</para></step>
+				<step><para>The <guilabel>End User License Agreement</guilabel> screen is displayed. Press <keycap>Enter</keycap> to accept the license agreement.</para></step>
+				<step><para>On the next screen, enter and confirm a <literal>root</literal> password for the VM and press <keycap>Enter</keycap> to continue.</para></step>
+				<step><para>On the next screen, select the <guilabel>IP adress configuration mode</guilabel>. Select <guilabel>DHCP</guilabel> to enter the hostname allocated to this VM by a DHCP server or <guilabel>Static</guilabel> to set up a static IP address, hostname and DNS server configuration. Press <keycap>Enter</keycap> to confirm your chosen network settings. The <guilabel>Configuring network...</guilabel> message is displayed.</para>
+					<note><para>If the &BACKEND; FQDN cannot be resolved, due to incorrect DNS settings for example, an appropriate IP address will be chosen and used as the &BACKEND; URL.</para></note>
+				</step>
+
+				<step><para>When the system has completed writing the network configuration, the <guilabel>Customize certficate attributes</guilabel> screen is displayed. Use this screen to configure the details of the certificate to be used for HTTPS communication with the &BACKEND; VM. Fill in the desired values and then press <keycap>Enter</keycap>. The <guilabel>Installing certificates...</guilabel> message is displayed.</para></step>
+				
+				<step><para>On the next screen, enter and confirm an administrator password to be used for accessing the &BACKEND; web interface as the <literal>admin</literal> user, and press <keycap>Enter</keycap> to continue. The <guilabel>The initial Synchronizer setup process is complete</guilabel> message is displayed alongside the &BACKEND; web interface FQDN. Press <keycap>Enter</keycap> to continue.</para></step>
+				<step><para>The <guilabel>&BACKEND; for &PB;</guilabel> configuration console is displayed. This is the standard console to be used for changing &BACKEND; configuration, which is automatically displayed in the <guilabel>Console</guilabel> tab of the VM in XenClient whenever the &BACKEND; VM is booted.</para></step>
+			</procedure>
+
+<!--
+<procedure id="extend_logical_volume"><title>To extend the logical volume for a resized virtual disk (optional)</title>
+
+<step><para>At the VM console command line, run the following commands: (in this example, the image disk size was increased in XenCenter from 20 to 100 GB)</para>
+<screen>pvresize /dev/xvdc
+lvextend - -size <replaceable>98.9G</replaceable> /dev/mapper/xt_data_vg-xt_images
+resize2fs /dev/mapper/xt_data_vg-xt_images</screen>
+
+
+<note>
+<para>The size of 98.9G passed to the <command>lvextend</command> command is calculated by subtracting the configuration volume and metadata volume size from the volume size specified in XenCenter. As a general rule, subtract 1.1GB from the size specified in XenCenter to calculate the <command>lvresize</command> <literal>size</literal> argument.</para></note>
+
+</step>
+ 
+</procedure>
+-->
+
+</section>
+
+<section id="upgrading_synchronizer"><title><indexterm><primary>Upgrading &BACKEND; to a new version</primary></indexterm>Upgrading &BACKEND; To a New Version</title>
+<para>If you are running &BACKEND; 2.0, you can upgrade it to the current version. The upgrade file is available for download from the &COMPANY_NAME_SHORT; website.</para>
+<note><para>If you are running &BACKEND; 1.0 Service Pack 1, you must upgrade it to &BACKEND; 2.0 before upgrading it to the current version. You cannot upgrade 1.0 Service Pack 1 to the current version directly.</para>
+<para>If you are running &BACKEND; 1.0, you must upgrade it to &BACKEND; 1.0 Service Pack 1, and then upgrade it to &BACKEND; 2.0 before upgrading it to the current version. You cannot upgrade 1.0 to the current version directly.</para>
+
+<para>Download the 2.0 upgrade from <ulink url="https://www.citrix.com/English/ss/downloads/details.asp&amp;downloadId=2315419&amp;productId=2300325">https://www.citrix.com/English/ss/downloads/details.asp?downloadId=2315419&amp;productId=2300325</ulink>.</para>
+<para>Download the 1.0 SP1 upgrade from <ulink url="https://www.citrix.com/English/ss/downloads/details.asp?downloadId=2306797&amp;productId=2300325">https://www.citrix.com/English/ss/downloads/details.asp?downloadId=2306797&amp;productId=2300325</ulink>.</para>
+</note>
+
+<para>In addition, from time to time &COMPANY_NAME_SHORT; might make service packs for &BACKEND; available for download from the &COMPANY_NAME_SHORT; website.</para>
+
+<note><para>&BACKEND; 2.1 supports &PB; devices running version 2.1 and version 2.0 of &PB;.</para></note>
+
+<para>To upgrade your &BACKEND; to a newer version, follow this procedure.</para>
+
+<procedure><title>To upgrade &BACKEND; to a newer version</title>
+<step><para>Transfer the upgrade file <filename>synchronizer_upgrade.zip</filename> file to the &BACKEND; appliance via ftp, scp or wget. For example, from the &BACKEND; console, as the root user:</para>
+<screen>wget <replaceable>path to zip file</replaceable>/synchronizer_upgrade.zip</screen></step>
+<step><para>Once the file has been transferred to the &BACKEND; appliance, unzip it with the following command:</para>
+<screen>unzip synchronizer_upgrade.zip</screen>
+</step>
+<step><para>Run the upgrade script:</para>
+<screen>./upgrade.sh</screen></step>
+<step><para>Reboot the &BACKEND; VM.</para></step>
+</procedure>
+
+<note><para>Be sure to transfer the zip file over to the &BACKEND; appliance and unzip it there. Do not unzip it on another computer first, then transfer the unzipped files and run the upgrade script - it will fail on a MD5 checksum error if you do that.</para></note>
+
+</section>
+
+
+<!--
+<section><title>Upgrading &BACKEND;<indexterm><primary>&BACKEND;</primary>
+<secondary>upgrading</secondary></indexterm></title>
+<para>If you already have a &BACKEND; 1.0 installation, use the following procedure to upgrade to &BACKEND; &PRODUCT_VERSION;.</para>
+
+<procedure><title>To Upgrade &BACKEND; from 1.0</title> -->
+<!--
+<step><para>If your 1.0 &BACKEND; is configured to be accessible over HTTPS, first:</para>
+<orderedlist>
+<listitem><para>In XenCenter, click the <guilabel>Console</guilabel> tab and log in to your RC2 &BACKEND; server.</para></listitem>
+<listitem><para>Run the installer script:</para>
+<screen>cd /root
+./installer.sh</screen></listitem>
+<listitem><para>Select <guilabel>I Agree</guilabel>.</para></listitem>
+<listitem><para>Select <guilabel>Transfer Mode</guilabel> and press <keycap>Enter</keycap>.</para></listitem>
+<listitem><para>Select <guilabel>Insecure</guilabel> and press <keycap>Enter</keycap>.</para></listitem>
+<listitem><para>Select <guilabel>Install now</guilabel> and press <keycap>Enter</keycap>.</para></listitem>
+<listitem><para>Press <keycap>Enter</keycap> to complete the reconfiguration.</para></listitem>
+</orderedlist></step>
+-->
+<!--
+<step><para>Download <filename>Synchronizer_1_0_SP1_upgrade.zip</filename> from <ulink url="http://www.citrix.com/xenclient/pkg/upgradesynchronizerv1sp1"/> to a location on your network accessible over <command>ssh</command>.</para>
+
+</step>
+
+<step><para>Log in to the &BACKEND; console as the local administrator account (usually root).</para></step>
+
+<step><para>Use the <command>scp</command> command to securely copy the upgrade package from the downloaded location to the &BACKEND; VM:</para>
+<screen>scp <replaceable>user</replaceable>@<replaceable>host</replaceable>:<replaceable>path to Synchronizer_1_0_SP1_upgrade.zip</replaceable> .</screen></step>
+
+<step><para>Extract <filename>upgrade.sh</filename> from <filename>Synchronizer_1_0_SP1_upgrade.zip</filename>:</para>
+<screen>unzip Synchronizer_1_0_upgrade.zip</screen>
+</step>
+<step><para>Next, take a snapshot of your VM as a backup.</para>
+<substeps>
+<step><para>Right-click on the VM in the tree view and select <guilabel>Shut Down</guilabel>.</para></step>
+<step><para>Right-click on the &BACKEND; host VM in the tree view and select <guilabel>Take Snapshot...</guilabel>. The <guilabel>Take Snaphsot</guilabel> dialog is displayed.</para></step>
+<step><para>Enter a <guilabel>Name</guilabel> and optionally a <guilabel>Description</guilabel> for the snapshot and click <guilabel>Take Snapshot</guilabel>.</para></step>
+</substeps>
+</step>
+<step><para>Run the upgrade script in a console on your &BACKEND; VM:</para>
+<screen>chmod +x upgrade.sh
+./upgrade.sh</screen></step>
+<step><para>Select <guilabel>I AGREE</guilabel>.</para></step>
+<step><para>Select <guilabel>Yes</guilabel>.</para></step>
+
+<step><para>When the upgrade has completed, you can access &BEC; by running the following command:</para>
+<screen>xsconsole</screen></step>
+</procedure>
+</section>
+-->
+</chapter>
+
+	<chapter><title>Configuring the &BACKEND;</title>
+	
+	<para>Upon installation, the &BACKEND; is configured with information provided during the installation process. You might need to reconfigure some of the settings. This chapter describes how to do that. The procedures below are performed using the <indexterm><primary>Console</primary></indexterm>&BEC;.</para> 
+	
+	<informalfigure>
+			<mediaobject>
+				<imageobject>
+					<imagedata align="center" fileref="images/console.png" />
+				</imageobject>
+			</mediaobject>
+	</informalfigure>
+	
+	<para>To access the console, click the <guilabel>Console</guilabel> tab of the &BACKEND; VM in <indexterm><primary>XenCenter</primary></indexterm>XenCenter. To make changes to configuration you will be prompted to log in as the <literal>root</literal> user.</para>
+	
+	<procedure><title><indexterm><primary>Joining the &BACKEND; to an AD domain</primary></indexterm>To Join an AD Domain</title>
+	<step><para>In the console, follow the menu path <guilabel>Active Directory Settings</guilabel>.</para></step>
+	<step><para>Enter the FQDN of your AD server, the Organizational Unit (if necessary), the User Name and the Password.</para></step>
+	<step><para>Press <keycap>Enter</keycap>.</para></step>
+	</procedure>
+	
+	<procedure><title><indexterm><primary>Changing &BACKEND; timezone</primary></indexterm><indexterm><primary>Timezone, changing</primary></indexterm>To Change the &BACKEND; timezone</title>
+	<step><para>In the console, follow the menu path <guilabel>Timezone &gt; Set Timezone</guilabel>. A list of Regions is displayed.</para></step>
+	<step><para>Select the Region of your desired timezone and press <keycap>Enter</keycap>. A list of cities with the selected region is displayed.</para></step>
+	<step><para>Select the City of your desired timezone and press <keycap>Enter</keycap>. An message is displayed stating that the timezone has been changed. Press <keycap>Enter</keycap> to dismiss the message.</para></step>
+	</procedure>
+
+	<procedure><title><indexterm><primary>Configuration</primary><secondary>Management network interface</secondary></indexterm><indexterm><primary>Management network interface</primary></indexterm>To Configure the Management Interface</title>
+	
+	<step><para>In the console, follow the menu path <guilabel>Network and Management Interface &gt; Configure Management Interface &gt; Configure Network Interface</guilabel>.</para></step>
+	<step><para>Select the type of configuration desired and press <keycap>Enter</keycap>. If you are using a static IP address without DHCP, enter the IP address, netmask, gateway and hostname. Press <keycap>Enter</keycap>.</para></step>
+	<step><para>Press <keycap>Enter</keycap> to accept the configuration changes.</para></step>
+	</procedure>
+	
+		<procedure><title><indexterm><primary>Configuration</primary><secondary>DNS server settings</secondary></indexterm><indexterm><primary>DNS server settings for &BACKEND;</primary></indexterm>To Configure a DNS Server</title>
+		
+		<para>This information is typically configured during installation, but it can be added or edited later as described below. You can add new nameservers, remove existing nameservers, edit the name of the local domain, and edit the DNS search list.</para>
+		
+		<step><para>In the console, follow the menu path <guilabel>Network and Management Interface &gt; Configure DNS resolver</guilabel>. The following dialog box is displayed:</para>
+		<informalfigure>
+			<mediaobject>
+				<imageobject>
+					<imagedata align="center" fileref="images/backend_dns_configuration.png" />
+				</imageobject>
+			</mediaobject>
+		</informalfigure>
+		<para>(Note that if no nameservers are currently configured on the &BACKEND;, only <guilabel>Add a Nameserver</guilabel>, <guilabel>Update local domain name</guilabel>, and <guilabel>Update search list for host-name lookup</guilabel> are displayed.</para></step>
+		<step><para>Select the relevant operation and press <keycap>Enter</keycap>.</para></step>
+		
+		<step><para>Follow the instructions and provide the relevant information for the operation you have selected and press <keycap>Enter</keycap>.</para></step>
+		</procedure>
+		
+		<procedure><title><indexterm><primary>Changing admission control settings for &BACKEND; VM</primary></indexterm>To Change Admission Control Settings</title>
+		<para>The Admission control settings control the maximum number of &PB; devices that can connect to your &BACKEND; server at the same time. By default at installation time, the mode is set to Automatic, which sets a fixed number of clients that can connect (the number depends on the hardware available to the &BACKEND;). You can change the mode to Manual and decrease increase this number to a maximum allowed value of 50.</para>
+		<para>There is also Disconnect grace period with a default of 180 seconds. A client holds an admission slot while performing a transfer and gives up the slot when the transfer completes. However, there are times when a transfer might be interrupted (intermittent network connectivity, or perhaps the user has manually paused the transfer). The Disconnect grace period allows the client to maintain its admission slot and resume transfer.</para>
+		<step><para>In the console, select <guilabel>Admission Control Settings</guilabel> and press <keycap>Enter</keycap>.</para></step>
+		<step><para>Select the admission control setting mode, <guilabel>Manual</guilabel> or <guilabel>Automatic</guilabel>, then press <keycap>Enter</keycap>.</para></step>
+		<step><para>If you chose <guilabel>Manual</guilabel> in the previous step, enter the desired number of <guilabel>Maximum connections</guilabel> (the default is 25), then press <keycap>Enter</keycap>. Enter the desired number of seconds for the <guilabel>Disconnect grace period</guilabel> (the default is 180 seconds) and press <keycap>Enter</keycap> again.</para>
+		<para>If you chose <guilabel>Automatic</guilabel> in the previous step, you are only prompted to edit the desired number of seconds for the <guilabel>Disconnect grace period</guilabel>. Press <keycap>Enter</keycap>.</para></step>
+		<step><para>An "updating settings" message is displayed, then a "configuration successful" message. Press <keycap>Enter</keycap> to dismiss the message.</para></step>
+		</procedure>
+		
+		<procedure><title><indexterm><primary>Changing root user password</primary></indexterm>To Change The Root Password</title>
+		<step><para>In the console, follow the menu path <guilabel>Authentication &gt; Change Root Password</guilabel>.</para></step>
+		<step><para>Enter the old password, the new password, and then confirm the new password and press <keycap>Enter</keycap>.</para></step>
+		</procedure>
+		
+		<procedure><title><indexterm><primary>Changing admin user password for the web interface</primary></indexterm>To Change the &BACKEND; Web Interface Admin User Password</title>
+		<step><para>In the console, follow the menu path <guilabel>Admin UI &gt; Change Admin UI Password</guilabel>.</para></step>
+		<step><para>Enter the new password, confirm the new password and press <keycap>Enter</keycap>.</para></step>
+		</procedure>
+		
+		<procedure><title><indexterm><primary>Changing default port for web interface</primary></indexterm>To Configure the Default Port for the &BACKEND; web interface</title>
+		<para>When installed, the port on which the administrators access the &BACKEND; web interface is set to Port 8443. If you need to change this, perform the following steps.</para>
+		<step><para>In the console, follow the menu path <guilabel>Admin UI &gt; Change Admin UI Port</guilabel>.</para></step>
+		<step>
+		<para>Enter the desired port number and press <keycap>Enter</keycap>.</para>
+		<note><para>The port number should be in the range of 1024 to 49151.</para></note>
+		</step>
+		<step><para>Press <keycap>F8</keycap> to accept the configuration changes.</para></step>
+		<step><para>On completion, a "configuration successful" message is displayed. Press <keycap>Enter</keycap> to dismiss this message.</para></step>
+		</procedure>
+			
+		<procedure><title><indexterm><primary>Regenerating CA certificates</primary></indexterm>To Regenerate the CA Certificates</title>
+		<note><para>Regenerating a CA certificate also cause a new SSL certificate to be generated. This is to ensure that there is never a situation where a valid CA certificate exists but no SSL certificate exists.</para></note>
+		<step><para>In the console, follow the menu path <guilabel>SSL Certificate &gt; CA Certificate</guilabel>.</para></step>
+		<step><para>Enter the certificate attributes and press <keycap>Enter</keycap>. The <guilabel>Generate Certificate</guilabel> dialog is displayed. Press <keycap>Enter</keycap> to continue. The <guilabel>Installing Certificates...</guilabel> dialog is displayed.</para></step>
+		<step><para>On completion, a "certificate installation successful" message is displayed. Press <keycap>Enter</keycap> to dismiss this message.</para></step>
+		</procedure>
+
+		<procedure><title><indexterm><primary>Regenerating web server SSL certificates</primary></indexterm>To Regenerate the Web Server SSL Certificates</title>
+<step><para>In the console, follow the menu path <guilabel>SSL Certificate &gt; SSL Certificate for Web Server</guilabel>.</para></step>
+		<step><para>Enter the certificate attributes and press <keycap>Enter</keycap>. The <guilabel>Generate Certificate</guilabel> dialog is displayed. Press <keycap>Enter</keycap> to continue. The <guilabel>Installing Certificates...</guilabel> dialog is displayed.</para></step>
+		<step><para>On completion, a "certificate installation successful" message is displayed. Press <keycap>Enter</keycap> to dismiss this message.</para></step>
+		</procedure>
+
+		
+	</chapter>
+	<chapter id="using_transmitter"><title>Administration</title><indexterm><primary>&BACKEND;</primary>
+<secondary>administration</secondary></indexterm>
+<indexterm><primary>Administering &BACKEND;</primary></indexterm>
+<para>This section contains the procedures required for administering &BACKEND;, using the &BACKEND; web interface, which can be accessed by pointing a web browser at the &BACKEND; server host name over HTTPS. &COMPANY_NAME_SHORT; recommends using one of the following browsers:</para>
+<itemizedlist>
+
+<listitem><para>Internet Explorer 7</para></listitem>
+<listitem><para>Internet Explorer 8</para></listitem>
+<listitem><para>Internet Explorer 9</para></listitem>
+<listitem><para>Firefox 6</para></listitem>
+<listitem><para>Firefox 7</para></listitem>
+<listitem><para>Firefox 8</para></listitem>
+<listitem><para>Firefox 9</para></listitem>
+<listitem><para>Firefox 10</para></listitem>
+
+</itemizedlist>
+
+<section><title>&BACKEND; Web Interface Overview<indexterm><primary>&BACKEND;</primary>
+<secondary>web interface overview</secondary></indexterm>
+<indexterm><primary>Web interface</primary></indexterm></title>
+<para>To connect to the &BACKEND; web interface, enter the DNS host name of the &BACKEND; VM in your browser address bar and connect over HTTPS. Log it using the administrator username <literal>admin</literal> and the administrator password.</para>
+<para>By default &PB; devices connect to &BACKEND; over port 443 and also port 80 if HTTP bulk transfer is enabled. See <olink targetdoc="SynchronizerSetupAndUsageGuide" targetptr="enabling_bulk_http_transfer" /> for more information about HTTP bulk transfer. An <literal>Admin</literal> user logs in to &BACKEND; over port 8443 (by default; if this has been reconfigured, use the appropriate port in the discussion below). This allows the corporate firewall to be configured to reject traffic to port 8443 that comes from outside of the corporate network. An attempt to log in to the &BACKEND; web interface over port 443 will automatically be redirected to port 8443. If you are not using trusted certificates it is therefore possible that your browser will prompt you twice to accept untrusted certificates, once when the initial attempt to connect is made over port 443 and again when the attempt to connect is redirected to port 8443, before allowing access to the &BACKEND; web interface.
+</para>
+<!-- <note><para>When logging in to &BACKEND; as the <literal>admin</literal> user, hostnames longer than 15 characters will be truncated to 15 characters. Therefore, to log in to a &BACKEND; instance with a hostname of <literal>very_long_host_name</literal>, log in as <literal>very_long_host_\admin</literal>.</para></note> -->
+
+<para>After logging in successfully, the <guilabel>Welcome to &BACKEND; for &PB;</guilabel> dialog box is displayed. This dialog box contains some useful information to quickly get you started working with &BACKEND;. To dismiss this dialog, click the cross at the top right. If you do not want to see this dialog every time that you log in, check the <guilabel>Don't show at logon</guilabel> checkbox before dismissing it. You can view this dialog box at any time by clicking <guilabel>Settings</guilabel> and then clicking the <guilabel>Show Help</guilabel> button.</para>
+
+<para>Next, the <guilabel>VM Images</guilabel> screen is displayed. When the &BACKEND; web interface is first displayed, only the <literal>admin</literal> user is listed, and there are no VM images or devices.</para>
+
+<figure id="synchronizer_ui-overview"><title>&BACKEND; Web Interface After Installation</title>
+   <mediaobject>
+     <imageobject>
+      <imagedata align="center" fileref="images/webui-after-install.png" width="85%" />
+     </imageobject>
+    </mediaobject>
+</figure>
+
+<para>To navigate through the &BACKEND; web interface, click on the buttons along the top to access the corresponding pages.</para>
+
+<informaltable>
+  <tgroup cols="2">
+     <colspec colwidth="1in"/>
+     <colspec colwidth="*"/>
+
+     <thead>
+      <row>
+       <entry>
+        <para>Button</para>
+       </entry>
+       <entry>
+        <para>Page description</para>
+       </entry>
+      
+      </row>
+     </thead>
+     <tbody>
+	 
+	 <row>
+		<entry>
+			<para>
+			<informalfigure>
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center" fileref="images/images-button.png" />
+					</imageobject>
+				</mediaobject>
+			</informalfigure>
+			</para>
+		</entry>
+	 <entry><para>The <guilabel>Images</guilabel> page shows a list of available VM images in the image library. You can select and assign them to users and view their disk usage.</para>
+<para>Also on this page you can:</para>
+<itemizedlist>
+<listitem><para>Filter the images displayed by entering text in the <guilabel>Search images</guilabel> text box. All images that contain the text that you enter in their name or description will be displayed.</para></listitem>
+<listitem><para>View the number of VMs deployed in the graph on the left hand side.</para></listitem>
+<listitem><para>Click the <guilabel>Disk Space Usage</guilabel> button to display a graph of how much disk space the VM images are taking up on the &BACKEND; VM disk.</para></listitem>
+</itemizedlist></entry>
+	 </row>
+
+	 <row>
+		<entry>
+			<para>
+			<informalfigure>
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center" fileref="images/users-button.png"/>
+					</imageobject>
+				</mediaobject>
+			</informalfigure>
+			</para>
+		</entry>
+		
+		<entry><para>The <guilabel>Users</guilabel> page shows a list of available users and groups. Here you can add new local users and groups and link in users and groups from AD. If you click on a user in the <guilabel>Users</guilabel> list, the <guilabel>User Details</guilabel> page is displayed. Here you can edit user information, delete this user, view a list of devices and VMs assigned to this user, assign new VM images to the user, edit VM policy, and revoke VM assignments. If you click on a group in this list the <guilabel>Group Details</guilabel> page is displayed. Here you can edit group information, delete a group, view a list of group users and VMs assigned to this group, assign new VM images to the group, edit VM policy, and revoke VM assignments.</para>
+		<para>Also on this page you can filter the users and groups displayed by entering text in the <guilabel>Search Users</guilabel> or <guilabel>Search Groups</guilabel> text box.</para></entry>
+	 </row>	 
+	 
+	 	 <row>
+		<entry>
+			<para>
+			<informalfigure>
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center" fileref="images/devices-button.png"/>
+					</imageobject>
+				</mediaobject>
+			</informalfigure>
+			</para>
+		</entry>
+		
+	 <entry><para>The <guilabel>Devices</guilabel> page shows a list of registered devices along with users and device vendors, and allows you to delete a device or mark a device as missing.</para></entry>
+	 </row>	 
+	 	 <row>
+		<entry>
+			<para>
+			<informalfigure>
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center" fileref="images/activity-button.png"/>
+					</imageobject>
+				</mediaobject>
+			</informalfigure>
+			</para>
+		</entry>
+	 <entry><para>The <guilabel>Activity</guilabel> page shows a list of active VM image transfers or a system log.</para></entry>
+	 </row>	 
+	 	 <row>
+		<entry>
+			<para>
+			<informalfigure>
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center" fileref="images/settings-button.png"/>
+					</imageobject>
+				</mediaobject>
+			</informalfigure>
+			</para>
+		</entry>
+		
+	 <entry><para>The <guilabel>Settings</guilabel> page shows a list of available image repositories and registration PINs. From here you can add new image repositories, edit existing image repositories, enable or disable the registration PIN feature, add new registration PINs, edit registration PINs, delete registration PINs and search registration PINs by name or description.</para>
+<para>Also on this page you can:</para>
+<itemizedlist>
+<listitem><para>Click the <guilabel>Generate Diagnostic Report</guilabel> button to generate a status report.</para></listitem>
+<listitem><para>Click the <guilabel>Show Help</guilabel> button to view a short help screen (the same one displayed when you connect to the &BACKEND; through the web interface) which contains useful information to help you get started using &BACKEND;.</para></listitem>
+</itemizedlist></entry>
+	 </row>	 
+	 
+	 </tbody>
+	 </tgroup> 
+	 </informaltable>
+
+
+
+
+<!--
+<para>The &BACKEND; administrator makes VM images available to a users and groups and their assigned devices. In general, this workflow goes as follows:</para>
+
+<orderedlist>
+<listitem><para>In the &BACKEND; web interface, <link linkend="create_user">create a new user</link> or <link linkend="link_in_ad_user">link in an Active Directory user</link>.</para></listitem>
+<listitem><para>Use &BC; to create a VM (see <xref linkend="add_vm_to_xenclient_ ">.</para></listitem>
+<listitem><para>Register the device with &BACKEND;.</para>
+</listitem>
+<listitem><para>Using &BC;, upload an existing VM to &BACKEND;.</para></listitem>
+<listitem><para>Once the VM upload is complete, use &BACKEND; to assign the desktop image instance that is created to a user or user group.</para>
+<para>The user can then use &BC; to connect to &BACKEND; and download the VM.</para></listitem>
+</orderedlist>
+
+
+
+<para>The &BACKEND; administrator makes VM images available to users and groups on their assigned devices. In general, this workflow goes as follows:</para>
+
+<informalfigure id="synchronizer_ui-process-diagram">
+   <mediaobject>
+     <imageobject>
+      <imagedata align="center" fileref="images/diagram-process1.png" width="90%" />
+     </imageobject>
+    </mediaobject>
+</informalfigure>
+
+-->
+</section>
+
+<section><title>Managing Users and Groups</title>
+<para><indexterm><primary>Users</primary><secondary>administration</secondary></indexterm>&BACKEND; users and groups can be managed using the &BACKEND; web interface, or in AD.</para>
+
+<section><title>Managing Local Users and Groups</title>	
+<para>A local user exists entirely in the &BACKEND; database.</para>		
+			
+<procedure id="create_user"><title>To Create a Local &BACKEND; User<indexterm><primary>Users</primary><secondary>creating</secondary></indexterm></title>
+	<step><para>In the &BACKEND; web interface, click <guilabel>Users</guilabel>.</para></step>
+
+	<step><para>Click <guilabel>Add Local User</guilabel>. The <guilabel>Add Local User</guilabel> dialog is displayed.</para>
+	<informalfigure id="synchronizer_ui-create-new-local-user">
+		<mediaobject>
+			<imageobject>
+				<imagedata align="center" fileref="images/webui-create-new-local-user.png" />
+			</imageobject>
+		</mediaobject>
+	</informalfigure>
+	</step>
+	<step><para>Enter the user details.</para></step>
+	<step><para>To grant the user <literal>Admin</literal> rights, select <guilabel>Admin</guilabel> from the <guilabel>Role</guilabel> dropdown list. <literal>Admin</literal> rights allow the user to publish VMs to &BACKEND; and log in to the &BACKEND; web interface.</para></step>
+	<step><para>To grant the user access to &BACKEND;, select <literal>Allow</literal> from the <guilabel>VM Image access</guilabel> dropdown list. Select <literal>Not specified</literal> to use the access settings of a group to which the user belongs instead, or <literal>Deny</literal> to deny the user access for the time being.</para>
+	<note><para>An <literal>admin</literal> user automatically has full access.</para></note></step>
+	<step><para>Click the <guilabel>Add</guilabel> button.</para></step>
+	<!-- <step><para>Click the refresh button at the bottom of the User list.</para></step> -->
+</procedure>
+
+<procedure><title>To Delete a Local &BACKEND; User<indexterm><primary>Users</primary><secondary>deleting</secondary></indexterm></title>
+<para>Deleting a local user has the following effects:</para>
+<itemizedlist>
+<listitem><para>The user name field in the &BACKEND; records of all the user's &PB; devices is set to empty and the devices becomes unregistered.</para></listitem>
+<listitem><para>All VMs on the user device become unmanaged.</para></listitem>
+<listitem><para>All VM image assignments for the user are deleted.</para></listitem> 
+</itemizedlist>
+<step><para>In the &BACKEND; web interface, click <guilabel>Users</guilabel>.</para></step>
+<step><para>Click on the user name.</para></step>
+<step><para>Select <guilabel>Delete User</guilabel> from the dropdown list in the <guilabel>User Details</guilabel> box. The <guilabel>Delete User</guilabel> dialog is displayed.</para></step>
+<step><para>Click <guilabel>Delete User</guilabel> to confirm.</para></step>
+<step><para>If desired, delete the records of the user's devices.</para></step>
+</procedure>
+
+			<procedure><title>To Create a &BACKEND; User Group<indexterm><primary>User groups</primary><secondary>creating</secondary></indexterm></title>
+<para>To make the management of VM images easier, &BACKEND; supports user groups. An administrator can assign a VM image or a set of VM images to a group of users that have similar computing needs.</para>
+			<step><para>In the &BACKEND; web interface, click <guilabel>Users</guilabel>.</para></step>
+			<step><para>Click the <guilabel>Groups</guilabel> tab.</para></step>
+<step><para>Click <guilabel>Add Local Group</guilabel>.</para>
+
+<informalfigure id="synchronizer_ui-create-new-local-group">
+   <mediaobject>
+     <imageobject>
+      <imagedata align="center" fileref="images/webui-create-new-local-group.png" />
+     </imageobject>
+    </mediaobject>
+</informalfigure>
+
+</step>
+
+
+<step><para>Enter a name for the group in the <guilabel>Name</guilabel> text box.</para></step>
+<step><para>Enter a description of the group in the <guilabel>Description</guilabel> text box.</para></step>
+<step><para>To grant users in the group access to &BACKEND;, select <literal>Allow</literal> from the <guilabel>VM Image access</guilabel> dropdown list. Select <literal>Not specified</literal> to use the access settings of the individual users instead, or <literal>Deny</literal> to deny the group access for the time being.</para></step>
+<!--
+<para>Complete the following optional fields if desired:</para>
+<variablelist>
+<varlistentry><term>Information</term><listitem><para>Any further information about the group.</para></listitem></varlistentry>
+<varlistentry><term>Homepage</term><listitem><para>The URL of the group home page.</para></listitem></varlistentry>
+</variablelist>
+-->
+
+<step><para>Click <guilabel>Add</guilabel>.</para></step>
+<!-- <step><para>Click the refresh button at the bottom of the Group list.</para></step> -->
+</procedure>
+
+
+		<procedure><title>To Add a User to a Group<indexterm><primary>Users</primary><secondary>adding to a group</secondary></indexterm></title>
+			<para>Once a group has been created, you can add new users to it, who will inherit the VM images already assigned to the group.</para>
+			<note><para>&BACKEND; does not support adding both local and AD users to the same group.</para></note>
+			<note><para>&PB; does not provide the facility to edit the membership of AD groups. Any changes to AD groups or users must be performed using your interface to AD.</para></note>
+			
+			<step><para>In the &BACKEND; web interface, click <guilabel>Users</guilabel>.</para></step>
+			<step><para>Click the <guilabel>Groups</guilabel> tab.</para></step>
+			<step><para>Click the group that you want to add the user to.</para></step> 
+			<step><para>Click <guilabel>Edit Group</guilabel>. The <guilabel>Edit Group Membership</guilabel> window is displayed.</para></step>
+			<step><para>Select the user or users that you want to add to the group in the list on the left. You can hold down <keycap>Ctrl</keycap> and click to add multiple users.</para></step>
+			<step><para>Click <guilabel>Add selected</guilabel> to add the selected users.</para></step>
+			<step><para>To grant users in the group access to &BACKEND;, select <literal>Allow</literal> from the <guilabel>VM image access</guilabel> dropdown list. Select <literal>Not specified</literal> to use the access settings of the individual users instead, or <literal>Deny</literal> to deny the user group access for the time being.</para></step>		
+			<step><para>Click <guilabel>OK</guilabel>.</para></step>
+		</procedure>
+
+<procedure><title>To Delete a Local &BACKEND; User Group<indexterm><primary>User groups</primary><secondary>deleting</secondary></indexterm></title>
+<para>Deleting a local user group also deletes all VM image assignments to the group.</para>
+<step><para>In the &BACKEND; web interface, click <guilabel>Users</guilabel>.</para></step>
+<step><para>Click the <guilabel>Groups</guilabel> tab.</para></step>
+<step><para>Click on the group name.</para></step>
+<step><para>Select <guilabel>Delete Group</guilabel> from the dropdown list in the <guilabel>Group Details</guilabel> box. The <guilabel>Delete Group</guilabel> dialog is displayed.</para></step>
+<step><para>Click <guilabel>Delete Group</guilabel> to confirm.</para></step>
+</procedure>
+
+</section>
+
+<section><title><indexterm><primary>AD users and groups</primary></indexterm>Managing AD Users and Groups</title>
+
+
+<procedure id="link_in_ad_user">
+<title><indexterm><primary>Linking AD user</primary></indexterm>To Link in an Existing AD User<indexterm><primary>Users</primary><secondary>linking AD user</secondary></indexterm></title>
+<para>You can link in an existing AD user to &BACKEND;. When the user logs in they will be authenticated against the AD server.</para>
+
+<note><para>This feature is only available in the web interface if your &BACKEND; is connected to an AD server.</para></note>
+			<step><para>In the &BACKEND; web interface, click <guilabel>Users</guilabel>.</para></step>
+			<step><para>Click <guilabel>Link AD User</guilabel>. The <guilabel>Add Link to Domain User</guilabel> window is displayed.</para>
+<!--
+<informalfigure id="synchronizer_ui-link-ad-user">
+   <mediaobject>
+     <imageobject>
+      <imagedata align="center" fileref="images/webui-link-ad-user.png"/>
+     </imageobject>
+    </mediaobject>
+</informalfigure>
+-->
+
+			</step>
+			<step><para>Enter the <guilabel>AD Username</guilabel>.</para></step>
+			<step><para>Select the user role from the <guilabel>Role</guilabel> dropdown list.</para></step>
+			<step><para>To grant the user access to &BACKEND;, select <literal>Allow</literal> from the <guilabel>VM Image access</guilabel> dropdown list. Select <literal>Not specified</literal> to use the access settings of a group to which the user belongs instead, or <literal>Deny</literal> to deny the user access for the time being.</para></step>
+			<step><para>Select the Domain from the <guilabel>Domain (NETBIOS)</guilabel> dropdown list.</para></step>
+			<step><para>Click <guilabel>Link</guilabel>. &BACKEND; connects to the AD domain specified, and creates the link if a valid user has been specified.</para></step>
+
+</procedure>
+<procedure><title>To Link in an Existing AD User Group<indexterm><primary>Linking AD user group</primary></indexterm><indexterm><primary>Users</primary><secondary>linking AD group</secondary></indexterm></title>
+<para>You can link in an existing AD user group to &BACKEND;. When a user in this group logs in they will be authenticated against the AD server.</para>
+<note><para>This feature is only available in the web interface if your &BACKEND; is connected to an AD server.</para></note>
+
+	<step><para>In the &BACKEND; web interface, click <guilabel>Users</guilabel>.</para></step>
+	<step><para>Click the <guilabel>Groups</guilabel> tab.</para></step>
+	<step><para>Click the <guilabel>Link AD Group</guilabel> button. The <guilabel>Add Link to Domain Group</guilabel> window is displayed.</para>
+<!--
+<informalfigure id="synchronizer_ui-link-ad-group">
+   <mediaobject>
+     <imageobject>
+      <imagedata align="center" fileref="images/webui-link-ad-group.png"/>
+     </imageobject>
+    </mediaobject>
+</informalfigure>
+-->
+	</step>
+	<step><para>Enter the <guilabel>AD Group Name</guilabel>.</para></step>
+			<step><para>To grant the group access to &BACKEND;, select <literal>Allow</literal> from the <guilabel>VM Image access</guilabel> dropdown list. Select <literal>Not specified</literal> to use the access settings specified in the user settings instead, or <literal>Deny</literal> to deny the user group access for the time being.</para></step>
+			<step><para>Select the Domain from the <guilabel>Domain (NETBIOS)</guilabel> dropdown list.</para></step>
+			 <step><para>Click <guilabel>Link</guilabel>. &BACKEND; connects to the specified AD domain, and creates the link if a valid group name is entered.</para></step>
+</procedure>
+</section>
+<section>
+<title>Changing the User Name Registered With &BACKEND;<indexterm><primary>Users</primary><secondary>changing registered user name</secondary></indexterm></title><para><indexterm><primary>User name</primary><secondary>changing</secondary></indexterm>If the user name of an AD user with a device that is registered with &BACKEND; changes, it is necessary to manually change the user name under which the device is registered on the &PB; device itself. To do this, press <keycap>Ctrl+Shift+t</keycap> in &BC; to open a control domain console. Then run the following command:</para>
+<screen>set_platform_username <replaceable>new_username</replaceable></screen>
+<para>This changes the user name on the device so that the user can authenticate with &BACKEND; using the new credentials.</para>
+
+<note><para>Installing Microsoft Windows Server 2003 Service Pack 1 (SP1) on your Domain Controller is known to change authentication behavior so that users can authenticate using their old password for up to an hour after changing it. For more information about this issue and for a workaround, see <ulink url="http://support.microsoft.com/kb/906305/en-us">http://support.microsoft.com/kb/906305/en-us</ulink>.</para></note>
+
+</section>
+</section>
+
+
+
+
+
+<!--
+<section><title>VM image administration</title>
+
+<section><title>Creating a &BACKEND; activation ID</title>
+<para><indexterm><primary>activation ID</primary><secondary>creating</secondary></indexterm>You can use an activation ID to group together a batch of devices.</para>
+
+<procedure><title>To create a &BACKEND; activation ID</title>
+
+<step><para>In the &BACKEND; web interface, click <guilabel>Settings</guilabel>.</para></step>
+
+<step><para>Click <guilabel>Create Device Activation</guilabel>. The <guilabel>Create New Activation</guilabel> window is displayed.</para></step>
+
+<step><para>Enter an activation ID and a description. The activation ID can be anything.</para></step>
+
+<step><para>Create and select <guilabel>Tags</guilabel> to identify this activation, or this batch of activations.</para></step>
+
+<step><para>Click the <guilabel>Create</guilabel> button.</para></step>
+
+<step><para>Click the <guilabel>Close</guilabel> button.</para></step>
+</procedure></section>
+	-->		
+<!--
+
+<section><title>Exporting a desktop to a VHD file</title>
+<para><indexterm><primary>desktop image</primary><secondary>exporting</secondary></indexterm>You can export a desktop image to a VHD file. This can be useful for taking an existing desktop and separating the system data and the user data onto different disks.</para>
+<procedure><title>Exporting a desktop to a VHD file</title>
+
+<step><para>On the <guilabel>Welcome</guilabel> tab in &BACKEND;, click <guilabel>Desktops</guilabel>. The <guilabel>Desktops</guilabel> tab is displayed.</para></step>
+
+<step><para>In the <guilabel>Desktops</guilabel> table, double click on the desktop image you want to export. A table is displayed listing the available desktop image versions.</para></step>
+<step><para>Double click on the version you want to export.</para></step>
+<step><para>Click the <guilabel>Export client desktop disks for <replaceable>desktop_name</replaceable></guilabel> arrow and click the <guilabel>Set Up Export</guilabel> button. The <guilabel>Export Disks</guilabel> dialog box is displayed. Complete the following fields:</para> 
+<variablelist>
+<varlistentry><term>Filename</term>
+<listitem><para>The name of the destination VHD file.</para></listitem>
+</varlistentry>
+<varlistentry><term>Image Repository</term>
+<listitem><para>The destination NFS image repository for the VHD file.</para></listitem></varlistentry>
+<varlistentry><term>Disks to Export</term>
+<listitem><para>Choose whether to export the Desktop system disk, user disk, or both.</para></listitem>
+</varlistentry>
+</variablelist>
+</step>
+
+<step><para>Click the <guilabel>Export</guilabel> button to begin the export operation.</para></step>
+
+
+</procedure>
+</section>
+-->
+
+<section><title>Managing VM Images</title>
+<para><indexterm><primary>VM images</primary><secondary>creating</secondary></indexterm>To add an image to the image repository, you will need an existing VM on a &PB; device. Connect the device to &BACKEND;, and then upload the VM to create a new VM image. See the <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="installing_vms" /> for information about how to install a VM on a &PB; device.</para>
+
+
+
+
+<!-- <procedure id="add_vm_to_xenclient_laptop"><title>To add a VM to a &BC; device</title>
+
+<step><para>Insert the operating system installation disc into the DVD drive.</para></step>
+
+<step><para>Click <guibutton>Add VM</guibutton> along the top banner of the &BC; screen and select <guilabel>Install from Disc</guilabel> from the menu. The <guilabel>Create from Install Disc</guilabel> wizard appears.</para></step>
+
+<step><para>Select the operating system from the <guilabel>Type</guilabel> pulldown, and enter a <guilabel>VM Name</guilabel> and <guilabel>Description</guilabel>. On the right, under <guilabel>Icon</guilabel>, click one of the displayed icons to be used to represent this VM in &BC; screens.</para>
+<para>Click <guibutton>Next</guibutton>.</para></step>
+
+<step><para>The <guilabel>Memory &amp; CPUs</guilabel> page is displayed. Select the desired <guilabel>Memory</guilabel> in MB and the desired number of <guilabel>VCPUs</guilabel>, then click <guibutton>Next</guibutton>.</para></step>
+
+<step><para>The <guilabel>Storage &amp; Networking</guilabel> page is displayed. Select the desired <guilabel>Virtual Disk Size</guilabel> in GB</para>
+<para>Select the desired <guilabel>Wired Network</guilabel> mode. The options are <emphasis>Bridged</emphasis>, which gives the VM full access to the networks that the &BC; is connected to; <emphasis>Shared</emphasis>, which creates a private network on the &BC; and allows outgoing connections using NAT (network address translation) (in this case incoming connections to the VM are not possible); or <emphasis>Internal</emphasis>, which allows for network communication between VMs on the &BC; system.</para>
+<para>Click <guibutton>Finish</guibutton>.</para></step>
+
+<step><para>Follow the installation procedure for the operating system.</para></step>
+
+</procedure> -->
+
+<procedure id="to_connect_a_device_to"><title>To Connect a &PB; Device to &BACKEND;<indexterm><primary>&BACKEND;</primary><secondary>connecting</secondary></indexterm></title>
+
+<step><para>In &BC;, click <guibutton>System</guibutton>. The <guilabel>System Settings</guilabel> dialog box is displayed.</para></step>
+
+<step><para>Click <guibutton>Synchronizer</guibutton> on the left side of the dialog box.</para></step>
+
+<step><para>Click <guibutton>Register</guibutton>. The <guilabel>Register with &BACKEND;</guilabel> wizard is displayed.</para></step>
+
+<step><para>Enter the FQDN or IP address of the &BACKEND; server and click <guilabel>Next</guilabel>.</para></step>
+
+<step><para>Ensure that the &BACKEND; Identification Code in the dialog box is the same as the one displayed during &BACKEND; installation.</para>
+<para>If the &BACKEND; has the Registration PIN feature enabled, enter the PIN in the <guilabel>Registration PIN</guilabel> field.</para>
+<para>Click <guilabel>Next</guilabel>.</para></step>
+
+<step><para>Press <keycap>Ctrl + Alt + Backspace</keycap> and enter your &BACKEND; user name and password. Press <keycap>Enter</keycap> to complete the connection process.</para></step>
+</procedure>
+
+<procedure id="to_upload_a_vm_to"><title>To Upload a VM to &BACKEND;<indexterm><primary>VM images</primary><secondary>uploading</secondary></indexterm></title>
+
+<para>To upload a VM to a &BACKEND;, you must be connected as a user whose account has the Admin role, or as a user whose account has the Standard role and whose policies have been set to allow them to upload VMs.</para>
+
+<step><para>On the &PB; device, shut down the VM that you want to upload to the &BACKEND;.</para></step>
+&view_details;
+<step><para>Click <guibutton>Upload VM</guibutton>. The <guilabel>Upload to Synchronizer</guilabel> dialog box is displayed.</para></step>
+<step><para>Enter a <guilabel>VM name</guilabel> and <guilabel>Description</guilabel>.</para></step>
+<step><para>Select the VM image mode. See <olink targetdoc="SynchronizerSetupAndUsageGuide" targetptr="image_modes" /> for more information about VM image modes.</para></step>
+<step><para>Click <guibutton>Finish</guibutton>.</para></step>
+<step><para>The transfer of the image to the &BACKEND; commences, and a progress bar is displayed. (A similar progress bar is displayed in the &BACKEND; web interface if you click <guibutton>Activity</guibutton>).</para></step>
+</procedure>
+
+<procedure><title>To Delete a VM Image<indexterm><primary>VM images</primary><secondary>deleting</secondary></indexterm></title>
+<para>Deleting a VM image removes the VM from &BACKEND;. Any deployed VMs that are based on the VM image will become unmanaged by &BACKEND; as soon as the client device connects to &BACKEND;. All versions and backups of the VM image are deleted, as are any VM image assignments of the deleted VM image.</para>
+<step><para>In the &BACKEND; web interface, click <guilabel>Images</guilabel>.</para></step>
+<step><para>Click on the name of the VM image you want to delete.</para></step>
+<step><para>Click the <guilabel>Delete VM Image</guilabel> button. The <guilabel>Delete VM Image</guilabel> dialog box is displayed.</para></step>
+<step><para>Click <guilabel>Delete VM</guilabel> to confirm the deletion.</para></step>
+
+</procedure>
+
+<procedure><title>To find VHDs associated with a VM Image<indexterm><primary>VM images</primary><secondary>associated VHDs</secondary></indexterm></title>
+<para>To figure out which VHDs are related to a VM, use the following command to output the paths of all VHDs related to a specific VM name and version.</para>
+<step><para>At the console for the &BACKEND; appliance, run the following command as root:</para>
+<screen>get-vm-disks -n <replaceable>vm_name</replaceable> -v <replaceable>version</replaceable></screen>
+<para>The paths to all the VHDs associated with the specified VM are displayed.</para>
+<note><para>Use double quotes around <replaceable>vm_name</replaceable> if it contains whitespaces.</para></note>
+</step>
+</procedure>
+</section>
+
+<section><title>Managing VM Image Assignments</title>
+
+<procedure id="to_assign_a_vm_image"><title>To Assign a VM Image<indexterm><primary>VM images</primary><secondary>assigning</secondary></indexterm><indexterm><primary>Assignments</primary><secondary>assigning VM images</secondary></indexterm></title>
+<para>Once a VM has been uploaded to &BACKEND;, it is shown on the <guilabel>VM images</guilabel> screen. You can now assign this VM image to users or groups, which allows them to install it on their device.</para>
+<step><para>In the &BACKEND; web interface, click <guibutton>Images</guibutton> to display a list of the available VM image images.</para></step>
+
+<step><para>Click <guibutton>Assign</guibutton> of the relevant VM image. The <guilabel>Assign VM image</guilabel> window is displayed.</para>
+<informalfigure id="synchronizer_ui-assign-desktop-first-page">
+   <mediaobject>
+     <imageobject>
+      <imagedata align="center" fileref="images/webui-assign-desktop-1.png" width="75%" />
+     </imageobject>
+    </mediaobject>
+</informalfigure> 
+</step>
+
+<step><para>Select either <literal>User</literal> or <literal>Group</literal> from the <guilabel>Assign To</guilabel> drop down menu, then select a specific user or group from the <guilabel>User</guilabel> or <guilabel>Group</guilabel> drop down menu.</para></step>
+
+<step><para>Click <guibutton>Continue</guibutton>.</para></step>
+
+<step><para>The <guilabel>VM image</guilabel> page of the wizard is displayed. Select the VM and the VM version to be assigned.</para></step>
+
+<!--
+<para>Set a <guilabel>Lease Time</guilabel> in days, <guilabel>Disk Backup Frequency</guilabel> in hours, <guilabel>Phone Home Frequency</guilabel> in minutes, and select whether or not to <guilabel>Allow Authorship</guilabel> and <guilabel>Allow Changing VM Properties</guilabel>.</para>
+-->
+
+<step>
+<para>Click <guilabel>Continue</guilabel>. The <guilabel>Policy</guilabel> page of the wizard is displayed. Here you can set <indexterm><primary>VM Policies</primary></indexterm>VM policy.</para>
+</step>
+<step><para>On the <guilabel>General</guilabel> page, you can set the following:</para>
+<informaltable>
+<tgroup cols="2">
+<colspec colwidth="1.5in"/>
+<colspec colwidth="*"/>
+
+<thead><row>
+<entry><para>Setting</para></entry>
+<entry><para>Description</para></entry>
+</row></thead>
+<tbody>
+
+<!--
+<row>
+<entry><para><guilabel><indexterm><primary>VM Policies</primary><secondary>Number of VCPUs</secondary></indexterm>vCPU</guilabel></para></entry>
+<entry><para>The number of VCPUs to assign to the VM.</para></entry>
+</row>
+-->
+
+<row>
+<entry><para><guilabel><indexterm><primary>VM Policies</primary><secondary>Memory</secondary></indexterm>Memory</guilabel></para></entry>
+<entry><para>The amount of virtual RAM to assign to the VM.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel><indexterm><primary>VM Policies</primary><secondary>Enable Disk Encryption</secondary></indexterm>Enable Disk Encryption</guilabel></para></entry>
+<entry><para>If enabled, the contents of the VHD files used by the VM will be encrypted using the AES XTS (256-bit) cypher.</para>
+<note><para>Disk encryption is only applied when a VM is first deployed to a device. Editing an assignment at a later point will not cause the disk to be encrypted.</para></note>
+</entry>
+</row>
+
+<row>
+<entry><para><guilabel><indexterm><primary>VM Policies</primary><secondary>Enable 3D Graphics</secondary></indexterm>Enable 3D Graphics</guilabel></para></entry>
+<entry><para>If enabled, the VM will have 3D graphics support enabled. Note that this means that the client device this image is assigned to can only run one VM at a time.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel><indexterm><primary>VM Policies</primary><secondary>Enable Autoboot</secondary></indexterm>Enable Autoboot</guilabel></para></entry>
+<entry><para>If enabled, the VM will automatically boot when its host device is booted.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel><indexterm><primary>VM Policies</primary><secondary>Enable Power Control</secondary></indexterm>Enable Power Control</guilabel></para></entry>
+<entry><para>If enabled, when the VM is powered down or restarted, the host device will also be powered down or restarted.</para></entry>
+</row>
+
+<!--
+<row>
+<entry><para><guilabel><indexterm><primary>VM Policies</primary><secondary>Enable Communication Between VMs</secondary></indexterm>Enable Communication Between VMs</guilabel></para></entry>
+<entry><para>If enabled, this controls the VM's firewall settings so that seamless applications will work.</para></entry>
+</row>
+-->
+
+<row>
+<entry><para><guilabel><indexterm><primary>VM Policies</primary><secondary>Allow users(s) to change properties</secondary></indexterm>Allow users(s) to change properties</guilabel></para></entry>
+<entry><para>If enabled, allows users to change VM properties in &BC;.</para></entry>
+</row>
+
+</tbody>
+</tgroup>
+</informaltable>
+
+</step>
+<step><para>Click <indexterm><primary>VM Policies</primary><secondary>Network access</secondary></indexterm><guibutton>Network</guibutton> and select whether or not to enable <guilabel>Wired</guilabel> and <guilabel>Wireless</guilabel> access for this user.</para>
+</step>
+<step>
+<para>Click <indexterm><primary>VM Policies</primary><secondary>USB devices</secondary></indexterm> <guibutton>Devices</guibutton> and select which classes of USB devices are allowed to be used.</para>
+<warning><para>Because many USB devices are composite USB devices which expose multiple devices of different device classes, not allowing a particular device class can affect the ability of the user to use USB devices which one otherwise might expect to work. For example, some USB modems initially present themselves as mass storage devices to allow the user to install drivers contained on the mass storage embedded in the device. It is only after the drivers are installed that the USB modem is recognized as a USB modem. However, if mass storage USB is disallowed under the policy you set, the user will not be able to install the drivers and will therefore not be able to use the USB modem.</para></warning>
+
+<informaltable>
+<tgroup cols="2">
+<colspec colwidth="1.5in"/>
+<colspec colwidth="*"/>
+
+<thead><row>
+<entry><para>USB device class</para></entry>
+<entry><para>Description</para></entry>
+</row></thead>
+
+<tbody>
+
+<row>
+<entry><para><guilabel>Audio</guilabel></para></entry>
+<entry><para>Devices for interfacing external audio devices (microphones, audio line level signals, etc.) to the computer. Select the level of enablement using the radio buttons.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel>Optical Drive</guilabel></para></entry>
+<entry><para>The onboard optical drive, for example Blu-ray drive.  Select the level of enablement using the radio buttons.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel>Allow these USB Devices - Audio</guilabel></para></entry>
+<entry><para>Audio USB devices.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel>Allow these USB Devices - Still Imaging (camera)</guilabel></para></entry>
+<entry><para>Devices for capturing still images (cameras, scanners).</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel>Allow these USB Devices - Printers</guilabel></para></entry>
+<entry><para>USB printers.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel>Allow these USB Devices - Mass Storage</guilabel></para></entry>
+<entry><para>External hard drives, DVD burners, USB sticks, etc.</para></entry>
+</row>
+<!--
+<row>
+<entry><para><guilabel>USB Hubs</guilabel></para></entry>
+<entry><para>Allows chaining of multiple USB devices to a single USB port</para></entry>
+</row>
+-->
+<row>
+<entry><para><guilabel>Allow these USB Devices - Video</guilabel></para></entry>
+<entry><para>Devices for capturing video data (web cams, digital video cameras).</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel>Allow these USB Devices - Unclassified USB devices</guilabel></para></entry>
+<entry><para>All devices which do not have a standard USB class ID.</para></entry>
+</row>
+
+</tbody>
+</tgroup>
+</informaltable>
+
+
+</step>
+
+<step>
+<para>Click <indexterm><primary>VM Policies</primary><secondary>Synchronizer</secondary></indexterm> <guibutton>Synchronizer</guibutton> and set the following properties:</para>
+<informaltable>
+<tgroup cols="3">
+<colspec colwidth="1.5in"/>
+<colspec colwidth="1.0in"/>
+<colspec colwidth="*"/>
+
+<thead><row>
+<entry><para>Setting</para></entry>
+<entry><para>Default</para></entry>
+<entry><para>Description</para></entry>
+</row></thead>
+<tbody>
+
+<row>
+<entry><para><guilabel><indexterm><primary>VM Policies</primary><secondary>Lease expiration</secondary></indexterm> Lease Expiration</guilabel></para></entry>
+<entry><para>14 days</para></entry>
+<entry><para>The number of days that the VM image is leased to the user. If the user does not authenticate with the &BACKEND; before the lease time expires, the leased VM shuts down and the <guilabel>REMOTE LOCKED</guilabel> message is displayed. Connecting to and authenticating with  &BACKEND; will renew the lease. To ensure that lease times are not renewable, the administrator of the &BACKEND; needs to manually revoke the assignment of the VM image to the user when they wish the lease to expire and not be renewable anymore. Enter <literal>0</literal> if you do not want to use a lease time for this assignment.</para></entry>
+</row>
+
+<row>
+<entry><para><indexterm><primary>VM Policies</primary><secondary>Update schedule</secondary></indexterm><guilabel>Update Schedule</guilabel></para></entry>
+<entry><para>60 minutes</para></entry>
+<entry><para>The interval, in minutes, that the registered &PB; device will check for policy updates from the &BACKEND;.</para></entry>
+</row>
+
+<row>
+<entry><para><guilabel><indexterm><primary>VM Policies</primary><secondary>Backup contents</secondary></indexterm>Backup Contents</guilabel></para></entry>
+<entry><para>All-Data</para></entry>
+<entry><para>By default all data is backed up. For Windows VMs, setting this property to <literal>User-Data</literal> causes only the user directories of the VM to be backed up.</para></entry>
+</row>
+
+
+
+<row>
+<entry><para><indexterm><primary>VM Policies</primary><secondary>Allowing manual updates</secondary></indexterm><guilabel>Allow Manual</guilabel></para></entry>
+<entry><para>Disabled</para></entry>
+<entry><para>Allows the user to manually perform VM backups.</para></entry>
+</row>
+
+<row>
+<entry><para><indexterm><primary>VM Policies</primary><secondary>Allowing manual updates</secondary></indexterm><guilabel>Automatically</guilabel></para></entry>
+<entry><para>Disabled</para></entry>
+<entry><para>Enables automatic VM backups. If enabled, specify the number of hours that will elapse before the VM image will next be backed up automatically in the provided text box.</para></entry>
+</row>
+
+
+</tbody>
+</tgroup>
+</informaltable>
+</step>
+
+<step>
+<para>Click <indexterm><primary>VM Policies</primary><secondary>Advanced</secondary></indexterm><guibutton>Advanced</guibutton> and set the following property:</para>
+<informaltable>
+<tgroup cols="3">
+<colspec colwidth="1.5in"/>
+<colspec colwidth="1.0in"/>
+<colspec colwidth="*"/>
+
+<thead><row>
+<entry><para>Setting</para></entry>
+<entry><para>Default</para></entry>
+<entry><para>Description</para></entry>
+</row></thead>
+<tbody>
+
+
+<row>
+<entry><para><guilabel><indexterm><primary>Authoring VM images</primary></indexterm>Allow users to author new versions of this image</guilabel></para></entry>
+<entry><para>Enabled for users with the <literal>admin</literal> role; disabled for other users</para></entry>
+<entry><para>Sets whether the user can upload a VM to the &BACKEND;.</para></entry>
+</row>
+<row>
+<entry><para><guilabel>Enable seamless application support</guilabel></para></entry>
+<entry><para>Enabled</para></entry>
+<entry><para>Sets whether seamless application support is enabled.</para></entry>
+</row>
+
+
+</tbody>
+</tgroup>
+</informaltable>
+</step>
+<step><para>Click <guibutton>Finish</guibutton>.</para>
+</step>
+</procedure>
+
+<para>If you want to change any of the user settings for this assignment, click on the user or group in the <guilabel>Users</guilabel> list, then click <guibutton>View</guibutton>, <guibutton>Edit</guibutton>, or <guibutton>Revoke</guibutton> next to the image name in the <guilabel>Actions</guilabel> column.</para> 
+
+<procedure><title>To Edit an Assignment<indexterm><primary>Assignments</primary><secondary>editing</secondary></indexterm></title>
+<step><para>In the &BACKEND; web interface, click <guilabel>Users</guilabel> or <guilabel>Groups</guilabel>.</para></step>
+<step><para>Click the relevant user or group name.</para></step>
+<step><para>Next to the relevant assignment in the <guilabel>Available Assignments</guilabel> table, select the <guilabel>Edit</guilabel> action. Follow the steps of the <guilabel>Assign VM Image</guilabel> wizard to edit the assignment.</para>
+
+<note><para>Disk encryption is only applied when a VM is first deployed to a device. Editing an assignment at a later point will not cause the disk to be encrypted.</para></note></step>
+</procedure>
+
+<procedure><title>To Revoke an Assignment<indexterm><primary>Assignments</primary><secondary>revoking</secondary></indexterm></title>
+<para>Revoking an assignment causes all the details of the assignment to be permanently erased from &BACKEND;. Once the lease time of the VM expires, the user no longer be able to use it.</para>
+<step><para>In the &BACKEND; web interface, click <guilabel>Users</guilabel> or <guilabel>Groups</guilabel>.</para></step>
+<step><para>Click the relevant user or group name.</para></step>
+<step><para>Next to the relevant assignment in the <guilabel>Available Assignments</guilabel> table, select the <guilabel>Revoke</guilabel> action.</para></step>
+<step><para>The <guilabel>Revoke Assignment?</guilabel> dialog is displayed. Click <guilabel>Revoke</guilabel> to permanently revoke the assignment.</para></step>
+</procedure>
+
+</section>
+
+<section><title>Working with Devices</title>
+<para>The Devices page lists all devices registered with the &BACKEND;, displaying the Model, Vendor, User Name, Status, and Version of &PRODUCT_BRAND; for each.</para>
+
+<para>To ensure that sensitive data is not compromised when a device is lost or stolen, &PB; provides the ability to mark the device as "lost" and remotely ensure that managed VMs on the missing device cannot be started.</para>
+<procedure><title>To Mark a Device as Lost<indexterm><primary>Devices</primary><secondary>marking as lost</secondary></indexterm></title>
+<step><para>In the &BACKEND; web interface, click <guilabel>Devices</guilabel>.</para></step>
+
+<step><para>Click <guilabel>Mark as Lost</guilabel> next to the lost device and click <guilabel>Yes</guilabel>.</para></step>
+
+</procedure>
+<para>When the VM next connects to &BACKEND; the status of all managed VMs on the device is changed to <guilabel>Remote Locked</guilabel>, all managed VMs are forcibly shut down, and no managed VMs can be booted.</para>
+<warning><para>As with a bare-metal operating system, if a managed VM is attempting to update using Windows Update while it is forcibly shut down, the VM may suffer from corruption caused by the interruption to the update.</para></warning>
+
+<procedure><title>To Delete a Device<indexterm><primary>Devices</primary><secondary>deleting</secondary></indexterm></title>
+<step><para>In the &BACKEND; web interface, click <guilabel>Devices</guilabel>.</para></step>
+
+<step><para>Next to the device in the <guilabel>All Devices</guilabel> table, select the <guilabel>Delete</guilabel> action.</para></step>
+<step><para>The <guilabel>Delete Device?</guilabel> dialog is displayed. Click <guilabel>Delete Device</guilabel> to permanently delete the selected device.</para></step>
+</procedure>
+
+<bridgehead>Filtering the Devices List<indexterm><primary>Devices</primary><secondary>filtering</secondary></indexterm></bridgehead>
+
+<para>On the left side of the screen are table filters that can be applied to the devices list.</para>
+
+<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata align="center" fileref="images/synch-devices-filters.png" width="170px" />
+</imageobject>
+</mediaobject>
+</informalfigure>
+
+<para>You can filter the list by any combination of the following:</para>
+
+<informaltable>
+  <tgroup cols="2">
+     <colspec colwidth="1.25in"/>
+     <colspec colwidth="*"/>
+
+     <thead>
+      <row>
+       <entry>
+        <para>Filter</para>
+       </entry>
+       <entry>
+        <para>How to use</para>
+       </entry>
+      </row>
+     </thead>
+     <tbody>
+		<row>
+			<entry>
+				<para>Not checked last <guilabel>any</guilabel> days</para>
+			</entry>
+			<entry>
+				<para>Click the checkbox to filter the list to show only devices that have not been checked for a specified number of days. To specify the number of days, click on the word <guilabel>any</guilabel> in the filter text and type the desired number into the field that appears.</para>
+			</entry>
+		</row>
+		<row>
+			<entry>
+				<para>Lost in last <guilabel>any</guilabel> days</para>
+			</entry>
+			<entry>
+				<para>Click the checkbox to filter the list to show only devices that have been lost for a specified number of days. To specify the number of days, click on the word <guilabel>any</guilabel> in the filter text and type the desired number into the field that appears. If you do not specify the number of days, it will display all devices that have ever been lost.</para>
+			</entry>
+		</row>
+		<row>
+			<entry>
+				<para>From vendor <guilabel>any</guilabel> with model <guilabel>any</guilabel></para>
+			</entry>
+			<entry>
+				<para>Click the checkbox to filter the list to show only devices from a specified vendor and of a specified model. To specify the vendor, click on the first instance of the word <guilabel>any</guilabel> in the filter text and type the desired vendor name into the field that appears. Likewise, to specify the model, click on the second instance of the word <guilabel>any</guilabel> in the filter text and type the desired model name into the field that appears. If you do not specify either of these names, the list will display all devices. For example, if you specify the vendor <guilabel>Dell Inc.</guilabel> but do not specify the model, the list will display all Dell models.</para>
+			</entry>
+		</row>
+		<row>
+			<entry>
+				<para>Where &PRODUCT_BRAND; version is <guilabel>any</guilabel></para>
+			</entry>
+			<entry>
+
+				<para>Click the checkbox to filter the list to show only devices running a specified version of &PRODUCT_BRAND;. To specify the version, click on the word <replaceable>any</replaceable> in the filter text and type the desired version into the field that appears. If you do not specify the version, devices of any version are displayed.</para>
+
+			</entry>
+		</row>
+	</tbody>
+	</tgroup>
+</informaltable>	
+<para>You can use these filters in combination. For example, if you wanted to show just the Dell devices that were running version 1.0, you would select the checkboxes for the last two filters, type "Dell Inc." for the vendor in the first, and type "1.0" for the version in the second.</para> 
+
+</section>
+
+
+<section><title>Working With Image Repositories<indexterm><primary>Image repositories</primary></indexterm>
+<indexterm><primary>&BACKEND;</primary><secondary>Image repositories</secondary></indexterm></title>
+<para>By default, &BACKEND; is installed with a local image repository with 18G of space. You can add NFS image repositories using the &BACKEND; web interface.</para>
+
+<note><para>The local image repository size cannot be modified from the &BACKEND; web interface. It must be changed by resizing the virtual disk of the &BACKEND; appliance in XenCenter, as described in the &BACKEND; installation procedure.</para></note>
+
+<procedure id="adding_an_nfs_image_repository"><title>To Add an NFS Image Repository<indexterm><primary>Image repositories</primary><secondary>adding</secondary></indexterm></title>
+
+<step><para><indexterm><primary>NFS image repository</primary></indexterm>In the &BACKEND; web interface, click <guilabel>Settings</guilabel>.</para></step>
+<step><para>Click <guilabel>Add Image Repository</guilabel>.
+</para></step>
+<step><para>Enter a name to identify the repository in the <guilabel>Name</guilabel> text box.</para></step>
+<step><para>Enter the IP address or DNS name of the NFS server, for example, <literal>nfs.mycompany.com</literal> in the <guilabel>Server Address</guilabel> text box.</para></step>
+<step><para>Enter the  path to the exported share on the server (for example, <filename>/exports/xc-images</filename>) in the <guilabel>Server Path</guilabel> text box.</para></step>
+<step><para>Enter and standard Linux mount options you want to use in the <guilabel>Mount Options</guilabel> text box.</para></step>
+
+<step><para>Click <guilabel>OK</guilabel>.</para></step>
+<step><para>All new VM images will be put in the new network image repository.<!-- A <filename>dropbox</filename> directory is created in the image repository. You can put existing VHD VM images in this directory to make them available to &BACKEND;. --></para></step>
+		  </procedure> 
+		  
+</section>
+
+
+<section id="registration_pin"><title>Registration PINs</title>
+
+<para>In some cases you might want an additional level of security for your &BACKEND;, in addition to requiring users to provide their username and password. &BACKEND; includes a means for adding registration PINs that users will be required to provide upon registering their devices. The PINs are autogenerated.</para>
+
+<para>PINs are added and managed in the <guilabel>Settings</guilabel> page.</para>
+
+<procedure id="adding_registration_pin"><title>To Add a Registration PIN<indexterm><primary>Registration PINS</primary><secondary>adding</secondary></indexterm></title>
+<step><para>On the <guilabel>Settings</guilabel> page, in the <guilabel>Registration PINs</guilabel> section, click the <guilabel>Add Registration PIN</guilabel> button. A dialog box appears.</para></step>
+<step><para>In the <guilabel>Number of devices</guilabel> field, enter a number (or use the increment/decrement control on the right). The default is 1.</para>
+<para>In the <guilabel>Expiry</guilabel> field, if the <guilabel>Enabled</guilabel> checkbox to its right is checked, enter a date in the form yyyy-mm-dd (or use the calendar button to the right and choose a date from the calendar control that is displayed). By default the expiry date is enabled and set to 30 days from now.</para>
+<para>In the <guilabel>Description</guilabel> field, type some descriptive text.</para> 
+<para>All of these fields are required.</para></step>
+<step><para>Click <guilabel>OK</guilabel>. The dialog box closes and the new PIN is added the list in the <guilabel>Registration PINs</guilabel> section.</para></step>
+</procedure>
+
+<para>Once you have added a PIN, you still need to enable its use.</para>
+
+<procedure id="enabling_registration_pins"><title>To Enable the Use of Registration PINs<indexterm><primary>Registration PINS</primary><secondary>enabling</secondary></indexterm></title>
+<step><para>Click the button on the top right of the <guilabel>Registration PINs</guilabel> section to set its state to ON.</para></step> 
+</procedure>
+
+<procedure id="disabling_registration_pins"><title>To Disable the Use of Registration PINs<indexterm><primary>Registration PINS</primary><secondary>disabling</secondary></indexterm></title>
+<step><para>Click the button on the top right of the <guilabel>Registration PINs</guilabel> section to set its state to OFF.</para></step> 
+</procedure>
+
+</section>
+
+<section id="enabling_bulk_http_transfer"><title><indexterm><primary>Enabling VM Image transfer over HTTP</primary></indexterm>Enabling VM Image Download and Upload Over HTTP</title>
+<para>Because VM images are encrypted for transfer, it may be safe to change the default HTTPS mode of transfer to use HTTP instead. Doing so will decrease the load on your &BACKEND; server and should increase the speed of image transfer between &PB; clients and the &BACKEND; server.</para>
+<warning><para>Using HTTP presents a risk that the HTTP session token could be intercepted and used maliciously. This includes the risk that the token could be used by an attacker to overwrite &BACKEND; data. &COMPANY_NAME_SHORT; recommends taking appropriate steps to mitigate this risk if you choose to enable transfer over HTTP.</para></warning>
+<procedure><title>To Enable VM Image Transfer Over HTTP</title>
+
+<step><para>In XenCenter, click the <guilabel>Console</guilabel> tab of your &BACKEND; VM and select <guilabel>Local Command Shell</guilabel> from the console menu.</para></step>
+<step><para>The local command shell opens. Log in with the root user credentials.</para></step>
+<step><para>Enter the command:</para>
+<screen>vi /xt/config/site.conf</screen></step>
+<step><para>Change the line:</para>
+<screen>imagelibrary.bulk_transfer_scheme = "https"</screen></step>
+<step><para>To read:</para>
+<screen>imagelibrary.bulk_transfer_scheme = "http"</screen></step>
+<step><para>Type</para>
+<screen>exit</screen>
+<para>and press <keycap>Enter</keycap> to quit the local command shell.</para></step>
+<step><para>Reboot the &BACKEND; VM from either the console menu or from the XenCenter <guilabel>VM</guilabel> menu.</para>
+<para>VM images will now transfer using HTTP over port 80.</para></step>
+</procedure>
+</section>
+
+<xi:include href="XenClientLocalVHDCache.xml" xpointer="local_vhd_cache" xmlns:xi="http://www.w3.org/2001/XInclude" /> 
+ 
+
+<section id="backing_up_synchronizer"><title><indexterm><primary>Backing up Synchronizer deployment</primary></indexterm>Backing up &BACKEND; and its VM images</title>
+<para>Citrix recommends backing up your &BACKEND; environment. This includes the &BACKEND; virtual appliance itself, including its metadata about users, assignments, etc., and the &PB; VM images that you are managing with it.</para>
+
+<para>In a typical environment, the &PB; VM images will be on shared storage. You can just back these up by whatever means you currently use. For example, you can periodically rsync the images to a remote filer.</para>
+
+<para>For the &BACKEND; appliance itself and its database, and also any VM images that you might be saved on local storage, we recommend the following procedure.</para>
+<procedure><title>To Back Up a &BACKEND;</title>
+<step><para>In XenCenter, right-click on the &BACKEND; appliance and choose <guilabel>Shut Down</guilabel>.</para></step>
+
+<step><para>When the &BACKEND; is no longer running, right-click and this time choose <guilabel>Take Snapshot</guilabel>. In the dialog box that appears, provide a Name and Description for the Snapshot, and make sure the Snapshot mode is set to <guilabel>Snapshot the virtual machine's disks</guilabel>.</para></step>
+
+<step>
+<para>When the snapshot is completed, click on the <guilabel>Snapshots</guilabel> tab, select the snapshot you just took, click the <guilabel>Actions</guilabel> button above, and select <guilabel>Export to a File</guilabel> from the menu. You can then browse to a desired location available to the machine your XenCenter is running on, give the export file a name, and click <guilabel>Save</guilabel>.</para>
+<para>The export operation will take some time.</para> 
+
+<note><para>Starting with <indexterm><primary>XenServer</primary></indexterm>XenServer 5.6 Feature Pack 1, you can automate snapshotting and archiving (exporting) of virtual machines if you have the XenServer Platinum Edition. See the <citetitle>VM Protection and Recovery</citetitle> section in the <citetitle>XenServer 5.6 Feature Pack 1 Administrator's Guide</citetitle> for details.</para></note>
+</step>
+
+<step><para>Once the &BACKEND; export is complete, back up the exported appliance Snapshots remotely as you would back up the VM images.</para></step>
+</procedure>
+
+<para>To restore your environment after a disaster, first restore the XenServer pool where the &BACKEND; will reside. Next, restore the shared storage for the VM images. Finally import the backed-up appliance into the XenServer pool and start it. Assuming the environment has been restored to the same state as it was in before the failure, the information in the &BACKEND; database should properly point to the VM images and your &BACKEND; installation should be up and functioning again.</para>
+</section>
+ 
+</chapter>
+
+<chapter><title>Advanced &BACKEND; Features</title>
+
+<section id="image_modes"><title>VM Image Modes<indexterm><primary>VMs</primary><secondary>Image modes</secondary></indexterm></title>
+
+<para>&PB; VMs can be uploaded to a &BACKEND; server to create a library of VM images that can be deployed to &PB; users.</para>
+
+<para>A &PB; VM image stored on a &BACKEND; server exists in one of the following managed modes:</para>
+<indexterm><primary>VM Image Modes</primary><secondary>&VM_PRIVATE_MODE;</secondary></indexterm>
+<indexterm><primary>VM Image Modes</primary><secondary>&VM_PRIVATE_MODE; with user profile only backed up</secondary></indexterm>
+<indexterm><primary>VM Image Modes</primary><secondary>&VM_SHARED_MODE;</secondary></indexterm>
+<itemizedlist>
+<listitem><para>&VM_PRIVATE_MODE;</para><para>A traditional image of the entire VM stored as a single VHD file. You can make changes to a VM based on this image (for example, installing software or updating the operation system) without affecting other users, and your changes remain when you reboot the device. With this type of VM Image, initial deployment of the image is made with &BACKEND; and ongoing updates can be made in the traditional manner using existing Windows distribution tools.</para></listitem>
+<listitem><para>&VM_PRIVATE_MODE; with User Profile only backed up</para><para>The user profile of the VM alone is uploaded to the &BACKEND; as a separate VHD from the rest of the system. You can make changes to a VM based on this image (for example, installing software or updating the operation system) without affecting other users, and your changes remain when you reboot the device. With this type of VM Image, initial deployment of the image is made with &BACKEND;, and the user profile is thereafter backed up to the &BACKEND;. Ongoing operating system and application updates can be made in the traditional manner using existing Windows distribution tools.</para></listitem>
+<listitem><para>&VM_SHARED_MODE;</para><para>The user profile of the VM is stored as a separate VHD from the rest of the system. You can make changes to a VM based on this image without affecting other users, but only changes made in the user profile remain when you reboot the device; the operating system and applications revert to the state they were stored at when the image was last saved. With this type of VM Image, deployment and ongoing image updates are made with &BACKEND;. Existing Windows distribution tools are not useable with these images.</para></listitem>
+</itemizedlist>
+
+<para>The mode is chosen when you first upload the VM to a &BACKEND;.</para>
+
+<indexterm><primary>Uploading VM to &BACKEND;</primary></indexterm>
+<indexterm><primary>VMs</primary><secondary>Uploading image to &BACKEND;</secondary></indexterm>
+
+<procedure><title>To Author a VM in &VM_PRIVATE_MODE;<indexterm><primary>VMs</primary><secondary>authoring in &VM_PRIVATE_MODE;</secondary></indexterm><indexterm><primary>Authoring VM images</primary></indexterm></title>
+<note><para>Only &BACKEND; users with <literal>Admin</literal> rights can upload VMs to &BACKEND;.</para></note>
+<step>
+<para>Shut down the VM that you want to use as a template for the &VM_SHARED_MODE; VM.</para>
+<note><para>The VM must not already be registered with &BACKEND;.</para></note>
+</step>
+&view_details;
+<step><para>Click <guilabel>Upload VM</guilabel> near the top right side of the VM details box. An <guilabel>Upload to &BACKEND;</guilabel> dialog box appears.</para></step>
+<step><para>Enter a VM Image Name and a Description for the VM.</para></step>
+<step><para>Select the <guilabel>Static</guilabel> radio button and leave the <guilabel>Allow backup of user profile only</guilabel> checkbox unchecked.</para></step>
+<step><para>Click <guilabel>Finish</guilabel>.</para></step>
+
+</procedure>
+
+<procedure><title>To Author a VM in &VM_PRIVATE_MODE; with User Profile only backed up<indexterm><primary>VMs</primary><secondary>authoring in &VM_PRIVATE_MODE; with user profile only backed up</secondary></indexterm></title>
+<note><para>Only &BACKEND; users with <literal>Admin</literal> rights can upload VMs to &BACKEND;.</para></note>
+<step>
+<para>Shut down the VM that you want to use as a template for the &VM_SHARED_MODE; VM.</para>
+<note><para>The VM must not already be registered with &BACKEND;.</para></note>
+</step>
+&view_details;
+<step><para>Click <guilabel>Upload VM</guilabel> near the top right side of the VM details box. An <guilabel>Upload to &BACKEND;</guilabel> dialog box appears.</para></step>
+<step><para>Enter a VM Image Name and a Description for the VM.</para></step>
+<step><para>Select the <guilabel>Static</guilabel> radio button and check the <guilabel>Allow backup of user profile only</guilabel> checkbox.</para></step>
+<step><para>Click <guilabel>Finish</guilabel>.</para></step>
+
+</procedure>
+
+<procedure><title>To Author a VM in &VM_SHARED_MODE;<indexterm><primary>VMs</primary><secondary>authoring in &VM_SHARED_MODE;</secondary></indexterm></title>
+<step><para>On a &PB; device, ensure that you are connected to &BACKEND; as a user with <literal>Admin</literal> rights.</para></step>
+<step><para>Shut down the VM that you want to use as a template for the &VM_SHARED_MODE; VM.</para>
+<note><para>The VM must not already be registered with &BACKEND;.</para></note>
+</step>
+&view_details;
+<step><para>Click <guilabel>Upload VM</guilabel>.</para></step>
+<step><para>Enter a name and description for the VM, and select <guilabel>Dynamic</guilabel>.</para></step>
+<step><para>Click <guilabel>Finish</guilabel>. The VM is uploaded to &BACKEND; in &VM_SHARED_MODE;.</para></step>
+<step><para>Once the VM is uploaded, you need to create a second version of the VM before assigning it to users.</para>
+<para>When a VM based on a newly-created (version 1) &VM_SHARED_MODE; is first started, VM to users, its operating system detects the new disks and automatically installs new driver software, which requires a reboot to finish. Because this driver software cannot persist on reboot for a user unless he has <literal>Admin</literal> rights, if you were to assign the freshly-created VM to users, their VM would need to reboot again each time they restarted it. To avoid this, you need to create a second version of the &VM_SHARED_MODE; VM to assign to users.</para>
+<note><para>Disable 3D graphics in the policy when assigning &VM_SHARED_MODE; VMs. If 3D graphics is enabled, the physical GPU will be visible to the VM. If the VM image was authored on a machine with a different GPU, then Windows won’t have the driver for the host GPU installed. As a result, Windows will install the driver for the new GPU and prompt for a reboot. After reboot, the system disk will be wiped and the process will repeat.</para>
+<para>Similar to the GPU, &PB; passes the optical drive directly through to the VM, which also results in drivers being installed (users will see a notification in the systray when the install completes), but does not prompt for a reboot.</para></note>
+
+</step>
+<step><para>If <guilabel>Save changes for reboots</guilabel> is not set to <literal>Enabled</literal>, click <guilabel>Edit</guilabel> and enable it, then Click <guilabel>Save</guilabel>.</para></step>
+<step><para>Start the VM. When the VM has started, the required drivers install automatically.</para></step>
+<step><para>Reboot the VM to complete the proper installation of the required drivers.</para></step>
+<step><para>Before shutting down the VM and publishing the next version, you should apply all the current Windows updates, rebooting again if necessary. Then, turn off automatic updating for Windows if it is not already disabled. You probably would also want to configure the Windows Firewall at this time.</para>
+<para>Any applications you want the image to have will also need to be installed. Consider that some of the applications will have their own settings for automatic updating that will be an annoyance for users of the image if you leave them enabled.</para></step>
+<step><para>When the VM is fully prepared, shut down the VM.</para></step> 
+&view_details;
+<step><para>Click <guilabel>Upload VM</guilabel>.</para></step>
+<step><para>From the <guilabel>Operation</guilabel> pulldown, select <literal>Upload new version of current VM</literal>, then click <guilabel>Finish</guilabel>.</para></step>
+<step><para>Once the VM is uploaded, this version is ready to assign to users.</para>
+<note><para>The user must manually join an AD domain if required after downloading a &VM_SHARED_MODE; VM.</para></note>
+</step>
+</procedure>
+
+<para>When the upload is complete, you can assign this VM to users just like any other VM. However, when the user boots the VM, a copy of the VM VHD file is created, which is used as the file system for that user session. Any changes that the user makes in their user folders are preserved, but when the machine is rebooted, any applications installed and the operating system itself will be reverted to the state they had at first boot.</para>
+
+<para>To update a &VM_SHARED_MODE; VM, use the following procedure:</para>
+<procedure><title>To Update a &VM_SHARED_MODE; VM<indexterm><primary>VM images</primary><secondary>updating</secondary></indexterm></title>
+
+<step><para>In &BACKEND;, assign the &VM_SHARED_MODE; VM image to your administrator user account.</para></step>
+<step><para>On your &PB; device, in &BC;, create a new VM from &BACKEND;, selecting the &VM_SHARED_MODE; VM image.</para></step>
+&view_details;
+<step><para>Click the <guilabel>Synchronization</guilabel> tab.</para></step>
+<step><para>From the <guilabel>Operation</guilabel> pulldown, select <literal>Upload new version of current VM</literal>, then click <guilabel>Finish</guilabel>.</para></step>
+<step><para>Click <guilabel>Save</guilabel>.</para></step>
+<step><para>Start the VM and perform maintenance work. When you are finished, shut down the VM.</para></step>
+<step><para>In &BACKEND;, assign the new version of the VM to the relevant user(s), editing the VM policies if desired. The assigned users will be updated with the new version automatically when their &PB; device is restarted or on the schedule defined in the VM policies.</para></step>
+</procedure>
+
+</section>
+</chapter>
+
+
+<chapter id="troubleshooting">
+	<title>Troubleshooting</title>
+	<para><indexterm><primary>Troubleshooting</primary></indexterm>This section describes some solutions for common problems. You may also want to visit the &PB; forums at <ulink url="http://forums.citrix.com/forum.jspa?forumID=1292">http://forums.citrix.com/forum.jspa?forumID=1292</ulink> for solutions not found in this chapter.</para>
+
+	<section><title><indexterm><primary>Troubleshooting</primary><secondary>changing  role of user to admin outside of &BACKEND; web interface</secondary></indexterm>Changing the Role of a User to Admin Outside of the &BACKEND; web interface</title>
+		<para>Through the &BACKEND; web interface it is possible to remove the admin privilege from all users, including the admin user. If this happens to you, there is a command line script <filename>make-user-admin</filename> that you can run to grant yourself admin user rights.</para>
+		
+		<procedure><title>To Grant a User Admin Rights</title>
+		
+		<step><para>In XenCenter, click the <guilabel>Console</guilabel> tab of your &BACKEND; VM and select <guilabel>Local Command Shell</guilabel> from the console menu.</para></step>
+<step><para>The local command shell opens. Log in with the root user credentials.</para></step>
+		<step><para>Run the following command:</para>
+		<screen>make-user-admin</screen>
+		<para>The following output is displayed:</para>
+		<screen>This program will grant Synchronizer admin privileges to a user 
+  of your choice. Provide the user information at the prompt below:
+
+    1) To specify a local synchronizer user, simply enter the username 
+       with no prefix. e.g. 'jane'
+
+    2) To specify a synchronizer user that is linked to an AD user, prefix 
+       the username with the NETBIOS name of the domain and a backslash 
+       character. e.g. 'MYDOMAIN\jane'
+
+Enter username (CTRL-C to cancel):</screen></step>
+<step><para>Enter the username as prompted and press <keycap>Enter</keycap>.</para>
+<para>The user role is changed in the &BACKEND; database to have admin privileges.</para></step>
+<step><para>Type</para>
+<screen>exit</screen>
+<para>and press <keycap>Enter</keycap> to quit the local command shell.</para></step>
+</procedure>
+	
+	</section>
+	<section><title><indexterm><primary>Troubleshooting</primary><secondary>VM upload issues</secondary></indexterm>VM Upload Issues</title>
+	<para><!-- VM upload will fail if there is insufficient space in the &BACKEND; image repository, and if the VM that you attempt to upload was not shut down cleanly. --> Use the following procedures to troubleshoot VM upload issues.</para>
+	<procedure><title>To Fix VM Upload Failure due to Insufficient Space</title>
+	<step><para>In XenClient, shutdown the &BACKEND; VM.</para></step>
+	<step><para>Click the <guilabel>Storage</guilabel> tab.</para></step>
+	<step><para>Select the <guilabel>xt-data-vol</guilabel> virtual disk and click <guilabel>Properties</guilabel>.</para></step>
+	<step><para>Click <guilabel>Size and location</guilabel> and increase the disk size.</para></step>
+	<step><para>Click <guilabel>OK</guilabel> and restart the &BACKEND; VM.</para></step>
+	</procedure>
+	
+	<!--
+	<procedure><title>To Fix VM Upload Failure due to a Dirty File System</title>
+	<step><para>Start the VM and shut it down cleanly.</para></step>
+	<step><para>Try the upload again.</para></step>
+	</procedure>
+	-->
+
+	
+	</section>
+
+<section><title><indexterm><primary>Troubleshooting</primary><secondary>locked VM issues</secondary></indexterm>VM Locked Issues</title>
+<para>When the lease time of a VM expires and you cannot contact a &BACKEND; server, the VM is put into a locked state and cannot be booted. Use the following procedure to unlock a locked VM. This procedure requires the root password set at &PB; installation time.</para>
+
+<procedure><title>To Boot a Locked VM</title>
+<step><para>&OPEN_CONSOLE;</para></step>
+<step><para>Run the <command>xec-vm</command> command to get the name of the locked VM:</para>
+<screen>xec-vm</screen>
+</step>
+<step><para>Run the following two commands:</para>
+<screen>UUID=`xec-vm --name <replaceable>locked_vm_name</replaceable> get uuid`
+db-write /vm/${UUID}/backend/state/operation READY</screen>
+</step>
+<step><para>Press <keycap>Ctrl + q</keycap> to refresh &BC;.</para></step>
+
+</procedure>
+</section>
+	
+	<section>
+		<title><indexterm><primary>Troubleshooting</primary><secondary>Active Directory issues</secondary></indexterm>AD Issues</title>
+		<para>If you encounter problems linking in AD users and groups, first check that the username is spelled correctly. If you are still unable to link in a user or group, try restarting the AD link services by using the following procedure:</para>
+		<procedure><title>To Restart the AD Client Services</title>
+		<step><para>In XenCenter, click the <guilabel>Console</guilabel> tab of your &BACKEND; VM and select <guilabel>Local Command Shell</guilabel> from the console menu.</para></step>
+		<step><para>The local command shell opens. Log in with the root user credentials.</para></step>
+		<step><para>Run the command:</para>
+		<screen>/sbin/ad-link-restart</screen>
+		</step>
+		<step><para>Type</para>
+		<screen>exit</screen>
+		<para>and press <keycap>Enter</keycap> to quit the local command shell.</para></step>
+		</procedure>
+		
+		<para>If you are still unable to link in a user or group, check to assure that AD and the &BACKEND; server are getting the same time from their clocks. If there is a problem with time synchronization between them, an error message "Unable to create user: Unable to find specified user or group" will be displayed.</para>
+	</section>
+		
+</chapter>
+
+<appendix role="die">
+	<title>Licenses</title>
+	<section><title>FastCGI</title>
+<para>This package was <phrase role="die">debianized</phrase> by Davide Puricelli (evo) &lt;apurice@tin.it&gt; on
+Sat,  3 Jun 2000 22:50:10 +0200.</para>
+<para>It was downloaded from http://www.fastcgi.com/</para>
+
+<para>Copyright:</para>
+
+<para>Copyright (c) 1995-1996 Open Market, Inc.</para>
+
+<para>Authors:</para>
+
+ <itemizedlist><listitem><para>Patches for Apache-1.1 provided by
+    Ralf S. Engelschall
+    &lt;rse@en.muc.de&gt;</para></listitem>
+ <listitem><para>Patches for Linux provided by
+    Scott Langley
+    &lt;langles@vote-smart.org&gt;</para></listitem>
+ <listitem><para>Patches for suexec handling by
+    Brian Grossman &lt;brian@SoftHome.net&gt; and
+    Rob Saccoccio &lt;robs@ipass.net&gt;</para></listitem>
+</itemizedlist>
+<section><title>Mod_fastcgi License Terms</title>
+<para>This FastCGI application library source and object code (the
+"Software") and its documentation (the "Documentation") are
+copyrighted by Open Market, Inc ("Open Market").  The following terms
+apply to all files associated with the Software and Documentation
+unless explicitly disclaimed in individual files.</para>
+
+<para>Open Market permits you to use, copy, modify, distribute, and license
+this Software and the Documentation solely for the purpose of
+implementing the FastCGI specification defined by Open Market or
+derivative specifications publicly endorsed by Open Market and
+promulgated by an open standards organization and for no other
+purpose, provided that existing copyright notices are retained in all
+copies and that this notice is included verbatim in any distributions.</para>
+
+<para>No written agreement, license, or royalty fee is required for any of
+the authorized uses.  Modifications to this Software and Documentation
+may be copyrighted by their authors and need not follow the licensing
+terms described here, but the modified Software and Documentation must
+be used for the sole purpose of implementing the FastCGI specification
+defined by Open Market or derivative specifications publicly endorsed
+by Open Market and promulgated by an open standards organization and
+for no other purpose.  If modifications to this Software and
+Documentation have new licensing terms, the new terms must protect Open
+<phrase role="die">Market's</phrase> proprietary rights in the Software and Documentation to the
+same extent as these licensing terms and must be clearly indicated on
+the first page of each file where they apply.</para>
+
+<para>Open Market shall retain all right, title and interest in and to the
+Software and Documentation, including without limitation all patent,
+copyright, trade secret and other proprietary rights.</para>
+
+<para>OPEN MARKET MAKES NO EXPRESS OR IMPLIED WARRANTY WITH RESPECT TO THE
+SOFTWARE OR THE DOCUMENTATION, INCLUDING WITHOUT LIMITATION ANY
+WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  IN
+NO EVENT SHALL OPEN MARKET BE LIABLE TO YOU OR ANY THIRD PARTY FOR ANY
+DAMAGES ARISING FROM OR RELATING TO THIS SOFTWARE OR THE
+DOCUMENTATION, INCLUDING, WITHOUT LIMITATION, ANY INDIRECT, SPECIAL OR
+CONSEQUENTIAL DAMAGES OR SIMILAR DAMAGES, INCLUDING LOST PROFITS OR
+LOST DATA, EVEN IF OPEN MARKET HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGES.  THE SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS".
+OPEN MARKET HAS NO LIABILITY IN CONTRACT, TORT, NEGLIGENCE OR
+OTHERWISE ARISING OUT OF THIS SOFTWARE OR THE DOCUMENTATION.</para>
+</section>
+	
+	</section>
+	<?hard-pagebreak?>
+
+	</appendix>
+<index/>
+&colophon;
+</book>

@@ -1,0 +1,196 @@
+<section><title>/com/citrix/xenclient/xenmgr/vms</title>
+
+  <section><title>com.citrix.xenclient.xenmgr.vms</title><bridgehead>Methods:</bridgehead><informaltable><tgroup cols="4"><colspec colwidth="50"/><colspec colwidth="50"/><colspec colwidth="50"/><colspec colwidth="*"/><thead><row><entry>name</entry><entry>type</entry><entry>access</entry><entry>description</entry></row></thead><tbody><row><entry><literal>vms</literal></entry><entry><para>out</para></entry><entry><para>ao</para></entry><entry>
+      
+        
+          
+            <para>
+              Array of VM object paths.
+              <screen>
+                array [
+                  object_path "/vm/00000000_0000_0000_0000_000000000000"
+                  object_path "/vm/00000000_0000_0000_0000_000000000001"
+                ]
+              </screen>
+            </para>
+          
+        
+      
+    </entry></row><row><entry><literal>vms</literal></entry><entry><para>out</para></entry><entry><para>as</para></entry><entry>
+      
+        
+          
+            <para>
+              Array of VM object uuid.
+              <screen>
+                array [
+                  string "00000000-0000-0000-0000-000000000000"
+                  string "00000000-0000-0000-0000-000000000001"
+                ]
+              </screen>
+            </para>
+          
+        
+      
+    </entry></row><row><entry><literal>uuid</literal></entry><entry><para>in</para></entry><entry><para>s</para></entry><entry>
+      
+      
+      
+        
+          <para>
+            On success, the returned value is the current status of
+            the VM (i.e. it should be either "Starting", "Running", or
+            perhaps even "Resuming" if the last VM state was last
+            suspended.
+
+            On error, an error reply is sent.  The format of the error
+            message is TBD, but should contain an error code and an
+            error message.
+          </para>
+        
+      
+    </entry></row><row><entry><literal>uuid</literal></entry><entry><para>in</para></entry><entry><para>o</para></entry><entry>
+      
+      
+      
+        
+          <para>
+            On success, the returned value is the current status of
+            the VM (i.e. it should be either "Stopping" or "Stopped".)
+
+            On error, an error reply is sent.
+          </para>
+        
+      
+    </entry></row><row><entry><literal>vm</literal></entry><entry><para>in</para></entry><entry><para>o</para></entry><entry>
+      
+      
+      
+        
+          <para>
+            On success, the returned value is the current status of
+            the VM (i.e. it should be either "Suspending" or "Suspended".)
+
+            On error, an error reply is sent.
+          </para>
+        
+      
+    </entry></row><row><entry><literal>vm</literal></entry><entry><para>in</para></entry><entry><para>o</para></entry><entry>
+      
+      
+      
+        
+          <para>
+            Restores the VM from the latest suspended image.  On
+            success, the returned value is the current status of the
+            VM (i.e. it should be either "Restoring" or "Running".)
+
+            On error, an error reply is sent.
+          </para>
+        
+      
+    </entry></row><row><entry><literal>vm</literal></entry><entry><para>in</para></entry><entry><para>s</para></entry><entry>
+      
+      
+        
+          <para>
+            Called from the backend / UI daemon.
+
+            TBD: If the VM is running, should the operation fail, or
+            only take effect when the VM shuts down, or on a host
+            reboot?
+          </para>
+        
+      
+    </entry></row></tbody></tgroup></informaltable></section>
+
+  <section><title>/com/citrix/xenclient/xenmgr/vm/00000000_0000_0000_0000_000000000000</title>
+    <section><title>com.citrix.xenclient.xenmgr.vm</title><bridgehead>Properties:</bridgehead><informaltable><tgroup cols="3"><colspec colwidth="*"/><colspec colwidth="*"/><colspec colwidth="*"/><thead><row><entry>name</entry><entry>type</entry><entry>access</entry></row></thead><tbody><row><entry>status</entry><entry>s</entry><entry>read</entry></row></tbody></tgroup></informaltable></section>
+
+    <section><title>org.freedesktop.DBus.Properties</title><bridgehead>Properties:</bridgehead><informaltable><tgroup cols="3"><colspec colwidth="*"/><colspec colwidth="*"/><colspec colwidth="*"/><thead><row><entry>name</entry><entry>type</entry><entry>access</entry></row></thead><tbody><row><entry>uuid</entry><entry>s</entry><entry>read</entry></row><row><entry>name</entry><entry>s</entry><entry>readwrite</entry></row><row><entry>description</entry><entry>s</entry><entry>readwrite</entry></row><row><entry>slot</entry><entry>i</entry><entry>readwrite</entry></row></tbody></tgroup></informaltable></section>
+
+
+    <section><title>platform_config</title>
+      <section><title>org.freedesktop.DBus.Properties</title><bridgehead>Properties:</bridgehead><informaltable><tgroup cols="3"><colspec colwidth="*"/><colspec colwidth="*"/><colspec colwidth="*"/><thead><row><entry>name</entry><entry>type</entry><entry>access</entry></row></thead><tbody><row><entry>vcpus</entry><entry>i</entry><entry>readwrite</entry></row><row><entry>memory</entry><entry>i</entry><entry>readwrite</entry></row><row><entry>smbios-oem-types-pt</entry><entry>i</entry><entry>readwrite</entry></row><row><entry>smbios-pt</entry><entry>b</entry><entry>readwrite</entry></row><row><entry>acpi-pt</entry><entry>b</entry><entry>readwrite</entry></row><row><entry>power-management</entry><entry>b</entry><entry>readwrite</entry></row><row><entry>graphic-pt</entry><entry>b</entry><entry>readwrite</entry></row></tbody></tgroup></informaltable></section>
+   </section>
+    
+    
+
+    <section><title>disks</title>
+        <section><title>com.citrix.xenclient.xenmgr.vm.disks</title><bridgehead>Methods:</bridgehead><informaltable><tgroup cols="4"><colspec colwidth="50"/><colspec colwidth="50"/><colspec colwidth="50"/><colspec colwidth="*"/><thead><row><entry>name</entry><entry>type</entry><entry>access</entry><entry>description</entry></row></thead><tbody><row><entry><literal>disks</literal></entry><entry><para>in</para></entry><entry><para>ao</para></entry><entry>
+          
+          
+            
+              <para>
+                  array [
+                    Object "/vm/00000000_0000_0000_0000_000000000000/disk/0"
+                    Object "/vm/00000000_0000_0000_0000_000000000000/disk/1"
+                  ]
+              </para>
+            
+          
+        </entry></row><row><entry><literal>path</literal></entry><entry><para>in</para></entry><entry><para>s</para></entry><entry>
+           
+           
+           
+             
+               <para>
+                  Add a give disk from a path.
+               </para>
+             
+           
+         </entry></row><row><entry><literal>size</literal></entry><entry><para>in</para></entry><entry><para>i</para></entry><entry>
+           
+           
+           
+             
+               <para>
+                   CreateDisk create a new vhd file on the local storage.
+                   size is in MegaBytes.
+                   The return value is the dbus object path of the new disk.
+               </para>
+             
+           
+         </entry></row><row><entry><literal>disk_id</literal></entry><entry><para>in</para></entry><entry><para>i</para></entry><entry>
+           
+         </entry></row></tbody></tgroup></informaltable></section>
+    </section>
+    
+    <section><title>nics</title>
+      <section><title>com.citrix.xenclient.xenmgr.vm.nic</title><bridgehead>Methods:</bridgehead><informaltable><tgroup cols="4"><colspec colwidth="50"/><colspec colwidth="50"/><colspec colwidth="50"/><colspec colwidth="*"/><thead><row><entry>name</entry><entry>type</entry><entry>access</entry><entry>description</entry></row></thead><tbody><row><entry><literal>nics</literal></entry><entry><para>out</para></entry><entry><para>ao</para></entry><entry>
+          
+            
+              
+                <para>
+                  Array of nic object paths.
+                  <screen>
+                    array [
+                    object_path "/vm/00000000-0000-0000-0000-000000000000/nic/1"
+                    object_path "/vm/00000000-0000-0000-0000-000000000000/nic/2"
+                    ]
+                  </screen>
+                </para>
+              
+            
+          
+        </entry></row><row><entry><literal>nic_id</literal></entry><entry><para>out</para></entry><entry><para>i</para></entry><entry>
+          <para>ocaml-function
+			'set_nic_config'</para>
+          
+          
+            
+              <para>
+                This allocates the next NIC id.
+              </para>
+            
+          
+        </entry></row><row><entry><literal>nic_id</literal></entry><entry><para>in</para></entry><entry><para>i</para></entry><entry>
+          
+        </entry></row></tbody></tgroup></informaltable></section>
+
+      <section><title>0</title>
+        <section><title>org.freedesktop.DBus.Properties</title><bridgehead>Properties:</bridgehead><informaltable><tgroup cols="3"><colspec colwidth="*"/><colspec colwidth="*"/><colspec colwidth="*"/><thead><row><entry>name</entry><entry>type</entry><entry>access</entry></row></thead><tbody><row><entry>mac</entry><entry>s</entry><entry>readwrite</entry></row><row><entry>model</entry><entry>s</entry><entry>readwrite</entry></row><row><entry>bridge</entry><entry>s</entry><entry>readwrite</entry></row></tbody></tgroup></informaltable></section>
+      </section>
+    </section> 
+  </section> 
+</section>

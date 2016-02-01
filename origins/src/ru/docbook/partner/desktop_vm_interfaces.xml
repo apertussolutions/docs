@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+  Copyright 2014 by Citrix Systems, Inc.  Created by Gordon Stretch <Gordon.Stretch@citrix.com>. This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+-->
+
+
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % local SYSTEM "../local.ent">
+%local;
+]><article lang="en">
+	<articleinfo id="titlestuff">
+		<title> [Citrix Confidential]</title>
+		<subtitle>Release &PRODUCT_VERSION;</subtitle>
+		<pubdate>Published <?dbtimestamp format="B Y"?>
+		</pubdate>
+	<productnumber>Version &PRODUCT_VERSION;</productnumber>
+	<edition>&DOC_EDITION_NUMBER;</edition>
+		<copyright>
+			<year>2008</year>
+			<holder>Citrix Systems, Inc.</holder>
+		</copyright>
+	</articleinfo>
+
+        
+
+</article>

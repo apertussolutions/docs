@@ -1,0 +1,305 @@
+                                    <row>
+                                            <entry>
+                        <para role="horrible-release-note-hack">Phantom USB Device Hub Appears in Windows Device Manager</para>
+						<para><emphasis role="bold">Workaround:</emphasis> Windows Device Manager reports the existence of a USB root hub device in fault state. This device cam safely be ignored.</para>
+                                            </entry>
+                                    </row>
+
+
+
+                                    <row>
+                                            <entry>
+                        <para role="horrible-release-note-hack">VMs on Some &PB; Devices do not Recognise Optical Media Insertion</para>
+						<para><emphasis role="bold">Workaround:</emphasis> Eject and re-insert the optical media.</para>
+                                            </entry>
+                                    </row>
+									
+			
+								                                    <row>
+                                            <entry>
+                        <para role="horrible-release-note-hack">USB Devices Remain Associated to Windows XP VMs When Put to Sleep Using &BC;</para>
+						<para><emphasis role="bold">Workaround:</emphasis>  Manually disassociate the VM using &BC;.</para>
+                                            </entry>
+                                    </row>		
+									
+									
+									 <row>
+                                            <entry>
+                        <para role="horrible-release-note-hack">Burning an Audio CD Using Windows CD Utility Fails on Some Devices</para>
+						<para><emphasis role="bold">Issue:</emphasis> This has been observed on the following device models:</para>
+						
+						<itemizedlist>
+						<listitem><para>Panasonic CF-52</para></listitem>
+						<listitem><para>Lenovo M91P</para></listitem>
+						<listitem><para>HP ProBook 6460b</para></listitem>
+						<listitem><para>Dell E6520</para></listitem>
+
+						</itemizedlist>
+						
+                                            </entry>
+                                    </row>
+									
+									
+									
+									
+
+									                 <row>
+                                            <entry>
+                        <para role="horrible-release-note-hack">Changing Screen Resolution or Hot-Plugging an External Monitor While &PORTICA; Session is Active Causes Loss of Mouse on &PORTICA_VIEW; Applications</para>
+						<para><emphasis role="bold">Workaround:</emphasis> End your &PORTICA; session before changing screen reolution. Restart your &PORTICA; session should &PORTICA_VIEW; applications no longer respond to mouse events.</para>
+                                            </entry>
+                                    </row>
+									
+									
+						<row>
+                                            <entry>
+                        <para role="horrible-release-note-hack">When a &HDX; VM is Running on a Dell Device, Screen Brightness Buttons only Work When the &HDX; VM is in Focus </para>
+						<para><emphasis role="bold">Workaround:</emphasis> Switch to the &HDX; VM before Using the Brightness Buttons.</para>
+                                            </entry>
+                                    </row>
+
+									
+							<row>
+                                            <entry>
+                        <para role="horrible-release-note-hack">&HDX; VMs Unstable When Assigned Greater than 3GB of RAM</para>
+						<para><emphasis role="bold">Workaround:</emphasis> Assign a maximum of 3GB of RAM to a &HDX; VM.</para>
+                                            </entry>
+                                    </row>
+									
+									
+                                    <row>
+                                            <entry>
+                        <para role="horrible-release-note-hack">Screen Brightness Buttons on Dell Devices when &HDX; VM has Focus do not Initially Work</para>
+                     
+						<para><emphasis role="bold">Issue:</emphasis> Dell screen brightness buttons do not work after the first reboot after installing graphics drivers. A second reboot is required.</para>
+                     	<para><emphasis role="bold">Workaround:</emphasis> Reboot the device twice after installing the graphics drivers on an &HDX; VM.</para>
+                                            </entry>
+                                    </row>
+									
+									<row>
+                                            <entry>
+                        <para role="horrible-release-note-hack">&PORTICA; Functionality Does Not Work on Windows XP After First Reboot After Installing &PORTICA_VIEW; Software</para>
+                     
+                     	<para><emphasis role="bold">Workaround:</emphasis> Restart the VM twice before attempting to use the &PORTICA; functionality.</para>
+                                            </entry>
+                                    </row>
+									
+																	<row>
+                                            <entry>
+                        <para role="horrible-release-note-hack">&PORTICA; Application List Does not Refresh in a &PORTICA_VIEW; VM Before Several Reboots of &PORTICA_SHARE; VM that was Reverted to a Previous VM Version</para>
+                     
+                     	<para><emphasis role="bold">Workaround:</emphasis> Reboot the &PORTICA_SHARE; VM until the application list is refreshed.</para>
+                                            </entry>
+                                    </row>	
+									 
+	  				<row>
+						<entry>
+							<para role="horrible-release-note-hack">Ubuntu 11.04 Fails to Reboot at the End of the OS installation</para>
+							<para><emphasis role="bold">Issue:</emphasis> After installing Ubuntu 11.04, you are prompted to reboot. It has been observed that sometimes the reboot fails and a black screen is displayed.</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Force shutdown the VM and restart it.</para>
+						</entry>
+					</row>
+
+	  				<row>
+						<entry>
+							<para role="horrible-release-note-hack">Laptops with Hardware Mute Functions can Get Out of Sync</para>
+							
+							<para><emphasis role="bold">Issue:</emphasis> Some laptops, in particular Sandy Bridge Lenovos, have a hardware mute button that toggles sound for the entire &BC; device. The state of the hardware mute is also toggled when a VM is muted using software, for example when using the Windows taskbar sound icon to mute a VM. Therefore, pressing the hardware mute button when in &BC; and then switching to a VM and muting it using software will cause the VM to be muted and the platform to be unmuted, with the result that there is no sound in the VM. Pressing the hardware mute button again will then cause the VM to be unmuted but the platform to be muted, once again with no sound in the VM.
+</para>
+
+ 							<para><emphasis role="bold">Workaround:</emphasis> Switch to &BC; and press the mute button once. This will cause the software and hardware mute functions to get back into sync.</para>
+						</entry>
+					</row>					
+					
+	  				<row>
+						<entry>
+							<para role="horrible-release-note-hack">Applications That Use Windows Presentation Foundation Do Not Share Using &PORTICA;</para>
+
+							<para><emphasis role="bold">Workaround:</emphasis> None available. This will be addressed in a future release.</para>
+						</entry>
+					</row>
+
+	  				<row>
+						<entry>
+							<para role="horrible-release-note-hack">Installing &PV_TOOLS; and &PORTICA_VIEW; Software Simultaneously Fails on Window 7 64-bit</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Reboot inbetween installing &PV_TOOLS; and &PORTICA_VIEW; software.</para>
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Burning a CD Using Apple iTunes May Fail on Windows 7</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Please use the Microsoft Windows 7 CD-burning utility.</para>
+						</entry>
+					</row>
+					
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Windows Media Player Running on a Windows 7 VM Using 2 VCPUs of an Intel I5 or I7 Chip Can Cause System to Hang</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Either use 1 VCPU or another media player.</para>
+						</entry>
+					</row>
+					
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Uninstalling &PV_TOOLS; from a &VM_SHARED_MODE; VM Causes User Profile Data to Become Unavailable</para>
+							<para><emphasis role="bold">Workaround:</emphasis> &PV_TOOLS; are required for correct VM operation and should not be uninstalled.</para>
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Mouse Becomes Unresponsive Intermittently on Dell Systems When Using Windows Touchpad Driver</para>
+							<para><emphasis role="bold">Issue:</emphasis> A conflict between the &PB; emulated generic PS/2 mouse driver and a Dell Touchpad driver causes the mouse to become unresponsive for a brief period on a regular basis.</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Uninstall the Dell Touchpad driver.</para>
+						</entry>
+					</row>
+					
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Setting Non-&HDX; VM Display Resolution to 1920x1200 or 1920x1080 Causes Graphics Corruption</para>
+							<para><emphasis role="bold">Issue:</emphasis> If a laptop display does not natively support 1920x1200 or 1920x1080  resolution, attempting to set the display to such a resolution on a non-&HDX; VM causes graphics corruption. This is a known bug in this release as is should not be possible to set the display to a resolution that is not natively supported.</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Only set the resolution of a non-&HDX; VM to a natively supported resolution.</para>
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Running a Low Resolution &HDX; VM May Interfere With the Displays of Other VMs Using a Higher Resolution</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Raise the screen resolution setting of the HDX VM.</para>
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Screen Corruption When a Windows 7 &HDX;-enabled VM Resumes from Hibernation</para>
+							<para><emphasis role="bold">Issue:</emphasis> Screen corruption has been encountered when a Windows 7 &HDX; VM resumes after hibernation.</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Switch away from the VM and then back to it.</para>
+						</entry>
+					</row>  
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Low Screen Brightness When Device Wakes Up from Sleep</para>
+							<para><emphasis role="bold">Issue:</emphasis> When a VM resumes after sleeping, the brightness of the device screen is decreased.</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Manually reset the brightness of the device screen.</para>
+						</entry>
+					</row>  
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Disconnection of External Display Does Not Always Trigger Screen Adjustment</para>
+							<para><emphasis role="bold">Issue:</emphasis> If an external monitor has been attached when a PVM is in use and then it is disconnected with an SVM in use, the screen does not adjust.</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Switch back to the PVM to update the configuration.</para>
+						</entry>
+					</row>  
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Black Screen and Unresponsive System When Attempting to Update Graphics Drivers</para>
+							<para><emphasis role="bold">Issue:</emphasis> Attempting to update the graphics drivers on a &HDX;-enabled VM using the Device Manager <guilabel>Update Driver Software</guilabel> function can cause &PB; to hang, requiring a reboot.</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Do not use the <guilabel>Update Driver Software</guilabel> function to upgrade graphics drivers.</para>
+						</entry>
+					</row>  
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Graphics Drivers Not Automatically Installed on Windows Vista VM</para>
+							<para><emphasis role="bold">Issue:</emphasis> The graphics drivers for a Windows Vista VM that are usually installed during &PV_TOOLS; installation do not install on a Windows Vista VM.</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Follow <olink targetdoc="XenClientReleaseNotes" targetptr="manual_graphics_driver_install_vista" />.</para>
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack"><keycap>Caps Lock</keycap> Does Not Work With &PORTICA; Applications</para>
+							<para><emphasis role="bold">Issue:</emphasis> Turning on <keycap>Caps Lock</keycap> in a &PORTICA_VIEW; VM does not allow you to input capital letters in a &PORTICA; application.</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Use the <keycap>Shift</keycap> key.</para>
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Installing an Updated Webcam Driver Available from Windows Update for the Internal Webcam May Cause it to Stop Working on Some Laptop Models</para>
+							<para><emphasis role="bold">Workaround:</emphasis> In Device Manager, right click on the effected webcam device and select <guilabel>Properties</guilabel>. Select the <guilabel>Driver</guilabel> tab, and click <guilabel>Roll Back Driver</guilabel>.</para>
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Unplugging a USB Audio Device While it is in Use on an XP VM Can Cause the VM to Hang</para>
+							<para><emphasis role="bold">Issue:</emphasis> Unplugging a USB audio device, such as a set of USB headphones while it is  actively in use can cause an XP VM to hang.</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Ensure that the USB audio device is not currently is use (for example, currently playing music) and unplug the device using the standard XP mechanism.</para>
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Windows Safe Mode Prevents &HDX; VM Switching</para><para>
+								<emphasis role="bold">Issue:</emphasis> Booting a &HDX; enabled VM into Windows Safe Mode prevents the &PB; Switcher Bar from loading and also switching between VMs using the <keycap>Ctrl</keycap> hotkeys.</para>
+							<para>
+								<emphasis role="bold">Workaround:</emphasis> Reboot the VM, exiting Safe Mode.</para>
+						</entry>
+					</row>
+
+			<row>
+						<entry>
+							<para role="horrible-release-note-hack">External Monitor Blank When Attached</para><para>
+								<emphasis role="bold">Issue:</emphasis> When a &HDX; VM is running and you plug an external monitor into your device when the &HDX; VM is not currently on screen, the screen remains blank.</para>
+							<para>
+								<emphasis role="bold">Workaround:</emphasis> Always switch to the &HDX; VM, if running, before plugging in an external monitor.</para>
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Unable to Install VMs from External USB Optical Media Device If Internal Device is Present</para>
+							<para><emphasis role="bold">Issue:</emphasis> VMs on a laptop with an internal optical media drive cannot boot from an external optical media drive.</para>
+
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Subscribed Applications Are Not Removed When the VM Publishing Them is Deleted</para>
+							<para><emphasis role="bold">Issue:</emphasis> When a publishing VM is deleted, the &DAZZLE; stores and Start menu shortcuts for the subscribed applications are removed from subscribing VMs.</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Open &DAZZLE; on the affected VM. Click <guilabel>Application Stores</guilabel> and then <guilabel>Manage Stores ...</guilabel>. Select the store representing the deleted VM and click <guilabel>Remove</guilabel>. The applications will be removed from the &DAZZLE; store and from the <guilabel>Start</guilabel> menu.</para>
+						</entry>
+					</row> 
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">The Windows 7 Program Compatibility Assistant is Displayed If &PV_TOOLS; Installation is Cancelled before Completion</para>
+							<para><emphasis role="bold">Issue:</emphasis> If you cancel &PV_TOOLS; installation before installation is complete on Windows 7, the Program Compatibility Assistant is displayed with the message <literal>This program might not have installed correctly</literal>.</para>
+
+							<para><emphasis role="bold">Workaround:</emphasis> The dialog box can be safely ignored, and the installation of &PV_TOOLS; restarted at any time.</para>
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Caps Lock, Num Lock and Scroll Lock Lights do Not Illuminate in &BC;</para>
+							<para><emphasis role="bold">Issue:</emphasis> When using &BC; the aforementioned icons are not illuminated when Caps Lock, Scroll Lock or Num Lock is activated. Switching to a VM causes the lights to function as expected.</para>
+						</entry>
+					</row>  
+	  
+
+		
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Other Applications Running on a VM That is Publishing an Application May Also Be Shown in the Subscribing VM</para><para>
+								<emphasis role="bold">Issue:</emphasis> When launching an application that is being shared from another VM, other applications running on that VM may also be displayed in the &HDX;-enabled VM.</para>
+							<para>
+								<emphasis role="bold">Workaround:</emphasis> None available.</para>
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">External USB Keyboard Prevents HP 8440p from Booting</para><para>
+								<emphasis role="bold">Issue:</emphasis> If <guilabel>USB legacy support</guilabel> is enabled in the BIOS of an HP 8440p, &PB; fails to boot.</para>
+							<para>
+								<emphasis role="bold">Workaround:</emphasis> Follow <olink targetdoc="XenClientReleaseNotes" targetptr="to_disable_usb_legacy_support" />.</para>
+						</entry>
+					</row> 

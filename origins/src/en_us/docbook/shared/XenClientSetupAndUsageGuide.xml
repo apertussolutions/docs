@@ -1,0 +1,1746 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+  Copyright 2014 by Citrix Systems, Inc.  Created by Gordon Stretch <Gordon.Stretch@citrix.com>. This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+-->
+
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+  <!ENTITY colophon PUBLIC "colophon" "colophon.ent">
+  <!ENTITY legal PUBLIC "legal" "legal.ent">
+  <!ENTITY view_details PUBLIC "view_details" "view_details.ent">
+  
+  <!ENTITY choose_installation_medium PUBLIC "view_details" "choose_installation_medium.ent">
+  <!ENTITY % local PUBLIC "local" "local.ent">
+  %local;
+]><book id="user_guide" lang="en"><?dbhtml dir="XenClientSetupAndUsageGuide"?>
+
+ <bookinfo id="bookinfo_titlestuff" role="die">
+  <title>&COMPANY_NAME_SHORT;<trademark class="registered" role="die"/> &PB;<trademark class="trade" role="die"/> &PRODUCT_VERSION; Setup and Usage Guide</title>
+
+  <pubdate><?dbtimestamp format="d B Y"?></pubdate>
+  
+  &legal;
+  <releaseinfo>This document is a guide for users of the &COMPANY_NAME_SHORT; &PB; &PRODUCT_VERSION; release.</releaseinfo>
+
+ </bookinfo>
+	<chapter><title>Introduction</title>
+	<!--
+	<section><title>&PB; Overview</title>
+	-->
+	
+				
+		<para>&COMPANY_NAME_SHORT; <indexterm><primary>&PB;</primary><secondary>about</secondary></indexterm>&PB; is a high-performance, bare-metal hypervisor that runs directly on the client device hardware, dividing up the resources of the machine and enabling multiple operating systems to run side by side in complete isolation.</para>
+		
+		<para>&PB; can run stand-alone, but working together with <indexterm><primary>Synchronizer</primary><secondary>overview</secondary></indexterm>&BACKEND;, the server-based application for IT administrators to manage &PB; virtual machine (VM) images, users, and their &PB; devices, &PB; provides a safe, secure and simple way to provision and administer virtual machine (VM) images, combining performance with ease of use.</para>
+		
+		<para>Together with &BACKEND;, &PB; provides the capacity to radically simplify the deployment and maintenance of VM images and applications to users in a way that provides secure computing and ease of use for users and administrators alike. By enabling multiple operating systems to be installed on a single computer and providing the ability to switch between running operating systems in real time, a user can, for example, have a single computer for both home and office use, with each operating system securely isolated from the other. Additionally, user data can be separated from system data, and the system data refreshed from a single location on a regular basis. This ensures the performance and great user experience of a fresh installation each day, and ease of patch deployment and operating system updates for IT administrators.</para> 
+		
+		<para>&BACKEND; is described in detail in the <citetitle>&PRODUCT_VERSION; &BACKEND; Setup and Usage Guide</citetitle>.</para> 
+<!--
+<para>&PB; integrates with &DAZZLE; to allow users to pull the applications they want onto their desktops and can also use &PORTICA; to seamlessly share application windows between operating systems.</para>
+	-->
+<para><indexterm><primary>&PB;</primary><secondary>overview</secondary></indexterm>The &PB; software is based on bare metal 64-bit <indexterm><primary>Xen</primary></indexterm>Xen virtualization technology. It can be thought of as a software layer that acts as an intermediary between virtual machines (VMs) running on the device and the physical hardware. This allows you to run multiple VMs on a single device simultaneously, and switch between them in real time. The hypervisor layer controls the resources of the physical machine (CPU, RAM, GPU, disk, and so on) and allocates them to VMs according to your settings.</para>
+<informalfigure>
+<mediaobject>
+<imageobject>
+
+<imagedata align="center" fileref="../public/images/xenclient_layers.png" />
+</imageobject>
+</mediaobject>
+</informalfigure>	
+<para>&PB; management capabilities are provided by &BRAND_CONSOLE;. The &BRAND_CONSOLE; user interface is displayed after the &PB; software has been installed and the device has been rebooted to guide you through the process of installing VMs. VMs can be installed using CD or DVD disks, over the network, or by downloading a VM image from &BACKEND;. &BRAND_CONSOLE; also provides an easy-to-use network configuration utility, the ability to start, stop and hibernate VMs, and to interact with &BACKEND;.</para>
+<para>Once you have installed the VMs you want to run on your device and started them, switching between running VMs is as easy as using a keystroke (for example, <keycap>Ctrl+<replaceable>2</replaceable></keycap>) or using the &PB; switcher bar, which appears when you click the black bar in the middle of the top of the VM screen.</para>
+
+<!--
+</section>
+-->
+
+<!--
+<section><title>What's New in &PB; &PRODUCT_VERSION;</title>
+<para>The &PRODUCT_VERSION; release of &PB; contains the following new features and enhancements:</para>
+
+<itemizedlist>
+	<listitem>
+		<para>Broadened platform support</para>
+		<itemizedlist>
+			<listitem>
+				<para>Expanded hardware compatibility: support for laptops and desktops based on the 2nd generation of Intel Core processors (Sandy Bridge)</para>
+			</listitem>
+			<listitem>
+				<para>Broadened OS support</para>
+				<itemizedlist>
+					<listitem>
+						<para>Support for latest versions of Windows and Service Packs - Windows 7 SP1 (32- and 64-bit), Windows Vista SP2 (32-bit) and Windows XP SP3 (32-bit).</para>
+					</listitem>
+					<listitem>
+						<para>Support for Ubuntu Desktop 11.04 and 10.04 (Experimental)</para>
+					</listitem>
+				</itemizedlist>
+			</listitem>
+			<listitem>
+				<para>Extended data storage support: new advanced format 4K disk drives</para>
+			</listitem>
+		</itemizedlist>
+	</listitem>
+	
+	<listitem>
+		<para>Simplified user experience</para>
+		<itemizedlist>
+			<listitem>
+				<para>Reorder of switcher hotkeys for VMs: VMs can reordered to change the assignments of the hotkeys. Hotkey reassignment to a VM can be accomplished on the fly without the need to reboot the VM or &PB;.</para>  
+			</listitem>
+			<listitem>
+				<para>Unified view of VM controls and details: The Basic and Advanced viewing modes for VMs are now unified to simplify the management aspects for a VM in &PB;.</para>
+			</listitem>
+			<listitem>
+				<para>Seamless upgrade of &PB;: Support for over-the-air upgrade of &PB;</para>
+			</listitem>
+			<listitem>
+				<para>Keeping VM intact After unregistering &PB; from &BACKEND;: VMs can be deregistered from a &BACKEND; without the requirement to delete the VMs and settings. VMs will switched to an unmanaged state and any previous policy settings from the &BACKEND; will be cleared.</para>
+			</listitem>
+		</itemizedlist>
+	</listitem>
+
+	<listitem>
+		<para>Secure computing</para>
+		<itemizedlist>		
+			<listitem>
+				<para>Measured boot of &PB; with Intel Trusted Execution Technology (TXT): Secured booting ensures that &PB; and support components have not been unknowingly modified since installation or update in order to prevent malware infection.</para>
+			</listitem>
+		</itemizedlist>
+	</listitem>
+	
+	<listitem>
+		<para>Extended memory support for VMs: Up to 8GB of virtual memory can be allocated to a VM in order for the OS to take advantage of.</para>
+	</listitem>
+	
+	<listitem>
+		<para>Support for System Management Agent software integration: Support for Enterprise Software Distribution agent software provides the underlying system hardware and software inventory information for VMs.</para>
+	</listitem>
+	
+	<listitem>
+		<para>Extended USB device support</para>
+		<itemizedlist>
+			<listitem>
+				<para>USB 3.0 hardware compatibility: USB 3.0 is not supported, but will continue to function in USB 2 compatibility mode.</para>
+			</listitem>
+			<listitem>
+				<para>Mapping local USB devices to remote XenDesktop sessions: Local USB devices can be redirected to a remote XenDesktop session that is running in a Windows VM on &PB;.</para>
+			</listitem>
+		</itemizedlist>
+	</listitem>
+</itemizedlist>
+</section>
+-->
+
+</chapter>
+
+<chapter id="install_pb"><title>Installation</title>
+<para>This chapter explains how to install &PB;.</para>
+
+<section><title>Hardware Requirements</title>
+<para>&PB; runs on the 64-bit hardware platforms listed at the <ulink url="http://www.citrix.com/ready/list/products?page=1&amp;partnerPage=1&amp;currentTab=product&amp;rss=false&amp;currentComparison=&amp;h_Product_Citrix+Products=XenClient&amp;h_Product_XenClient=XenClient_(1.0+SP1)&amp;h_0Categories_Categories=Notebooks+and+Desktops&amp;h_zzPartners_Partner=&amp;sortBy=Alpha&amp;showGridExists=&amp;gridOn=1">Citrix Ready Products for XenClient</ulink> website. The additional recommendations are:</para>
+<itemizedlist>
+<listitem><para>4GB or more memory (RAM) recommended</para></listitem>
+<listitem><para>80GB or more disk drive space recommended</para></listitem>
+</itemizedlist>
+<note><para>&PB; does not support the use of non-symmetric RAM DIMMs.</para></note>
+<note><para>&PB; does not support the use of multiple physical network interfaces.</para></note>
+</section>
+
+<section><title>Supported Operating Systems</title>
+<para>&PB; supports the installation of the following operating systems:</para>
+<itemizedlist>
+<listitem><para>Microsoft Windows 7 32-bit SP1</para></listitem>
+<listitem><para>Microsoft Windows 7 64-bit SP1</para></listitem>
+<!--<note><para>If you prefer to use Windows XP Mode to run your Windows XP applications on your Windows 7 VM, (instead of using a separate Windows XP VM) please ensure that you download the latest version of the Windows XP Mode software from <ulink url="http://www.microsoft.com/windows/virtual-pc/">http://www.microsoft.com/windows/virtual-pc/</ulink>. Some earlier versions of the Windows XP Mode software used Intel VT-x virtualization technology in a way that conflicted with &PB; operation. The latest version of Windows XP Mode does not use Intel VT-x virtualization technology.</para></note>-->
+<listitem><para>Microsoft Windows Vista 32-bit SP3</para></listitem>
+<listitem><para>Microsoft Windows XP 32-bit SP3</para></listitem>
+<listitem><para>Ubuntu 11.04 32-bit (experimental)</para></listitem>
+</itemizedlist>
+<!-- <note><para>The installation or modification of software directly on the &PRODUCT_BRAND; host file system is not supported.</para></note> -->
+</section>
+
+<section><title>Installing &PB;</title>
+<para>
+<indexterm><primary>&PB;</primary><secondary>installing</secondary></indexterm>
+<indexterm><primary>Installing &PB;</primary></indexterm>
+<indexterm><primary>Preparing devices for &PB; installation</primary></indexterm>
+The first step in installing &PB; is to ensure that your computer has the correct BIOS settings. As a general rule, please ensure that:</para>
+
+<itemizedlist>
+<listitem><para>SATA is set up to use AHCI  mode.</para></listitem>
+<listitem><para>Intel (R) Virtualization Technology is enabled.</para></listitem>
+<listitem><para>The Intel (R) VT-d and VT-x features are enabled.</para></listitem>
+<listitem><para><!-- TODO -->Trusted Execution Technology (TXT) and the Trusted Platform Module (TPM) are disabled.</para>
+<note><para>TXT and TPM support is available in the XenClient XT product.</para></note></listitem>
+</itemizedlist>
+
+<para>With most systems, enabling Virtualization Technology or Intel Virtualization Technology (vPro) in the BIOS will enable both VT-x and VT-d capabilities. In other systems, these may be two separate settings. Please ensure that both are enabled.</para>
+
+<section><title>Configuring your Device BIOS Settings</title>
+<para>The following procedures serve as guides to setting up a Lenovo, Dell, HP, Panasonic or Fujitsu devices.</para>
+
+<note><para>As device models evolve, the BIOS interfaces are sometimes changed. If in the following procedures a specified setting does not appear where stated, it has probably been moved under another category.</para></note>
+
+<procedure><title>To Prepare a Lenovo Device for Installation</title>
+<step><para>While the machine is booting, press the blue ThinkVantage button and then <guilabel>F1</guilabel>.</para></step>
+<step><para>Set <phrase role="die"><guilabel>Config &gt; CPU &gt; Intel Virtualization Technology</guilabel></phrase> to <literal>Enabled</literal>.</para></step>
+<step><para>Set <guilabel>Config &gt; CPU &gt; Intel VT-d feature</guilabel> to <literal>Enabled</literal>.</para></step>
+<step><para>Set <guilabel>Security &gt; Security Chip &gt; Security Chip</guilabel> to <literal>Disabled</literal>.</para></step>
+<step><para>Set <guilabel>Serial ATA (SATA) &gt; SATA Controller Mode Option</guilabel> to <literal>AHCI</literal>.</para></step>
+<step><para>If the machine has a physical wireless switch, make sure that it is set to turn wireless on.</para></step>
+</procedure>
+
+<procedure><title>To Prepare a Dell Device for Installation</title>
+<step><para>While the machine is booting, press <keycap>F12</keycap> and select <guilabel>BIOS Setup</guilabel>.</para></step>
+<step><para>Set <phrase role="die"><guilabel>System Configuration &gt; SATA Operation &gt; AHCI</guilabel></phrase>.</para></step>
+<step><para>Set <phrase role="die"><guilabel>Virtualization Support &gt; Virtualization &gt; Enable Intel Virtualization Technology</guilabel>.</phrase></para></step>
+<step><para>Set <phrase role="die"><guilabel>Virtualization Support &gt; VT for Direct I/O &gt; Enable VT for Direct I/O</guilabel>.</phrase></para></step>
+<step><para>Ensure that the <phrase role="die"><guilabel>Virtualization Support &gt; Trusted Execution</guilabel></phrase> checkbox is not checked.</para></step>
+<step><para>Ensure that the <phrase role="die"><guilabel>Security &gt; TPM Security</guilabel></phrase> checkbox is not checked.</para></step>
+<step><para>Ensure that the <phrase role="die"><guilabel>Power Management &gt; Wireless Radio Control &gt; WLAN</guilabel></phrase> checkbox is not checked.</para></step>
+<step><para>Ensure that the <phrase role="die"><guilabel>Power Management &gt; Wireless Radio Control &gt; WWAN</guilabel></phrase> checkbox is not checked.</para></step>
+<step><para>Set <guilabel>Wireless &gt; Wi-Fi Catcher</guilabel> to <literal>Disabled</literal>.</para></step>
+<step><para>If the machine has a physical wireless switch, make sure that it is set to turn wireless on.</para></step>
+</procedure>
+
+<procedure><title>To Prepare an HP Device for Installation</title>
+<step><para>Press <keycap>Esc</keycap> and then <keycap>F10</keycap> while the machine is booting to enter BIOS setup.</para></step>
+<step><para>Set <phrase role="die"><guilabel>System &gt; System Configuration &gt; Virtualization Technology &gt; Enabled</guilabel></phrase>.</para></step>
+<step><para>Set <phrase role="die"><guilabel>System &gt; System Configuration &gt; SATA Device Mode &gt; AHCI</guilabel></phrase>.</para></step>
+<step><para>Set <phrase role="die"><guilabel>System &gt; System Configuration &gt; TXT Technology &gt; Disabled</guilabel></phrase>.</para></step>
+<step><para>Press the WiFi icon so it changes color from red to blue.</para></step>
+</procedure>
+
+<procedure><title>To Prepare a Panasonic Device for Installation</title>
+<step><para>Press <keycap>F2</keycap> while the machine is booting to enter BIOS setup.</para></step>
+<step><para>Set <phrase role="die"><guilabel>Advanced &gt; Intel (R) Virtualization Technology &gt; Enabled</guilabel></phrase>.</para></step>
+<step><para>Set <phrase role="die"><guilabel>Advanced &gt; Intel (R) VT-d &gt; Enabled</guilabel></phrase>.</para></step>
+<step><para>Set <phrase role="die"><guilabel>Advanced &gt; Intel (R) Trusted Execution Technology &gt; Disabled</guilabel></phrase>.</para></step>
+
+</procedure>
+
+<procedure><title>To Prepare a Fujitsu Device for Installation</title>
+<step><para>Press <keycap>Enter</keycap> while the machine is booting and select <guilabel>BIOS setup</guilabel>.</para></step>
+<step><para>Set <phrase role="die"><guilabel>Advanced &gt; CPU Features &gt; Virtualization Technology &gt; enabled</guilabel></phrase>.</para></step>
+<step><para>Set <phrase role="die"><guilabel>Advanced &gt; CPU Features &gt; Intel (R) VT-d &gt; Enabled</guilabel></phrase>.</para></step>
+<step><para>Set <phrase role="die"><guilabel>Advanced &gt; CPU Features &gt; Intel (R) TXT &gt; Disabled</guilabel></phrase>.</para></step>
+</procedure>
+
+
+<!--
+<section>
+<title>Enabling Trusted Boot</title>
+<procedure><title>To setup trusted boot using the Intel Trusted Platform Module (TPM) and Intel Trusted eXecution Technology (TXT), on an HP 6930p</title>
+<step><para>Install the correct firmware for the 6930p:</para>
+<substeps>
+<step><para>On a Windows machine, point a web browser at <ulink url="http://h20000.www2.hp.com/bizsupport/TechSupport/SoftwareDescription.jsp?lang=en&amp;cc=us&amp;prodTypeId=321957&amp;prodSeriesId=3688868&amp;prodNameId=3688870&amp;swEnvOID=2096&amp;swLang=13&amp;mode=2&amp;taskId=135&amp;swItem=ob-73149-1">the BIOS update</ulink>.</para></step>
+<step><para>Click <guilabel>Download</guilabel>.</para></step>
+<step><para>When the executable has downloaded, run it, accepting the default settings.</para></step>
+<step><para>Navigate to <filename>C:\SWSetup\sp44150</filename>.</para></step>
+<step><para>Run <filename>sp44150u.exe</filename> to create a bootable USB drive.</para></step>
+<step><para>Accept the defaults and click <guilabel>Start</guilabel>.
+</para></step>
+<step><para>Remove the USB drive or CD from the Windows machine and put it in a USB port on the target laptop.</para></step>
+<step><para>Reboot the machine.</para></step>
+<step><para>Press <keycap>Esc</keycap> and then <keycap>F9</keycap>.</para></step>
+<step><para>In the <guilabel>Boot Options</guilabel> menu, select to boot from <guilabel>USB Hard Drive</guilabel> or CD.</para></step>
+<step><para>Select <keycap>Update</keycap> and press <keycap>Enter</keycap>.</para></step>
+<step><para>Press <keycap>F10</keycap> to confirm.</para></step>
+<step><para>Press any key on the keyboard twice to confirm.</para></step>
+<step><para>Select <guilabel>Exit</guilabel> and press <keycap>Enter</keycap>.</para></step>
+<step><para>Press <keycap>F10</keycap>.</para></step>
+<step><para>Do not remove the USB stick or CD and wait for the machine to power down.</para></step>
+<step><para>Power up the machine and wait for the BIOS to update.</para></step>
+<step><para>When prompted, press <keycap>Esc</keycap> and then <keycap>F10</keycap> to enter the BIOS Setup.</para></step>
+<step><para>At this stage it is safe to remove the USB stick.</para></step>
+<step><para>Select <guilabel>File > Restore Defaults</guilabel>.</para></step>
+<step><para>Click <guilabel>Yes</guilabel>.</para></step>
+
+</substeps>
+</step>
+<step>The next stage involves correctly setting up the new BIOS:
+<substeps>
+<step><para>Select <guilabel>System Configuration > Device Configuration</guilabel>.
+</para></step>
+<step><para>Enable <guilabel>Virtualization Technology</guilabel>.
+</para></step>
+<step><para>Ensure that <guilabel>SATA Device Mode</guilabel> is set to <literal>AHCI</literal>.
+</para></step>
+<step><para>Save your settings and reboot your machine.</para></step>
+
+</substeps>
+</step>
+
+
+<step><para>While the machine is rebooting, press <keycap>Esc</keycap> and then <keycap>F10</keycap> to enter BIOS setup.
+</para></step>
+<step><para>Select <guilabel>Security > Setup BIOS Administrator Password</guilabel>.
+</para></step>
+<step><para>Enter a password twice to confirm it.
+</para></step>
+<step><para>Click <guilabel>Security > TPM Embedded Security</guilabel>.
+</para></step>
+<step><para>Enable <guilabel>Embedded Security Device State</guilabel>.</para></step>
+<step><para>Enable <guilabel>OS Management of TPM</guilabel>.</para></step>
+<step><para>Press <keycap>Esc</keycap> twice and select <guilabel>Yes</guilabel> to save your changes changes.</para></step>
+<step><para>Press <keycap>F1</keycap> to accept TPM activation.</para></step>
+<step><para>The <guilabel>HP Sparekey</guilabel> screen is displayed.</para></step>
+<step><para>Click <guilabel>Do Not Show This Again</guilabel>.</para></step>
+<step><para>Shutdown the machine completely.</para></step>
+
+<step><para>Start &PB;, click on the <guilabel>Console</guilabel> button and <command>ssh</command> to the control domain:
+<screen>ssh dom0</screen>
+</para></step>
+<step><para>Run the following command to enable the <literal>Trousers</literal> daemon:</para>
+<screen>tcsd</screen>
+</step>
+<step><para>If this is the first time you are using the TPM, take ownership of it by running the following command:</para>
+<screen>tpm_takeownership -z</screen> 
+</step>
+<step><para>Change directory to <filename>/usr/share/xenclient</filename>:</para>
+<screen>cd /usr/share/xenclient</screen></step>
+<step><para>The next step is to provision the TPM for use with TXT. Run the command:</para>
+<screen>./configure_tboot <replaceable>tpm_owner_password></replaceable></screen></step>
+<step><para>Run the <command>sync</command> command:</para>
+<screen>sync</screen></step>
+<step><para>Reboot to enable TXT in the BIOS Setup program.</para></step>
+<step><para>Press <keycap>Esc</keycap> and then <keycap>F10</keycap> to enter BIOS Setup.</para></step>
+<step><para>Enter the BIOS Administrator password you set up earlier.</para></step>
+<step><para>Select <guilabel>System Configuration > Device Configuration</guilabel>.</para></step>
+<step><para>Enable <guilabel>TXT Technology</guilabel>.</para></step>
+<step><para>Press <keycap>Esc</keycap> twice and select <guilabel>Yes</guilabel> to save your changes changes.</para></step>
+<step><para>Restart the system so that SMX mode is correctly enabled.</para></step>
+<step><para>Boot into &PB; using the <guilabel>XenClient</guilabel> GRUB entry. The system enters into SMX mode and boots using TXT. </para>
+ </step>
+</procedure>
+</section>
+-->
+
+
+</section>
+				<section id="installing_xc"><title>Installing or Upgrading<indexterm><primary>&PB;</primary><secondary>installing</secondary><tertiary>using optical media</tertiary></indexterm></title>
+				<para>See <olink role="die" targetdoc="XenClientReleaseNotes" targetptr="known_issues"/> for any known issues that might affect your installation.</para>
+<!--<note><para>The following settings are not preserved when upgrading an existing &PB; installation:</para>
+
+<itemizedlist><listitem><para>Helpful hint suppression</para></listitem></itemizedlist>
+<itemizedlist><listitem><para>&BC; network settings</para></listitem></itemizedlist>
+</note>-->
+
+<important><para>Before upgrading &PB;, ensure that all VMs on the &PB; device are shut down.</para></important>
+
+<para>&PB; offers two installation modes: quick installation or advanced installation. Use the arrow keys and the <keycap>Enter</keycap> key to navigate through the installation wizard. Press <keycap>Esc</keycap> to go back a step.</para>
+    <procedure id="quick_install">
+		<title>To Perform a Quick Install or Upgrade</title>
+		<para><indexterm><primary>&PB;</primary>
+<secondary>installing</secondary><tertiary>quick</tertiary></indexterm>Quick install does not include the option to register with a &BACKEND; server, or to enable <command>ssh</command> access to the control domain. If you choose <guilabel>Quick install</guilabel> and later decide to use &BACKEND; you can connect to your &BACKEND; server using &BC;.</para>
+		<step>
+		<para>Boot from the &PRODUCT_BRAND; installation media or network in the case of a PXE boot setup.</para></step>
+		<step>
+		<para>Choose <guilabel>Quick install</guilabel>.</para>
+		</step>
+		<step>
+		<para>Choose <guilabel>OK</guilabel> and review the software license.</para>
+		</step>
+		<step>
+		<para>Choose <guilabel>OK</guilabel> and <guilabel>Yes</guilabel> to accept the terms of the license.</para>
+		</step>
+		<step>
+		<para>Select the language and choose <guilabel>Select</guilabel>.</para>
+		</step>
+		<step>
+		<para>Select the keyboard layout of the device and choose <guilabel>Select</guilabel>.</para>
+		</step>
+		
+&choose_installation_medium;
+		
+		<step>
+		<para>Choose <guilabel>Verify</guilabel> to ensure that the installation media is valid and uncorrupted, or <guilabel>Skip</guilabel>.</para>
+		</step>
+	<step><para>If an existing &PB; installation is detected, you are presented with the option to <guilabel>Upgrade</guilabel> or perform a <guilabel>Fresh Install</guilabel>. If you select <guilabel>Upgrade</guilabel>, &PB; will be upgraded to the new version of the software and your existing settings and VMs  preserved. When the upgrade is complete, you are prompted to reboot. If you choose <guilabel>Fresh Install</guilabel>, the installation procedure continues below.</para></step> 
+<step><para>You are warned that the hard drive partition will be overwritten. Select <guilabel>Continue</guilabel>.</para></step>
+		<step><para>Next you are prompted to provide a password for the system. You will need this password to log in to the control domain and generate status reports or perform other diagnostics. Enter the password and choose <guilabel>OK</guilabel>.</para></step>
+		<step><para>You are then prompted to confirm your password by entering it again. Enter the password and choose <guilabel>OK</guilabel>.</para></step>
+		 
+		<step>
+		<para>The installation commences, and a progress bar is displayed. When the installation has completed, choose <guilabel>Continue</guilabel> and then <guilabel>Reboot</guilabel> to reboot the machine.</para>
+		
+		</step>
+		<step>
+		<para>When the device has rebooted the &BRAND_CONSOLE; is displayed. If you have performed an upgrade from a previous version of &PB;, update the &PB; software on your VMs as described in <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="updating_VMs" />.</para>
+		</step>
+	</procedure>
+	
+<procedure id="advanced_install">
+		<title>To Perform an Advanced Install or Upgrade<indexterm><primary>&PB;</primary> 
+<secondary>installing</secondary><tertiary>advanced</tertiary></indexterm><indexterm><primary>&PB;</primary>
+<secondary>upgrading</secondary><tertiary>advanced</tertiary></indexterm></title>
+		<step>
+		<para>Boot from the &PRODUCT_BRAND; installation media.</para></step>
+		<step>
+		<para>Choose <guilabel>Advanced Install</guilabel>.</para>
+		</step>
+<step>
+		<para>Choose <guilabel>OK</guilabel> and review the software license.</para>
+</step>
+		<step>
+		<para>Choose <guilabel>OK</guilabel> and <guilabel>Yes</guilabel> to accept the terms of the license.</para>
+		</step>
+		<step>
+		<para>Select the language and choose <guilabel>Select</guilabel>.</para>
+		</step>
+		<step>
+		<para>Select the keyboard layout of the device and choose <guilabel>Select</guilabel>.</para>
+		</step>
+		
+		<!--
+		<step>
+		<para>You are asked if you have any optional Supplemental Packs that you want to install. Choose <guilabel>Yes</guilabel> or <guilabel>No</guilabel>.</para>
+		</step>
+		-->
+
+&choose_installation_medium;
+		
+		<step><para>Choose <guilabel>Verify</guilabel> to ensure that the installation media is valid and uncorrupted, or <guilabel>Skip</guilabel> to move to the next installation step.</para>
+		</step>
+		  
+			<step><para>If there is an existing &PB; installation detected, you are presented with the option to <guilabel>Upgrade</guilabel> or perform a <guilabel>Fresh Install</guilabel>. If you select <guilabel>Upgrade</guilabel>, click <guilabel>Continue</guilabel> to be upgraded to the new version of the software. Your existing settings and VMs will be preserved.</para>
+<para>When the upgrade is complete, you are prompted to reboot. If you choose <guilabel>Fresh Install</guilabel>, the installation procedure continues below.</para></step>
+<step><para>You are warned that the device hard drive will be overwritten. Select <guilabel>Continue</guilabel>.</para>
+<note><para>If you choose to upgrade from a previous version, please update the &PV_TOOLS; on all VMs.</para></note></step> 
+	
+
+		<step><para>Choose <guilabel>Continue</guilabel> to begin the installation.</para></step>
+		
+		<step><para>Next you are prompted to provide a password for the system. You will need this password to log in to the control domain and generate status reports or perform other diagnostics.  Enter the password and choose <guilabel>OK</guilabel>.</para></step>
+		<step><para>You are then prompted to confirm your password by entering it again. Enter the password and choose <guilabel>OK</guilabel>.</para></step>
+		<step><para>Select <guilabel>Yes</guilabel> to enable remote access to the &PB; device over SSH. This allows you to connect directly to the &PB; hypervisor file system to perform diagnostic tasks.</para></step>
+		<step>
+		<para>Choose <guilabel>Register</guilabel> to enter a &BACKEND; URL.</para>
+		</step>
+		<step><para>Enter the address of your &BACKEND; server and click <guilabel>OK</guilabel>.</para></step>
+		<step><para>Enter the path to a root certificate to be used to authenticate your &BACKEND; server, or leave the field empty if you do not want to specify a certificate. Choose <guilabel>OK</guilabel>.</para>
+		<para>If the &BACKEND; server is configured to require <indexterm><primary>Registration PIN</primary></indexterm>Registration PINs, you are also prompted to enter the required PIN now. Enter the PIN provided by your system administrator.</para>
+				<para>If you do not want to register with a &BACKEND;, choose <guilabel>Skip</guilabel>.</para>
+		</step>
+	<step>
+		<para>Choose <guilabel>Continue</guilabel>.</para>
+	</step>
+		<step><para>When the installation has completed, press <guilabel>Continue</guilabel> and then <guilabel>Reboot</guilabel> to reboot the machine.</para></step>
+		<step>
+		<para>Upon reboot, the &BRAND_CONSOLE; is displayed. If you have performed an upgrade from a previous version of &PB;, update the &PB; software on your VMs as described in <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="updating_VMs" />.</para>
+		
+		</step>
+	</procedure> 
+	
+	
+				<!-- <para>When you have completed the &PB; software installation and booted into &BC;, ensure that your device is connected to a network before you install any VMs. If you are connected to a physical network, &PB; automatically sets up a network connection. You can also use NetworkManager to configure wireless networks. These network settings apply to the &PB; host device. Each VM can be given full, limited or no access to the networks you configure for the host.</para> -->
+				</section>
+
+				<section><title>Upgrading &PB; Over a Network Using &BC;<indexterm><primary>&PB;</primary>
+<secondary>upgrading</secondary><tertiary>using &BC;</tertiary></indexterm></title>
+				<para>&PB; &BC; can be used to upgrade &PB;. The upgrade is initiated by entering the URL to the location of an installation package available over HTTP. The upgrade process first downloads the package, then prompts the user to restart the &PB; device. The device is then shutdown, the upgrade is installed, and the device rebooted.</para>
+				<procedure><title>To Setup the Installation Package</title>
+				<step><para>Copy the <filename>packages.main</filename> directory from the &PB; installation medium to a location accessible over HTTP.</para></step>
+				<step><para>Notify the users of the location of this directory. The user will manually enter the location when performing the upgrade.</para></step>
+				</procedure>
+
+				<procedure><title>To Upgrade &PB; Using &BC;</title>
+				<step><para>In &BC;, click <guilabel>System &gt; Software</guilabel>.</para></step>
+				<step><para>In the <guilabel>Software Update</guilabel> textbox, enter the location of the installation packages provided by your system administrator.</para></step>
+				<step><para>Click the <guilabel>Check for Update</guilabel> button. The <guilabel>Software Update</guilabel> dialog is displayed.</para></step>
+<step><para>Click the <guilabel>Download</guilabel> button to download the installation packages.</para></step>
+				<step><para>Click <guilabel>Power &gt; Restart</guilabel> to restart your system and install the &BC; update.</para>
+				<note><para>&PB; will not force-shutdown running VMs. If VMs are running you are prompted to shut them down before restarting.</para></note></step>
+
+				</procedure>
+
+				
+				</section>
+
+				<section><title>Installing &PB; Over a Network Using Preboot eXecution Environment (PXE)</title>
+				<para>You can also install &PB; over the network using PXE. An example of how to set up PXE that uses PXELINUX is described in another document.</para>
+				
+				</section>
+		<!--		
+				<section><title>Installing or Upgrading &PB; Over a Network from &BACKEND;</title>
+				<para>You can also install &PB; over the network using installation media on an iSCSI LUN.</para>
+				
+				</section>
+			-->	
+		
+			<section id="updating_VMs"><title>Updating &PB; Software on VMs in an Upgraded &PB; Installation</title>
+			<para>If you have upgraded your &PB; installation, you need to update the &PV_TOOLS; installed on the VMs on your &PB; device. To upgrade the &PV_TOOLS;, first uninstall the existing &PV_TOOLS; and then run the new &PV_TOOLS; installer.</para>
+			<note><para>If &HDX; is enabled on your VM, before upgrading the &PV_TOOLS;, shut down the VM, disable &HDX;, then boot the VM.</para></note>
+			<!--
+			<procedure><title>To Update &PORTICA;</title>
+			<step><para>In the Windows VM, click  <guilabel>Start &gt; Control Panel &gt; Programs and Features</guilabel>.</para></step>
+			<step><para>Right click and select <guilabel>Uninstall</guilabel> on the following programs:</para>
+			<itemizedlist>
+			<listitem><para>Citrix Dazzle plug-in</para></listitem>
+			<listitem><para>Citrix online plug-in</para></listitem>
+			<listitem><para>Citrix Receiver</para></listitem>
+			<listitem><para>Citrix XenClient Application Sharing</para></listitem>
+			<listitem><para>Citrix XenClient Application Viewing</para></listitem>
+			</itemizedlist></step>
+			<step><para>Install the new &PORTICA; software.</para></step>
+			</procedure>
+			-->
+			</section>				
+			</section>
+	</chapter>
+
+<chapter id="resource_allocation"><title>How &PB; Allocates Resources to VMs</title><indexterm><primary>&PB; resource allocation</primary>
+<secondary>computing resources</secondary></indexterm>
+
+<para>Given that multiple VMs are using the same hardware, &PB; must manage this interaction. This chapter describes how &PB; handles shared hardware resources.</para>
+
+<section id="allocating_resources-vcpus"><title>CPU<indexterm><primary>&PB; device sharing</primary><secondary>CPU</secondary></indexterm></title>
+<para>&PB; provides virtual CPUs (vCPUs) to the VMs running on it. &PB; automatically shares the computing load over the physical CPUs present on the &PB; device.</para>
+<para>In general, VMs running more intense workloads (for example, anything multi-threaded or running in separate processes) should be be assigned more vCPUs.</para>
+<para>While it is possible to allocate more vCPUs to a VM than the number of physical CPUs on the &PB; hosting them, there is no advantage gained from doing so.</para>
+</section>
+
+<section id="allocating_resources-memory"><title>RAM<indexterm><primary>&PB; device sharing</primary>
+<secondary>RAM</secondary></indexterm></title>
+<para>You can allocate available RAM to individual VMs. When a VM is started the specified RAM is hard-allocated to it. On shutting down the VM, the memory is freed and made available for other VMs to use. A certain amount of RAM is required for &PB; operation, so not all installed device RAM is available to be allocated to VMs.</para>
+</section>
+
+<section id="allocating_resources-gpu"><title>GPU<indexterm><primary>&PB; device sharing</primary>
+<secondary>GPU</secondary></indexterm></title>
+<para>The physical GPU can optionally be directly allocated to a single VM. This is part of the &HDX; experience, providing excellent graphics performance to your favored VM.</para>
+</section>
+
+<section id="allocating_resources-network_and_internet_connections"><title>Network and Internet Connections<indexterm><primary>&PB; device sharing</primary>
+<secondary>network and internet connection</secondary></indexterm></title>
+<para><indexterm><primary>&PB;</primary><secondary>networking</secondary></indexterm>&PB; networking is handled on two levels: host-wide connectivity, and the connectivity of each individual VM. A wired or wireless connection is configured using Network Manager in &BC; for the &PB; host. Each VM can then be configured individually to control the level of access to the network or networks that the host is connected to. All network traffic is routed through a single network interface at any given time. By default Network Manager sets up wired networking so that an address will be obtained by DHCP, if possible.</para></section>
+
+<section id="usb_devices"><title>USB Devices<indexterm><primary>&PB; device sharing</primary>
+<secondary>USB devices</secondary></indexterm></title>
+<para><indexterm><primary>&PB;</primary><secondary>USB device handling</secondary></indexterm>USB devices are handled differently according to their type. Human Interface Devices (HID) (for example, the mouse and keyboard) are directly connected to the &PB; platform and exposed in a secure manner to the VM that is currently in active use. Other USB devices, for example external disk drives and CD drives, would potentially suffer from contention issues if more than one VM attempts to write to them simultaneously. Because of this, &PB; attaches such devices to the VM that is being used when they are plugged in to the computer. You can also use &BC; to assign a plugged-in USB device to a different VM.</para>
+<important>
+<itemizedlist>
+<listitem><para>&COMPANY_NAME_SHORT; recommends that you take care to eject USB devices as the operating system expects before assigning them to another VM. Not doing this causes &PB; to force-eject the USB device, which can lead to loss of data.</para></listitem>
+<listitem><para>&COMPANY_NAME_SHORT; highly recommends not updating the firmware or software of any device attached to a &PB; device over USB. Such updates have been known to fail and may render the device unusable.</para></listitem>
+</itemizedlist>
+</important>
+
+<!--
+<para>&PB; supports the following types of USB devices:</para>
+
+<itemizedlist>
+<listitem><para>USB optical media device</para></listitem>
+<listitem><para>USB storage: hard drive, USB key</para></listitem>
+<listitem><para>USB printers</para></listitem>
+<listitem><para>USB keyboard</para></listitem>
+<listitem><para>USB mouse</para></listitem>
+</itemizedlist>
+-->
+<note><itemizedlist>
+<listitem><para>Plugging a non-HID USB device into your &PB; computer while switched to &BC; causes the USB device to be mounted in the hypervisor control domain by default. You can then assign the device to a VM using &BC;.</para></listitem>
+<listitem><para>When using a non-HID USB device with a &PORTICA; application, the device must be plugged in when the VM that the application is running from is active and in focus. See <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="portica" /> for information about &PORTICA;.</para></listitem>
+
+</itemizedlist>
+</note>
+
+<section id="usb_devices-external_optical_drives"><title>External Optical Media Drives<indexterm><primary>USB devices</primary>
+<secondary>external optical media drives</secondary></indexterm></title>
+<para>To enable the use of external USB optical media drives to install VMs using installation disks, external USB optical media devices behave differently from other USB devices. See the following table for information about how they behave. Examples of this type of device include:</para>
+<itemizedlist>
+<listitem><para>USB CD drive</para></listitem>
+<listitem><para>USB DVD drive</para></listitem>
+</itemizedlist>
+<para>The following table describes how this type of USB device interacts with &PB;.</para>
+<informaltable>
+  <tgroup cols="2">
+     <colspec colwidth="3in"/>
+     <colspec colwidth="*"/>
+
+     <thead>
+      <row>
+       <entry>
+        <para>Action</para>
+       </entry>
+       <entry>
+        <para>Behavior</para>
+       </entry>
+      
+      </row>
+     </thead>
+     <tbody>
+	 
+	 <row>
+	 <entry><para>Plug in and turn on your &PB; device</para></entry>
+	 <entry><para>Device is not assigned to anything</para></entry>
+	 </row>
+
+	 <row>
+	 <entry><para>Plug in when &BC; is on the screen</para></entry>
+	 <entry><para>Device is assigned to the control domain, and can be used to install VMs</para>
+	 <warning><para>Because &PB; mounts the external media drive as if it were internal hardware, unplugging the device while a VM that is using it is running can cause unpredictable VM behavior. &COMPANY_NAME_SHORT; recommends avoiding this.</para></warning></entry>
+	 </row>
+
+	 <row>
+	 <entry><para>Plug in when a VM is on the screen</para></entry>
+	 <entry><para>Device is assigned to the VM on screen</para></entry>
+	 </row>
+	 
+	<row>
+	 <entry><para>Plug in when previously assigned to a VM, without the <guilabel>Always</guilabel> checkbox checked in &BC;</para></entry>
+	 <entry><para>Device is assigned as per one of the previous 2 actions</para></entry>
+	 </row>
+
+	<row>
+	 <entry><para>Plug in when previously assigned to a VM, with the <guilabel>Always</guilabel> checkbox checked in &BC;</para></entry>
+	 <entry><para>The device is assigned to the VM it was previously assigned to if it is running, or when it is booted</para></entry>
+	 </row>
+	 
+	 </tbody>
+	</tgroup>
+	 
+</informaltable>
+</section>
+
+<section id="usb_devices-keyboards_pointing_devices"><title>USB Keyboards and Pointing Devices<indexterm><primary>USB devices</primary>
+<secondary>keyboards</secondary></indexterm><indexterm><primary>USB devices</primary>
+<secondary>pointing devices</secondary></indexterm></title>
+
+<para>When such a device is plugged in it can be used to control any virtual machine. For examples, keystrokes from a USB keyboard are directed to whichever VM is currently being displayed. A pointing device (for example, a mouse or trackpad) can alternately be assigned to a particular VM if desired, for example, to take advantage of pointing device functionality that is not passed through by &PB;. Doing this might take a short while to take effect if the VM that the device is assigned to does not yet have the required drivers to use the device. If you do assign a pointing device to a particular VM it will be made available to other VMs when the VM it is assigned to is shut down.</para>
+<para>USB 3.0 pointing devices (mouse and keyboard) have been tested and found to work with &PB;. In addition to this most USB storage devices should work when attached to a USB 3.0 port. There is limited support for other devices. In particular, isochronous devices such as USB webcams are known not to work.</para>
+
+
+<note><itemizedlist><listitem><para>If you assign a pointing device to a particular VM, it will not be available for use in &BC; or any other VMs.</para></listitem>
+<listitem><para>USB devices are released from a VM when the VM enters the sleep state.</para></listitem>
+</itemizedlist></note>
+
+</section>
+
+<section id="usb_devices-other_devices"><title>Other USB Devices<indexterm><primary>USB devices</primary>
+<secondary>other</secondary></indexterm></title>
+<para>The following table describes how this type of USB device interacts with &PB;.</para>
+<informaltable>
+  <tgroup cols="2">
+     <colspec colwidth="3in"/>
+     <colspec colwidth="*"/>
+
+     <thead>
+      <row>
+       <entry>
+        <para>Action</para>
+       </entry>
+       <entry>
+        <para>Behavior</para>
+       </entry>
+      
+      </row>
+     </thead>
+     <tbody>
+	 
+	 <row>
+	 <entry><para>Plug in and turn on your &PB; device or plug in when &BC; is on the screen</para></entry>
+	 <entry><para>Device can be assigned to a VM</para></entry>
+	 </row>
+
+	 <row>
+	 <entry><para>Plug in when a VM is on the screen</para></entry>
+	 <entry><para>Device is assigned to the VM on screen</para></entry>
+	 </row>
+	 
+	<row>
+	 <entry><para>Plug in when previously assigned to a VM, without the <guilabel>Always</guilabel> checkbox checked in &BC;</para></entry>
+	 <entry><para>Device is assigned as per one of the previous 2 actions</para></entry>
+	 </row>
+
+	<row>
+	 <entry><para>Plug in when previously assigned to a VM, with the <guilabel>Always</guilabel> checkbox checked in &BC;</para></entry>
+	 <entry><para>The device is assigned to the VM it was previously assigned to if it is running, or when it is booted</para></entry>
+	 </row>
+	 
+	 </tbody>
+	</tgroup>
+	 
+</informaltable>
+</section>
+
+<section id="usb_devices-composite"><title>Composite USB Devices<indexterm><primary>USB devices</primary>
+<secondary>composite</secondary></indexterm></title>
+<para>Composite USB devices expose interfaces to more than one USB device function. An example of this sort of composite device is a USB webcam with an integrated microphone. If you are using &PB; with &BACKEND;, USB policy will only prevent you from using a composite USB device if all of the individual USB device functions are disallowed by assignment policy.</para>
+</section>
+
+<section id="usb_devices-internal"><title>Internal USB Devices<indexterm><primary>USB devices</primary>
+<secondary>internal</secondary></indexterm></title>
+<para>Some built-in hardware devices present themselves to &PB; as USB devices. Examples of this type of USB device include built-in bluetooth receivers and fingerprint readers. As this type of USB device is rarely unplugged (which in most cases would require physically altering the device), the following behavior occurs:</para>
+
+<informaltable>
+  <tgroup cols="2">
+     <colspec colwidth="3in"/>
+     <colspec colwidth="*"/>
+
+     <thead>
+      <row>
+       <entry>
+        <para>Action</para>
+       </entry>
+       <entry>
+        <para>Behavior</para>
+       </entry>
+      
+      </row>
+     </thead>
+     <tbody>
+	 
+
+	<row>
+	 <entry><para>On &PB; boot, when previously assigned to a VM, without the <guilabel>Always</guilabel> checkbox checked in &BC;</para></entry>
+	 <entry><para>Device is unassigned</para></entry>
+	 </row>
+
+	<row>
+	 <entry><para>On &PB; boot, when previously assigned to a VM, with the <guilabel>Always</guilabel> checkbox checked in &BC;</para></entry>
+	 <entry><para>The device is assigned to the VM it was previously assigned to if it is running, or when it is booted</para></entry>
+	 </row>
+	 
+	 </tbody>
+	</tgroup>
+	 
+</informaltable>
+</section>
+
+</section>
+
+<section id="allocating_resources-optical_media_sharing"><title>Optical Media Sharing<indexterm><primary>&PB; device sharing</primary>
+<secondary>optical media</secondary></indexterm></title>
+<para>Optical media drives are not shared between VMs. When a disk is inserted, it is accessible from the VM that is in focus at the time. Other VMs are not able to access the disk contents and appear to have an empty optical media drive. To use the disk with a different VM, eject it, switch to the intended VM, and insert the disk.</para>
+<para>When &BC; is in focus, and a disk is inserted into the optical drive, it gets assigned to the VM that gets focus first on switching. The optical drive is then not available from other VMs until the time it is released from the VM it was assigned to.</para>
+</section>
+<section id="allocating_resources-vhd_sparse"><title>Hard Drive Disk Sharing<indexterm><primary>&PB; devices</primary>
+<secondary>hard drive</secondary></indexterm></title>
+<para>&PB; uses a thin-provisioning strategy for VM virtual disks. This means that disk space is only taken up when the virtual disk is written to. It is therefore possible to assign more virtual disk space to VMs than is physically available, and equally possible to fill the entire hard drive should you take this approach. Please exercise caution not to end up in a position where a VM attempts to write to a full disk, as this can cause catastrophic &PB; failure.</para>
+
+<para>To recover from the situation where you have filled the &PB; disk, follow <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="recovering_from_full_disk" />.</para>
+
+<note><para>&BACKEND; does not support VM disks with multiple user-defined partitions.</para></note>
+
+</section>
+
+
+<section id="allocating_resources-manufacturer_specific_features"><title>Manufacturer-Specific Device Features</title>
+<para>Supported &PB; devices often come with manufacturer-specific features, such as fingerprint readers, screen brightness control buttons, sound volume control buttons and so on. Some of these devices require software from the manufacturer to be installed in order to get them working correctly. Additionally, most of these features have not been designed for use with multiple VMs running on a device. For example, a sound volume level control button could conceivably increase the volume of all running VMs, or instead just increase the volume of the VM currently in focus, or alternately manipulate the sound volume of all running VMs to be the same as the new value for VM currently in focus. Conversely, when a user manipulates the volume of a VM from within the VM, the question arises whether this should affect the volume of the device as a whole and all the VMs currently running. As this example shows, even simple buttons to increase and decrease volume behave in very complicated fashion when multiple VMs are involved. Many manufacturer-specific devices are simply not designed to function on more than one VM.</para>
+
+<para>&PB; provides the following features and guidance for using manufacturer-specific features:</para>
+
+<itemizedlist>
+<listitem><para>If a &HDX; VM is running, features are likely to work best when used when the &HDX; VM is in focus.</para></listitem>
+<listitem><para>For best results when running an &HDX; VM, pass through the manufacturer's hardware and hardware information to the &HDX; VM.</para></listitem>
+<listitem><para>Some features will only work if passed through directly to a single VM. To do this, in the <guilabel>Advanced</guilabel> tab of the VM's <guilabel>Details</guilabel> window, set <guilabel>Expose Physical OEM Hardware</guilabel> to <guilabel>Enabled</guilabel>. This will cause the feature to only work with that VM.</para></listitem>
+<listitem><para>Some features require software to be installed which can only be installed if the manufacturer's hardware and hardware information if passed through directly to a single VM. To do this, in the <guilabel>Advanced</guilabel> tab of the VM's <guilabel>Details</guilabel> window, set <guilabel>Expose Physical OEM Hardware</guilabel> to <guilabel>Enabled</guilabel> and <guilabel>Expose Physical Hardware Information</guilabel> to <guilabel>Enabled</guilabel>. This will cause the feature to only work with that VM.</para></listitem>
+</itemizedlist>
+
+
+
+</section>
+		
+		
+		<section id="allocating_resources-external_monitors_docking_stations"><title>External Monitors and Docking Stations</title>
+		<para>&PB; supports attaching external monitors to mirror the laptop display. When hotplugging a monitor when a &HDX; VM is running, always switch to the &HDX; VM first before attaching the monitor. The same applies when docking a &PB; device to a docking station. This ensures that optimal native resolutions are chosen for all screens.</para>
+		
+		</section>
+		
+</chapter>
+
+<chapter id="using_bc"><title>Using &PB;</title>
+
+<para><indexterm><primary>&PB;</primary><secondary>using</secondary></indexterm><indexterm><primary>&BC;</primary><secondary>using</secondary></indexterm>When you start your &PB; device, the &BRAND_CONSOLE; UI is displayed. This is the user interface that allows you to manage your &PB; device and the VMs installed on it. Using &BC; you can:</para>
+
+<itemizedlist>
+<listitem><para>Create VMs, edit VM properties, and delete VMs.</para></listitem>
+<listitem><para>Connect to &BACKEND;, download, publish, and backup VMs.</para></listitem>
+<listitem><para>Set up networking.</para></listitem>
+<listitem><para>Control the power saving functions of VMs and the device as a whole.</para></listitem>
+<listitem><para>Manage &PB; device settings, including authentication, touchpad sensitivity and speed, and &BC; wallpaper.</para></listitem>
+<listitem><para>Manage USB devices.</para></listitem>
+
+</itemizedlist>
+<note><para>If one or more VMs have been set to start automatically on device startup, you can return to &BRAND_CONSOLE; by either:</para>
+<itemizedlist>
+<listitem><para>Pressing <keycap>Ctrl + 0</keycap>.</para></listitem>
+<listitem><para>Clicking <guilabel>Home</guilabel> in the switcher bar located in the middle of the top of the VM display.</para></listitem>
+</itemizedlist>
+
+</note>
+<para><olink targetdoc="XenClientSetupAndUsageGuide" targetptr="iovm_first_boot" /> shows &PB; as it appears before any VMs are installed.</para>
+   
+   	<figure id="iovm_first_boot"><title>&BC; With No VMs Installed</title>
+   <mediaobject>
+     <imageobject>
+      <imagedata align="center" fileref="../public/images/host-after_first_boot.png" width="6.5in" />
+     </imageobject>
+    </mediaobject>
+</figure>
+<bridgehead>Legend for <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="iovm_first_boot" /></bridgehead>
+
+<orderedlist>
+	<listitem><para><emphasis role="bold">Install VM</emphasis> Click here to create a new VM. When no VM has yet been installed, there is also a <guilabel>Install VM</guilabel> icon in the center of the main window.</para></listitem>
+	
+	<listitem><para><emphasis role="bold">Info</emphasis> Click here to open the <guilabel>Information</guilabel> window. In this window you can see information about the software version, the hardware components and the network interfaces present. You can also generate status reports from this window.</para>
+	</listitem>
+	
+	<listitem><para><emphasis role="bold">Settings</emphasis> Click here to open the <guilabel>Settings</guilabel> window. In the <guilabel>Settings</guilabel> window you can control many of the properties of your &PB; device.</para>
+	</listitem>
+		
+	<listitem><para><emphasis role="bold">Network</emphasis> Click here to set up wired and wireless networking for your &PB; device. You can control which networks each VM has access to by editing the VM properties.</para></listitem>
+	
+	<listitem><para><emphasis role="bold">Power</emphasis> Provides power controls for the device and the VMs running on it, allowing you to shut down, sleep, hibernate and restart &PB; and all the VMs running on it.</para></listitem>
+		
+	<listitem><para><emphasis role="bold">Battery power</emphasis> Battery power gauge, which shows how much power is left in the case of a battery powered laptop.</para></listitem>
+		
+	</orderedlist>
+	
+<section id="installing_vms"><title>Installing VMs on &PB;<indexterm><primary>VMs</primary>
+<secondary>installing</secondary></indexterm></title>
+
+<para>You can create VMs on &PB; by using an installation disc, over the network, or by downloading a VM from &BACKEND;.</para>
+<note>
+<itemizedlist>
+<listitem><para>If you are installing from an external optical drive that was connected to your &PB; device when &PB; booted, please unplug the optical drive and plug it in again before continuing.</para></listitem>
+
+<listitem><para>Installation using an external optical media device is not supported if your device has an internal optical media drive.</para></listitem>
+<listitem><para>&PB; only supports operating systems installed on the primary partition.</para></listitem>
+</itemizedlist>
+
+</note>
+			<procedure id="create_from_cd"><title>To Create a VM Using an Installation Disc</title>
+<step><para><indexterm><primary>VMs</primary>
+<secondary>installing</secondary><tertiary>from optical media</tertiary></indexterm>Click <guilabel>Add VM</guilabel> and choose <guilabel>Install from Disc</guilabel>. The <guilabel>Create from Install Disc</guilabel> wizard is displayed.</para></step>
+<step><para>Select the operating system type from the <guilabel>Type</guilabel> dropdown list.</para></step>
+<!--<step><para>Select the source of your Windows installation media from the <guilabel>Where did you obtain your Windows copy?</guilabel> dropdown list.</para></step>-->
+<step><para>Enter a name for the VM and an optional description, if desired. Select an icon to represent the VM.</para></step>
+<step><para>Click the <guilabel>Next</guilabel> button.</para></step>
+<step><para>Choose the amount of RAM to assign to the VM. See <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="allocating_resources-memory" /> for more information about how &PB; handles device memory.</para></step>
+<step><para>Choose the number of Virtual CPUs (VCPUs) to assign to the VM. See <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="allocating_resources-vcpus" /> for more information about how &PB; handles VCPUs.</para></step>
+<step><para>Click the <guilabel>Next</guilabel> button.</para></step>
+
+<step><para>Select the size of the virtual disk to assign to the VM. See <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="allocating_resources-vhd_sparse" /> for more information about how &PB; handles virtual disks.</para></step>
+
+<step><para>Select the wireless networking mode. The options are:</para>
+<itemizedlist>
+<listitem><para><guilabel>Shared Wireless</guilabel>, which gives the VM full access to the wireless network(s) that the &PB; host device is connected to using a wireless network card.</para></listitem>
+<listitem><para><guilabel>Shared 3G (experimental)</guilabel>, which gives the VM access to any 3G networks that the &PB; host device is connected to.</para></listitem>
+</itemizedlist>
+</step>
+
+<step><para>Select the wired networking mode. The options are:</para>
+<itemizedlist>
+<listitem><para><guilabel>Bridged</guilabel>, which gives the VM full access to the networks that the &PB; host computer is connected to.</para></listitem>
+<listitem><para><guilabel>Shared</guilabel> which creates a private network on the &BC; system and allows outgoing connections using NAT (Network Address Translation). In this case incoming connections to the VM are not possible.</para></listitem>
+<listitem><para><guilabel>Internal</guilabel> which only allows for network communication between VMs.</para></listitem>
+</itemizedlist>
+<note><para>Bridged mode requires that each virtual NIC is appropriately configured. Either the physical network will have to provide DHCP to allow the interface to establish an IP address and associated configuration, or you will need to statically configure the network settings on that interface from within the VM.</para></note>
+</step>
+<step><para>Click the <guilabel>Next</guilabel> button.</para></step>
+
+<step><para>If you would prefer to install the operating system at a later time, select the <guilabel>Create VM &amp; Install OS later</guilabel> radio button.</para>
+<warning><para>If you are using a Windows installation disk that originated from a OEM supplier, do not start the VM automatically. You will first need to enable OEM installation for the VM so that system properties are presented in a manner that allows the OEM installation disk to verify that it is being installed on genuine hardware. See <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="enable_oem_install" /> for information about how to do this.</para></warning></step>
+
+<step><para>Click the <guilabel>Finish</guilabel> button. Now that you have created a new VM, the next step is to install an operating system on it as described in <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="install_os" />.</para></step>
+</procedure>
+<!--
+<step><para><indexterm><primary>&HDX;</primary>
+<secondary>assigning</secondary></indexterm>To assign the VM the HDX 3D Graphics acceleration, check the <guilabel>Enable HDX 3D Graphics (Direct Graphics Acceleration)</guilabel> checkbox. Only one VM running on a machine can enjoy HDX 3D Graphics acceleration. If multiple VMs are enabled to use HDX 3D Graphics, only the first enabled VM started after the machine is booted will enjoy HDX 3D Graphics acceleration.</para><note>
+<itemizedlist>
+<listitem><para>&HDX; will only be available once the &PV_TOOLS; have been installed on the VM.</para></listitem>
+<listitem><para>&HDX; technology allows for a screen resolution up to <literal>1440x900</literal>. VMs not using &HDX; technology will use a display resolution of <literal>1276x796</literal>. </para></listitem>
+</itemizedlist></note>
+</step>
+<step><para>Click the <guilabel>Next</guilabel> button to go to the next step of the wizard.</para></step>
+
+<step><para>Select <filename>Attached</filename> from the <guilabel>&PB; Tools</guilabel> dropdown list. This causes the &PV_TOOLS; to be mounted as an extra optical disk drive in the VM.</para></step>
+
+<step><para>Configure your networks. For wired networks, select the <guilabel>Auto Ethernet</guilabel> option in NetworkManager. For internet access over wireless networks, configure the appropriate wireless network using NetworkManager. See <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="networking" /> for more information about configuring networks.</para></step>
+<step><para>Insert the operating system installation media for your VM into the optical drive of the computer.</para></step>
+<step><para>Click the <guilabel>Finish</guilabel> button.</para></step>
+-->
+
+<procedure id="enable_oem_install">
+<title>To Enable VM Installation from OEM Installation Media</title>
+<para>If you are installing Windows from an OEM version of the Windows installation media, use this procedure to enable OEM installation:</para>
+&view_details;
+<step><para>Click the <guilabel>Advanced</guilabel> menu item.</para></step>
+<step><para>Click <guilabel>Edit</guilabel>.</para></step>
+<step><para>From the <guilabel>Allow OEM Windows installs</guilabel> dropdown list, select <guilabel>Enabled</guilabel>.</para></step>
+<step><para>Click <guilabel>Save</guilabel>.</para></step>
+<step><para><!-- TODO: check -->Restart &PB;. When &PB; has restarted, start the VM and continue with the standard VM installation procedure.</para></step>
+
+</procedure>
+<procedure id="install_os"><title>To Install an Operating System onto a VM</title>
+<step><para>Insert the installation media into the optical media drive. For a network boot installation, skip to the next step.</para>
+</step>
+<step><para>Start the VM. The new VM takes focus and begins to boot into the operating system installation procedure. For a network boot, press <keycap>F12</keycap> (or the relevant key) and select the appropriate boot device.</para><note><para>For security reasons the optical media drive is only accessible from one VM at a time. If a VM is running that has the optical drive assigned to it, it is necessary to shut down that VM before you can boot into the operating system installation medium.</para></note></step>
+<step><para>Complete the operating system installation as you would do on a physical machine.</para>
+<note><para>&COMPANY_NAME_SHORT; recommends not enabling automatic Windows updates until you have installed the &PV_TOOLS;.</para></note></step>
+
+<!-- <step><para>If you are installing a Windows XP VM, download and install the Windows Installer 3.1 Redistributable from <ulink url="http://www.microsoft.com/downloads/details.aspx?familyid=889482FC-5F56-4A38-B838-DE776FD4138C&amp;displaylang=en"></ulink>, or run Windows Update before proceeding to the next step to install Windows Installer 3.1.</para></step> -->
+<step><para><indexterm><primary>&PV_TOOLS;</primary>
+<secondary>installing</secondary></indexterm>When installation is complete, install the &PV_TOOLS; by running <filename>setup.exe</filename> from the <phrase role="die"><guilabel>xc-tools</guilabel></phrase> disk, which is usually mounted as the <filename>E:</filename> drive. This installs high performance virtualization-aware drivers, the &PB; Switcher Bar to allow switching between the VMs using a mouse, and optionally the &PORTICA; functionality.</para>
+<warning><para>Installation of any software that uses low-level drivers to monitor disk operations before installing the &PV_TOOLS; (for example, antivirus software) will result in problems when hibernating, rebooting, or shutting down the VM. The installation of the &PV_TOOLS; is required for a VM to run on &PB;.</para></warning>
+<para>For an Ubuntu VM, first update the operating system software, and then install the <filename>xenclient-linuxtools.deb</filename> package.</para>
+</step>
+
+<!--
+<step><para>Disable all power management features. To do this:</para>
+
+-->
+<step><para>For a Windows VM, run Windows Update.<!-- For sound in Windows 7 32-bit, be sure to install the optional update <guilabel>Microsoft driver update for Intel(r) 82801AA AC'97 Audio Controller</guilabel>. For sound in Windows 7 64-bit, go to <ulink url="http://www.realtek.com.tw/downloads/">http://www.realtek.com.tw/downloads/</ulink> and download the <guilabel>AC'97 Audio Codecs (Software)</guilabel> described as <guilabel>Vista/Win7 (32/64 bits) Driver only (ZIP file)</guilabel>. Unzip the file and install the sound drivers by running <filename>setup.exe</filename>.--></para></step>
+ 
+<step><para>Once the installation is complete and updates have been installed you can press <keycap>Ctrl + 0</keycap> to return to &BC;</para></step>
+
+</procedure>
+<para>You can now optionally enable &HDX; for this VM. Only one running VM can benefit from &HDX; technology. See <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="hdx" /> for more information.</para>
+
+
+<procedure><title>To Install a VM from &BACKEND;<indexterm><primary>VMs</primary>
+<secondary>installing from &BACKEND;</secondary></indexterm></title>
+
+<step><para>Ensure that you are connected to your &BACKEND; server. See <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="registering_with_backend" /> for information about how to connect.</para></step>
+<step><para>In &BC;, click <guilabel>Add VM</guilabel> and choose <guilabel>Download From &BACKEND;</guilabel>.</para></step>
+<step><para>If you have not recently securely authenticated with &BACKEND; you are prompted to provide your password.</para>
+</step>
+<step><para>The <guilabel>Download from &BACKEND;</guilabel> wizard is displayed.</para></step>
+<step><para>Click the <guilabel>Select a new VM</guilabel> radio button if you want to create a new VM, or the <guilabel>Restore VM from backup</guilabel> radio button to create a new VM from a VM backup.</para></step>
+ 
+
+<step><para>For a new VM, click the VM you want to install. For a new VM from backup, select the VM and the VM backup version.</para></step>
+
+
+
+<step><para>Click <guilabel>Finish</guilabel>.</para></step>
+
+<step><para>Wait for the VM to download to &PB;. You can check the download progress in &BC; by switching to VM detail view.</para>
+
+</step>
+</procedure>
+			</section>
+
+	
+
+			
+<section id="vm_details"><title>VM Details<indexterm><primary>VMs</primary>
+<secondary>details</secondary></indexterm></title>
+<para>&BC; provides a simple intuitive interface that you can use to install, start and stop VMs. However, more powerful advanced options are also available that allow you to fine-tune and enhance your &PB; VM user experience. </para>
+
+  	<figure><title>VM Icons</title>
+   <mediaobject>
+     <imageobject>
+      <imagedata align="center" fileref="../public/images/uivm_vm_icons.png" />
+     </imageobject>
+    </mediaobject>
+</figure>
+<para>To access the advanced VM options, hover your mouse over a VM icon. The icon will increase in size. Then click the <guilabel>Details</guilabel> button.</para>
+  	<figure><title>Mouse over VM icon</title>
+
+   <mediaobject>
+     <imageobject>
+      <imagedata align="center" fileref="../public/images/uivm_vm_icon_mouseover.png" />
+     </imageobject>
+    </mediaobject>
+</figure>
+		<para>The VM details window is displayed.</para>
+  	<figure><title>VM Details Window</title>
+		
+   <mediaobject>
+     <imageobject>
+      <imagedata align="left" fileref="../public/images/iovm_detail_view_mode_viewing_details.png" width="5.5in" />
+     </imageobject>
+    </mediaobject>
+</figure>
+
+<para>The <guilabel>VM Details</guilabel> window includes some buttons along the top, and a main area that displays all of the properties of the VM, grouped into categories.</para>
+<para>The categories of the main area are <emphasis role="bold">General</emphasis>, <emphasis role="bold">Devices</emphasis>, <emphasis role="bold">Hardware</emphasis>, <emphasis role="bold">Power</emphasis>,<emphasis role="bold">Icon</emphasis>, and <emphasis role="bold">Advanced</emphasis>. If you click any of these, the properties in the corresponding group are displayed to the right. Many of these are editable. Some settings can only be changed when the VM is powered off. Also, some settings might not be editable if a policy set in &BACKEND; for this VM does not allow it.</para>
+
+<!--
+	<orderedlist>
+	<listitem><para><emphasis role="bold">Power controls</emphasis> at the upper left allow you to shut down, reboot, sleep or hibernate the VM.</para></listitem>
+	<listitem><para><emphasis role="bold">Upload VM</emphasis> allows you to upload a new version of the VM (the VM must be shut down for this function to be used).</para></listitem>
+	<listitem><para><emphasis role="bold">Add Device</emphasis> allows you to attach a USB device to the VM.</para></listitem>
+	<listitem><para><emphasis role="bold">Delete VM</emphasis> allows you to delete the VM (the VM must be shut down before this button is active).</para></listitem>
+
+	<listitem><para>When <emphasis role="bold">General</emphasis> Contains the VM name, description, allocated memory and VCPUs. Enabling <guilabel>Autoboot</guilabel> causes the VM to be started automatically when you start your &PB; device. Setting <guilabel>Tools CD</guilabel> to <guilabel>Attached</guilabel> mounts the &PV_TOOLS; installer as an extra optical drive in the VM so that you can easily install the &PV_TOOLS; on a new VM. A reboot may be required for this setting to take effect.</para></listitem>
+	<listitem><para><emphasis role="bold">Devices</emphasis> Allows you to assign USB devices to VMs.</para></listitem>
+	<listitem><para><emphasis role="bold">Hardware</emphasis> Allows you to view and edit various hardware settings, such as &HDX; graphics, networking, and memory.</para>  </listitem>
+	<listitem><para><emphasis role="bold">Power</emphasis> Allows you to edit VM power management.</para></listitem>
+
+	<listitem><para><emphasis role="bold">Icon</emphasis> Allows you to select a VM icon.</para></listitem>
+	<listitem><para><emphasis role="bold">Advanced</emphasis> Allows you to change advanced VM features.</para></listitem>
+	</orderedlist>
+	-->
+	
+	</section>
+ <section id="vm_power_controls"><title>VM Power Controls</title>
+ <para><indexterm><primary>VMs</primary><secondary>power controls</secondary></indexterm>When a VM is running, &BC; displays a set of power and configuration controls.</para>
+  <mediaobject>
+   <imageobject>
+    <imagedata align="left" fileref="../public/images/vm_details-power.png" width="5.5in" />
+   </imageobject> 
+  </mediaobject>
+  
+  <para><guilabel>Force Shut Down</guilabel> performs a hard shut down of the VM, similar to disconnecting the power source from a bare metal device. <guilabel>Shut Down</guilabel>, <guilabel>Reboot</guilabel> and <guilabel>Hibernate</guilabel> perform the same function as if they were initiated from within the VM. You can also use any one of the following combinations to achieve the power action effect you desire:</para>
+  
+ <variablelist>
+
+ <varlistentry><term>Click a VM icon</term><listitem><para>This will start the VM if it is not already started.</para></listitem></varlistentry>
+ <varlistentry><term>Shift + click a VM icon</term><listitem><para>This will start the VM without switching focus to it.</para></listitem></varlistentry>
+ 
+ <varlistentry><term>Shift + click a <guilabel>Start</guilabel> icon</term><listitem><para>This will start the VM without switching focus to it.</para></listitem></varlistentry>
+<!-- <varlistentry><term>Shift + click a <guilabel>Hibernate</guilabel> icon</term><listitem><para>This will switch to the VM and put it into the sleep state.</para></listitem></varlistentry> -->
+ </variablelist> 
+  
+  <para>The <guilabel>Autoboot</guilabel> property controls whether this VM is started automatically when the &PB; device is started. The <guilabel>Power Down</guilabel> property controls whether the &PB; device is shut down automatically when the VM is shut down.</para>
+  
+  <note><para>Sleeping a &HDX; VM is equivalent to sleeping the entire device, except that the other VMs are not put into the sleep state. Attempting to switch away from a sleeping &HDX; VM results in the &HDX; VM leaving the sleep state.</para></note>
+  
+  </section>
+<section id="working_with_vms"><title>Working With VMs</title>
+<para>This section contains procedures for working with VMs.</para>
+ <procedure>
+   <title>To Edit VM Properties<indexterm><primary>VMs</primary><secondary>editing properties</secondary></indexterm></title>
+   &view_details;
+   <step><para>Click the relevant tab.</para></step>
+   <step><para>Click <guilabel>Edit</guilabel> and make your changes.</para></step>
+<step><para>Click <guilabel>Save</guilabel>. Most configuration items only take effect on the next boot of the VM.</para></step>
+ </procedure>
+ <procedure>
+   <title>To Delete a VM<indexterm><primary>VMs</primary><secondary>deleting</secondary></indexterm></title>
+  <para>Use the following procedure to delete a VM.</para>
+ <warning><para>There is no way to recover a deleted VM.</para></warning>
+  <step><para>Shutdown the VM.</para></step>
+&view_details;
+  
+  <step><para>Click <guilabel>Delete</guilabel>, and confirm that you want to delete the VM.</para></step>
+ </procedure>
+ 
+<procedure><title>To Assign a USB Device to a VM<indexterm><primary>VMs</primary>
+<secondary>assigning USB devices</secondary></indexterm></title>
+   <step><para>Ensure that the VM you want to assign the USB device to is running.</para></step>
+&view_details;
+   <step><para>Click <guilabel>Add a Device</guilabel>. The <guilabel>Connect a Device</guilabel> dialog is displayed.</para></step>
+<step><para>Select the USB device in the list.</para></step>
+<step><para>If the USB device you want to re-assign is currently in use by a running VM you will be warned to eject the device first. </para></step>
+<step><para>Click <guilabel>Connect</guilabel>.</para></step>
+<step><para>If you want the assignment to persist across reboots, check the <guilabel>Always use with this VM</guilabel> checkbox.</para></step>
+<step><para>Click <guilabel>Save</guilabel>.</para></step>
+</procedure>
+
+ <procedure>
+   <title>To Change the VM Switcher Key</title>
+   &view_details;
+   <step><para>Click <guilabel>General</guilabel>.</para></step>
+   <step><para>Click <guilabel>Edit</guilabel>.</para></step>
+   
+      <step><para>Select the new switcher key from the <guilabel>Switcher Key</guilabel> dropdown list. If you select a switcher key that is already in use by another VM, the switcher keys of the two VMs will be swapped.</para></step>
+   
+<step><para>Click <guilabel>Save</guilabel>.</para></step>
+ </procedure>
+			
+ </section> 
+
+	<section id="hdx"><title>&HDX;<indexterm><primary>&HDX;</primary>
+<secondary>enabling</secondary></indexterm></title>
+<para>&HDX; provides support for hi-fidelity 3D applications by providing direct access to the graphics processor of the &PB; device. Only one running VM can have &HDX; enabled.</para>
+
+<important><para>Ensure that your &PB; device is not connected to a second screen when enabling or disabling &HDX;.</para></important>
+<!--<note><para>The latest graphics drivers from Intel will not install unless &HDX; is enabled.</para></note> -->
+<procedure><title>To Enable &HDX;</title>
+<!-- <warning><para>Do not attempt to resize the display of an XP VM, and do not let Windows do this automatically, until you have installed the latest Intel graphics drivers.</para></warning> -->
+
+&view_details;
+<step><para>If you are enabling &HDX; on a Vista VM, navigate to <guilabel>Start &gt; Control Panel &gt; Classic View &gt; System &gt; Advanced System Settings &gt; Hardware &gt; Windows Update Driver Settings</guilabel> and select <guilabel>Ask me each time I connect a new device before checking for drivers</guilabel>.</para></step>
+<step><para>Shut down the VM.</para></step>
+<step><para>Click <guilabel>Hardware</guilabel>.</para></step>
+<step><para>Click <guilabel>Edit</guilabel>.</para></step>  
+<step><para>From the <guilabel>3D Graphics</guilabel> dropdown list, select <guilabel>Enabled</guilabel>.</para></step>
+<step><para>Click <guilabel>Save</guilabel>.</para></step>
+<step><para>Restart the VM. A newly enabled &HDX; VM boots and automatically installs the required graphics drivers. A reboot is required after the drivers have installed. When the &HDX; VM has booted, an optimum graphics resolution is automatically chosen.</para>
+<note><para>It may be neccessary to manually install graphics drivers for devices with Intel HD 4000 graphics.</para></note>
+</step></procedure>
+
+<note><para>If you are using a supported AMD/ATI graphics card on a laptop, please download and install the graphics drivers from the support section of your laptop manufacturer's website, not from the AMD/ATI website.</para></note>
+
+<para>If you install the drivers on a Vista VM, the graphics drivers will not install automatically. Use the following procedure to install graphics drivers on a Vista VM.</para>
+
+<procedure><title>To Install Graphics Drivers on Vista</title>
+<step><para>Navigate to <guilabel>Start &gt; Control Panel &gt; Classic View &gt; Device Manager</guilabel>.</para></step>
+<step><para>Right-click on <guilabel>Standard VGA Graphics Adapter</guilabel> and select <guilabel>Update Driver Software...</guilabel>.</para></step>
+<step><para>Select <guilabel>Search automatically for updated driver software</guilabel> and then <guilabel>Don't search online</guilabel>. This will cause the correct graphics drivers to be installed. A reboot will be required after the drivers have been installed.</para></step>  
+</procedure>
+<warning><para>It has been observed that sometimes the installation of the graphics drivers on Vista can end with a black screen and unresponsive device. Should this occur, wait for all hard drive activity to cease, and manually reboot your &PB; device.</para></warning>
+
+<para>If you install ATI drivers on a Windows 7 VM, the graphics drivers will cause a blue screen on the VM. Use the following procedure to install ATI graphics drivers on a Windows 7 VM.</para>
+
+<procedure><title>To Install ATI Graphics Drivers on Windows 7</title>
+&view_details;
+<step><para>Shut down the VM.</para></step>
+<step><para>Click <guilabel>Hardware</guilabel>.</para></step>
+<step><para>Click <guilabel>Edit</guilabel>.</para></step>  
+<step><para>From the <guilabel>3D Graphics</guilabel> dropdown list, select <guilabel>Enabled</guilabel>.</para></step>
+<step><para>Click <guilabel>Save</guilabel>.</para></step>
+<step><para>Restart the VM. The VM boots and automatically installs the graphics drivers.</para>
+</step>
+<step><para>Navigate to <guilabel>Start &gt; Control Panel &gt; Hardware and Sound</guilabel> and select <guilabel>Device Manager</guilabel> in the <guilabel>Devices and Printers</guilabel> section to open the <guilabel>Device Manager</guilabel> dialog box.</para></step>
+<step><para>Under Display Adapters, right-click on the ATI display adapter and select <guilabel>Disable</guilabel> from the menu.</para></step>
+<step><para>Restart the VM.</para></step>
+<step><para>Install the ATI drivers. This automatically enables the adapter.</para></step>
+<step><para>Repeat the above steps to open the <guilabel>Device Manager</guilabel> dialog box and this time disable the Citrix graphics adapter.</para></step>
+<step><para>Restart the VM.</para></step>
+</procedure>
+
+<!-- <step><para>The next step is to install the latest Intel graphics driver on the VM. Failure to install these drivers degrades the &HDX; experience and can cause &HDX; to not function.</para> 
+<note><para>For a Windows 7 VM, the latest graphics drivers are automatically installed by the Windows update mechanism.</para></note> 
+</step>
+<step><para><indexterm><primary>graphics</primary>
+<secondary>installing graphics drivers</secondary></indexterm>Navigate to <ulink url="http://downloadcenter.intel.com/default.aspx" />.</para></step>
+<step><para>Select <guilabel>Graphics</guilabel> from the <guilabel>Select a product family</guilabel> list.</para></step>
+<step><para>Select <guilabel>Laptop graphics controllers</guilabel> from the <guilabel>Select a product line</guilabel> list.</para></step>
+<step><para>Select <guilabel>Mobile Intel 4 Series Express Chipset Family</guilabel> from the <guilabel>Select a product name</guilabel> list.</para></step>
+<step><para>Select your operating system from the <guilabel>Select an Operating System</guilabel> list.</para></step>
+<step><para>The required graphics drivers are displayed in the search results. Download and install the latest graphics driver. Depending on your operating system, the name of the drivers you need are:</para>
+
+<variablelist>
+<varlistentry><term>Microsoft Windows XP 32bit SP3</term>
+<listitem><para>Intel<trademark class="registered" /> Graphics Driver for Windows XP, version <literal>14.42.1.5248 (6.14.10.5248)</literal>. The filename of the download is <filename>winxp_14421.zip</filename>.</para></listitem>
+</varlistentry>
+<varlistentry><term>Microsoft Windows Vista 32bit SP2</term>
+<listitem><para>Intel<trademark class="registered" /> Graphics Driver for Windows 7 and Windows Vista (exe), version <literal>15.17.3.2104 (8.15.10.2104)</literal>. The filename of the download is <filename>WinVista7_15173.exe</filename>.</para></listitem>
+</varlistentry>
+<varlistentry><term>Microsoft Windows 7 32bit</term>
+<listitem><para>Intel<trademark class="registered" /> Graphics Driver for Windows 7 and Windows Vista (exe), version <literal>15.17.3.2104 (8.15.10.2104)</literal>. The filename of the download is <filename>WinVista7_15173.exe</filename>.</para></listitem>
+</varlistentry>
+</variablelist>
+</step>-->
+
+
+
+
+</section>
+
+<section id="portica"><title>&PORTICA; and &DAZZLE;</title>
+
+<para><indexterm><primary>&PORTICA;</primary>
+<secondary>about</secondary></indexterm>One of the features of &PB; is the ability of a user to work mainly in one VM, but use applications running in other VMs without switching display focus. This functionality is known as &PORTICA;.</para>
+<para>To use the &PORTICA; functionality you need to install the &PORTICA_VIEW; tools on the &PORTICA_VIEW; VM and the &PORTICA;_SHARE; software on the &PORTICA_SHARE; VM. You can install these tools using the &PB; Tools Setup wizard.</para>
+
+<para>The following diagram shows &PORTICA; in action. The &PORTICA_VIEW; VM is currently active and in focus. The shared application is displayed on the &PORTICA_VIEW; VM, but is actually running on the &PORTICA_SHARE; VM that is not currently in focus (that is, not currently displayed on the device screen). Any changes made to data with a shared applications is reflected in the VM on which it is actually running.</para>
+
+
+<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata align="left" fileref="../public/images/shared_app_windows.png" width="50%" />
+</imageobject>
+</mediaobject>
+</informalfigure>
+<para>The following image illustrates a similar scenario, except that in this case an application is being published from XenApp to the &PORTICA_SHARE; VM, which in turn is publishing it to the &PORTICA_VIEW; VM. The applications from XenApp are subscribed to using the &DAZZLE; store in the &PORTICA_VIEW; VM, in the same way as locally installed applications would be subscribed to from the &PORTICA_SHARE; VM. This is sometimes referred to as a double hop scenario.</para>
+<informalfigure>
+<mediaobject>
+<imageobject>
+<imagedata align="center" fileref="../public/images/shared_app_windows_double_hop.png" width="50%" />
+</imageobject>
+</mediaobject>
+</informalfigure>
+<!--<para><indexterm><primary>&DAZZLE;</primary>
+<secondary>about</secondary></indexterm>&DAZZLE; provides users with self-service access to the applications and desktops they need to work productively. The easy-to-use &DAZZLE; interface allows users to subscribe to applications and desktops hosted on other &PB; VMs, XenApp and XenDesktop servers with a single click. Once applications have been subscribed to they are added to the Windows <guilabel>Start</guilabel> menu. Applications can be delivered to users in one of three ways. They can be:</para>
+<itemizedlist>
+<listitem><para><emphasis>Streamed</emphasis> to the user computer and installed so that it can be used when the user is offline.</para></listitem>
+<listitem><para><emphasis>Accessed online</emphasis> from XenApp or XenDesktop resources.</para></listitem>  
+<listitem><para><emphasis>Locally installed</emphasis> and shared between VMs. In this case the application will be monitored when the user is online and reinstalled if the application gets corrupted or the administrator provides an updated version.</para></listitem> 
+</itemizedlist>-->
+<para><indexterm><primary>&DAZZLE;</primary><secondary>about spidering</secondary></indexterm>&DAZZLE; is a self-service application store which you can use in the &PORTICA_VIEW; VM to subscribe to applications published by &PORTICA_SHARE; VMs. Once &DAZZLE; has been installed and the &PORTICA; software has been setup, VMs are inspected to discover which applications are available to be subscribed to. These applications are listed in the &DAZZLE; store. The user can select which applications they want to share. These chosen applications then become available from the Windows <guilabel>Start</guilabel> menu under the <guilabel role="die">Dazzle Apps</guilabel> entry.</para>
+<!-- <para>For added security, although the application is shared, when an application is in focus the keystrokes and mouse movements are forwarded directly to the &PB; hypervisor and so that the VM that is displaying the application is never aware of them. </para> -->
+<para><indexterm><primary>&DAZZLE;</primary><secondary>security</secondary></indexterm>From a security point of view, although the application is shared, keystrokes and mouse movements are forwarded by the &PB; hypervisor directly to the &PORTICA_SHARE; VM. The &PORTICA_SHARE; VM (that is actually running the application) simply sends the updated graphical display to the &PB; hypervisor, which in turn forwards it to the &PORTICA_VIEW; VM.</para>
+<warning><para>The &PORTICA_VIEW; VM and &PORTICA_SHARE; VM must not have the same hostname.</para></warning> 
+<section><title>Installing &PORTICA; and &DAZZLE;</title>
+			<para><indexterm><primary>&PORTICA;</primary><secondary>installing</secondary></indexterm>&PORTICA; allows you to share application windows from &PORTICA_SHARE; VMs to a chosen &PORTICA_VIEW; VM. Once the software is installed, shared applications are available through the &DAZZLE; store. The applications you subscribe to in &DAZZLE; are automatically added to the Windows <guilabel>Start</guilabel> menu, and can be launched from the <guilabel>Start</guilabel> menu just like any locally installed application.</para>
+<warning><para>&COMPANY_NAME_SHORT; recommends not setting the Windows task bar to auto-hide in a &PORTICA_VIEW; VM, as the task bar may not appear as expected when a &PORTICA; session is active.</para></warning>
+<para>To setup &PORTICA;, first choose an &PORTICA_VIEW; VM. To set up this VM for &PORTICA_VIEW;, follow the <xref linkend="portica_view" /> procedure. Then, for each &PORTICA_SHARE; VM, follow the <xref linkend="portica_share" /> procedure.</para>
+<warning><para>Each VM in your &PORTICA; setup must have a unique host name.</para></warning>
+<para>Please ensure that you have installed all available Windows updates before installing &PORTICA;, and also the &PV_TOOLS;. Also ensure that the &PV_TOOLS; are mounted in the VM. To do this:</para>
+
+<procedure><title>Mounting the &PV_TOOLS; installer in a VM<indexterm><primary>&PV_TOOLS;</primary>
+<secondary>mounting in a VM</secondary></indexterm></title>
+&view_details;
+<step><para>Click <guilabel>Hardware</guilabel>.</para></step>
+<step><para>Click <guilabel>Edit</guilabel>.</para></step>
+<step><para>From the <guilabel>Tools CD</guilabel> dropdown list, select <guilabel>Attached</guilabel>.</para></step>
+<step><para>Click <guilabel>Save</guilabel>.</para></step>
+</procedure>
+
+
+<procedure id="portica_share"><title>Setting up a VM for &PORTICA_SHARE;<indexterm><primary>VMs</primary>
+<secondary>setting up for &PORTICA_SHARE;</secondary></indexterm></title>
+<!-- <note><para>Applications running on a VM using &HDX; cannot be shared.</para></note> -->
+<!-- <warning><para>Ensure that you have installed the &PV_TOOLS; and rebooted before installing the &PORTICA; software. Failure to do so can cause installation to fail.</para></warning> -->
+<step><para>Navigate to the <phrase role="die"><filename>xc-tools</filename></phrase> disk, which is usually mounted as the <filename>E:</filename> drive.</para></step>
+<step><para>Double-click <filename>Setup</filename>. The <guilabel>Citrix XenClient Setup</guilabel> installer is displayed.</para></step>
+<step><para>Accept the software license agreement and click <guilabel>Next</guilabel>.</para></step>
+<step><para>Check the <guilabel>Publish Applications</guilabel> checkbox and click <guilabel>Next</guilabel> and <guilabel>Install</guilabel>.</para></step>
+<step><para>When the installation has finished, restart the VM.</para></step>
+</procedure>
+
+<procedure id="portica_view"><title>Setting up a VM for &PORTICA_VIEW;<indexterm><primary>VMs</primary>
+<secondary>setting up for &PORTICA_VIEW;</secondary></indexterm></title>
+<!-- <warning><para>Ensure that you have installed the &PV_TOOLS; and rebooted before installing the &PORTICA; software. Failure to do so can cause installation to fail.</para></warning> -->
+<step><para>Navigate to the <phrase role="die"><filename>xc-tools</filename></phrase> disk, which is usually mounted as the <filename>E:</filename> drive.</para></step>
+<step><para>Double-click <filename>Setup</filename>. The <guilabel>Citrix XenClient Setup</guilabel> installer is displayed.</para></step>
+<step><para>Accept the software license agreement and click <guilabel>Next</guilabel>.</para></step>
+
+<step><para>Check the <guilabel>Subscribe to Applications</guilabel> checkbox and click <guilabel>Next</guilabel> and <guilabel>Install</guilabel>.</para></step>
+<step><para>When the software has finished installing, switch to the <literal>Windows Black</literal> mouse pointer scheme with pointer shadow enabled. This will eliminate any problems with multiple mouse pointers.</para></step>
+<step><para>Switch to &BC; by pressing <keycap>Ctrl + 0</keycap> or using the VM switcher bar.</para></step>
+&view_details;
+
+<step><para>Click the <guilabel>General</guilabel> tab.</para></step>
+<step><para>Click <guilabel>Edit</guilabel>.</para></step>
+<step><para>In the <guilabel>Seamless Application Support</guilabel> dropdown list, select <guilabel>Enabled</guilabel>.</para></step>
+
+<step><para>Restart the VM.</para></step>
+
+</procedure>
+
+<para>Now that you have installed the required software, switch back to the &PORTICA_VIEW; VM. From the <guilabel>Start</guilabel> menu, select <guilabel role="die">Select more apps...</guilabel>. The &DAZZLE; application is displayed.</para>
+<para>&DAZZLE; displays all the applications that are available to be subscribed to. Click <guilabel>Add</guilabel> to add an application to the <guilabel>Start</guilabel> menu. Chosen applications are placed in the start menu at <guilabel>All Programs > Dazzle Apps</guilabel>. When you launch one of these applications it will be displayed with a green border around it to identify it as a &DAZZLE;  application.</para>
+<note>
+<itemizedlist>
+<listitem><para>You cannot open an application directly using &DAZZLE;. You must first add the application and then launch it from the <guilabel>Start</guilabel> menu.</para></listitem>
+<listitem><para>An &PORTICA_SHARE; VM must be running to share the applications on it.</para></listitem>
+<listitem><para>Some windows, for example non-rectangular windows and application child windows, are not displayed with a green border.</para></listitem>
+</itemizedlist>
+</note>
+
+<procedure id="portica_border_color"><title>Changing the &PORTICA; Border Color</title>
+<para>In the Application Subscribing VM, there is a colored border around application windows that are shared by the
+Application Publishing VM. This color can be changed for each publishing VM. After the Secure Application Sharing
+tools have been installed and verified as working, the following registry edits will change the border color:</para>
+<step><para>Open the Windows registry editor in the &PORTICA_SHARE; VM.</para></step>
+<step><para>Create the key <literal>HKLM\Software\Citrix\PortICA\Border</literal>.</para></step>
+<step><para>Create the following DWORD values:</para>
+<itemizedlist>
+<listitem>Blue (default is 0)</listitem>
+<listitem>Green (default is FF)</listitem>
+<listitem>Red (default is 0)</listitem>
+<listitem>Width (default is 4)</listitem>
+</itemizedlist>
+</step>
+<step><para>Edit the RGB values and the width as desired.</para></step>
+<step><para>Reboot the VM.</para></step>
+</procedure>
+</section>
+
+</section>
+		
+<section id="working_with_backend">
+	<title>Working With a &BACKEND; Server</title>
+	<para>This section describes how to use your &PB; with a &BACKEND; server.</para>
+	
+	<section id="registering_with_backend"><title>Registering a &PB; Device With a &BACKEND; Server</title>
+	
+	<para><indexterm><primary>&PB;</primary><secondary>registering with &BACKEND;</secondary></indexterm>Before &PB; can interact with &BACKEND; you must register your &PB; device with a &BACKEND; server.</para>
+	<procedure>
+   <title>To Register &PB; With a &BACKEND; Server</title>
+   <important><para>If you are not a user with <literal>Admin</literal> rights, you must have a VM image assigned to you before you can connect to &BACKEND;.</para></important>
+   
+<step><para>In &BC;, click the <guilabel>System</guilabel> button. The <guilabel>System Settings</guilabel> window is displayed.</para></step>
+<step><para>Click  <guilabel>&BACKEND;</guilabel>.</para></step>
+<step><para>Click <guilabel>Register</guilabel>.</para></step>
+<step><para>Enter the host name of your &BACKEND; server in the <guilabel>Synchronizer Address</guilabel> text box.</para></step>
+<step><para>Click <guilabel>Next</guilabel>.</para></step>
+<step><para>An authorization code is displayed. Please ensure that the authentication code is the same as the one provided by your system administrator. Cancel the connection process if the codes do not match, and alert your system administrator.</para>
+<para>If the &BACKEND; server is configured to require <indexterm><primary>Registration PIN</primary></indexterm>Registration PINs, you are also prompted to enter the required PIN now. Enter the PIN provided by your system administrator.</para></step>
+<step><para>Press <keycap>Ctrl + Alt + Backspace</keycap> to securely authenticate with your &BACKEND; server.</para></step>
+<step><para>Enter your &BACKEND; user name and password and press <keycap>Enter</keycap>.</para></step>
+<step><para>Click <guilabel>Close</guilabel> to exit the <guilabel>System Settings</guilabel> window.</para></step>
+</procedure>
+</section>
+
+<section id="image_modes"><title>VM Image Modes
+<indexterm><primary>VMs</primary><secondary>Image modes</secondary></indexterm></title>
+
+<para>
+<indexterm><primary>VM Image modes</primary><secondary>&VM_PRIVATE_MODE;</secondary></indexterm>
+<indexterm><primary>VM Image modes</primary><secondary>&VM_PRIVATE_MODE; with user profile only backed up</secondary></indexterm>
+<indexterm><primary>VM Image modes</primary><secondary>&VM_SHARED_MODE;</secondary></indexterm>
+A &PB; VM image stored on a &BACKEND; server exists in one of the following managed modes:</para>
+<itemizedlist>
+<listitem><para>&VM_PRIVATE_MODE;</para><para>A traditional image of the entire VM stored as a single VHD file. You can make changes to a VM based on this image (for example, installing software or updating the operation system) without affecting other users, and your changes remain when you reboot the device. With this type of VM Image, initial deployment of the image is made with &BACKEND; and ongoing updates can be made in the traditional manner using existing Windows distribution tools.</para></listitem>
+<listitem><para>&VM_PRIVATE_MODE; with User Profile only backed up</para><para>The user profile of the VM alone is uploaded to the &BACKEND; as a separate VHD from the rest of the system. You can make changes to a VM based on this image (for example, installing software or updating the operation system) without affecting other users, and your changes remain when you reboot the device. With this type of VM Image, initial deployment of the image is made with &BACKEND;, and the user profile is backed up to the &BACKEND;. Ongoing operating system and application updates can be made in the traditional manner using existing Windows distribution tools.</para></listitem>
+<listitem><para>&VM_SHARED_MODE;</para><para>The user profile of the VM is stored as a separate VHD from the rest of the system. You can make changes to a VM based on this image without affecting other users, but only changes made in the user profile remain when you reboot the device; the operating system and applications revert to the state they were stored at when the image was last saved. With this type of VM Image, deployment and ongoing image updates are made with &BACKEND;. Existing Windows distribution tools are not useable in this mode.</para></listitem>
+</itemizedlist>
+
+<para>The mode is chosen when you first upload the VM to a &BACKEND;.</para>
+
+<!--
+<para>If your &PB; VM was downloaded from &BACKEND;, it exists in one of two managed modes. In &VM_PRIVATE_MODE;, you can make changes, for example, installing software or updating your operation system, without affecting other users, and your changes remain when you reboot the device. However, in &VM_SHARED_MODE;, you probably will not be able to make changes to the installed software depending on how your user account is configured. Only changes made to your user folders will remain. All other changes, for example any software you install, are removed when you reboot your device. This is because in &VM_SHARED_MODE;, your system administrator maintains a single VM image which is shared by multiple users.</para>
+-->
+
+</section>
+
+<section id="uploading_vm_image"><title>Uploading a VM<indexterm><primary>Uploading VM to &BACKEND;</primary></indexterm>
+<indexterm><primary>VMs</primary><secondary>Uploading to &BACKEND;</secondary></indexterm>
+</title>
+
+<procedure><title>To Upload a VM to &BACKEND;<indexterm><primary>VMs</primary>
+<secondary>uploading to &BACKEND;</secondary></indexterm></title>
+<note><para>Only &BACKEND; users with <literal>Admin</literal> rights can upload VMs to &BACKEND;. See the <citetitle>&BACKEND_DOC;</citetitle> for more information.</para></note>
+<step><para>Shut down the VM you want to upload and click the <guilabel>Details</guilabel> button.</para></step>
+<step><para>Click <guilabel>Upload VM</guilabel> near the top right side of the VM details box. An <guilabel>Upload to &BACKEND;</guilabel> dialog box appears.</para></step>
+<step><para>Enter a VM Image Name and a Description for the VM.</para></step>
+<step><para>Select the desired Image Mode. (For a description of the available image modes, see <olink targetdoc="XenClientSetupAndUsageGuide" targetptr="image_modes" /> for more information.</para></step>
+<step><para>Click <guilabel>Finish</guilabel>.</para></step>
+
+</procedure>
+<para>While a VM is being published or uploaded to &BACKEND;, a status bar is displayed in the VM details window, as shown below. You can pause, cancel or restart the transfer at any time.</para>
+
+  	<informalfigure>
+		<mediaobject>
+			<imageobject>
+				<imagedata align="center" fileref="../public/images/vm_image_transferring.png" width="6.5in" />
+			</imageobject>
+		</mediaobject>
+	</informalfigure>
+	
+</section>
+
+<section id="vm_backups_and_updates"><title>VM Backups and Updates</title>	
+<procedure id="backing_up_with_backend">
+	<title>To Backup a &BACKEND;-Managed VM<indexterm><primary>VMs</primary><secondary>backing up</secondary></indexterm></title>
+	<para>Only users who have been authorized to make manual backups are able to perform this procedure.</para>
+	<note><para>When a VM is backed up it is given a timestamp which is derived from the time in the BIOS of the device. When a new VM image version is created in &BACKEND;, it is given a timestamp which is derived from the NTP server &BACKEND; uses to get accurate time information. Please note that this may cause some discrepancies in timestamps.</para></note>
+	&view_details;
+<step><para>Click the <guilabel>Backup Now</guilabel> button.</para></step>	
+</procedure>	
+
+<procedure id="updating_with_backend">
+	<title>To Check for Updates to a &BACKEND;-managed VM<indexterm><primary>VMs</primary>
+<secondary>checking for updates</secondary></indexterm></title>
+&view_details;
+<step><para>Click the <guilabel>Check Now</guilabel> button.</para></step>	
+<step><para>If updates are available, they immediately begin to download. The updates could consist of VM assignment policy updates or, in the case of a &VM_SHARED_MODE; VM, system disk updates to a new version.</para></step>
+<step><para>If the message <guilabel>Shutdown Required</guilabel> is displayed, shut down the VM. Do not perform a VM restart instead. When the VM has shut down, the VM configuration is updated. It is then safe to start the VM again.</para></step>
+</procedure>	
+</section>
+
+<!--
+<procedure><title>Deregistering a &PB; computer from a &BACKEND; server</title>
+<step><para>In &BC; click the <guilabel>Terminal</guilabel> button to bring up a terminal window.</para></step>
+<step><para>Run the script <filename>/usr/sbin/bed-deregister</filename>:</para>
+<screen>cd /usr/sbin
+./bed-deregister</screen>
+<para>Running this script:</para>
+<itemizedlist>
+<listitem><para>Stops all VMs that are managed by &BACKEND;</para></listitem>
+<listitem><para>Erases the VM configuration for these VMs.</para></listitem>
+<listitem><para>Erases the VHD files used by these VMs.</para></listitem>
+<listitem><para>Deletes the file <filename>/config/backend/bed.store</filename>.</para></listitem>
+</itemizedlist>
+</step>
+</procedure>-->
+</section>
+
+</chapter>
+
+<chapter id="troubleshooting"><title>Troubleshooting</title>
+<section><title>General Troubleshooting</title>
+	<para><indexterm><primary>&PB;</primary><secondary>troubleshooting</secondary></indexterm><indexterm><primary>Troubleshooting</primary><secondary>general</secondary></indexterm>If you experience a technical issue with &PB;, please immediately generate a system status report to capture essential information from the system that will enable diagnosis. The status report can be supplied to a technical support representative. You may also want to visit the XenClient Forums at <ulink url="http://forums.citrix.com/forum.jspa?forumID=1292">http://forums.citrix.com/forum.jspa?forumID=1292</ulink> for solutions.</para>
+		
+<procedure>
+<title>
+<indexterm><primary>Control domain</primary><secondary>opening a console</secondary></indexterm>
+<indexterm><primary>Console, control domain</primary></indexterm>
+To Open a Control Domain Console</title>
+<step><para>&OPEN_CONSOLE; Alternately press <keycap>Ctrl + Shift + h</keycap> to open a larger control domain terminal window.</para>
+<note><para>Use <keycap>Alt + Tab</keycap> to bring the console back into focus should it end up behind &BC;.</para></note></step>
+</procedure>		
+		
+<!--<procedure><title>Restarting &BC;</title>
+<step><para>Open a terminal window in &BC;.</para></step>
+<step><para><command>ssh</command> into the control domain:</para><screen>ssh dom0</screen></step>
+<step><para>Run the following two commands:</para>
+<screen>killall xenmgr-ruby; xenmgr-ruby</screen></step>
+</procedure>-->
+<procedure><title>To Generate a &PB; Status Report<indexterm><primary>Status report</primary>
+<secondary>generating</secondary></indexterm></title>
+<important><para>VMs must be running for the status report to be able to gather important VM-specific diagnostic information.</para></important>
+<step><para>In &BC;, click <guilabel>System > Status Report</guilabel>, then click the <guilabel>Create Status Report</guilabel> button. Alternately, press <keycap>Ctrl + Alt + r</keycap>. The <guilabel>Create Status Report</guilabel> wizard is displayed. </para></step>
+
+<step><para>Select what information you would like to include in the status report. Screenshots and diagnostic information about the VMs running on the &BC; device can be extremely helpful with the diagnosis of technical issues, but you may prefer not to divulge this information. If you do not want to include screenshots of VMs in the status report, uncheck the <guilabel>Include screenshots of the VMs in this report checkbox</guilabel>. If you do not want any other diagnostic information about your VMs to be included, uncheck the <guilabel>Include other diagnostic information from the VMs in this report</guilabel> checkbox.</para>
+</step>
+<step><para>Click the <guilabel>Next</guilabel> button.</para></step>
+
+
+<step><para>Enter a short (8 words or less if possible) summary of the problem you have encountered in the <guilabel>Summary</guilabel> text box.</para></step>
+<step><para>Enter a more detailed description of the problem in the <guilabel>Description</guilabel> text area.</para></step>
+
+<step><para>Click the <guilabel>Next</guilabel> button.</para></step>
+
+<step><para>Enter the steps that you think are required to reproduce the problem in the <guilabel>Steps to Reproduce</guilabel> text area.</para></step>
+<step><para>If you have contacted &COMPANY_NAME_SHORT; with regard to this issue and have been given a technical support case number or a ticket number, enter the number you have been given in the <guilabel>Support Number</guilabel> text box.</para></step>
+
+
+<step><para>Click the <guilabel>Next</guilabel> button.</para></step>
+
+<step><para id="test_xinclude">Click the <guilabel>Next</guilabel> button again to start generating the report. The report is saved as a <literal>.tar.gz</literal> file on the control domain file system in the <filename>/storage/status-report</filename> directory. The file is named after the summary of the issue.</para>
+<para>Because the status report might contain sensitive information, no direct download link is provided. It is instead required to log in to a control domain console as the <literal>root</literal> user in order to access the status report. Contact your system administrator if you do not access to the <literal>root</literal> user password to arrange for the status report to be retrieved. To retrieve the status report, either use <command>SCP</command>, <command>WinSCP</command>, or an equivalent tool. Alternately, take the following steps:</para>
+<substeps>
+<step><para>Ensure that the device is connected to a network, either wired or wireless.</para>
+</step>
+<step><para>&OPEN_CONSOLE;</para></step>
+
+<step><para>Run the <command>status-server</command> command:</para>
+<screen>status-server</screen>
+</step>
+<step><para>Use a web browser on another device or in a VM to download the status report from the URL indicated by the <literal>status-server</literal> command.</para>
+</step>
+<step><para>Press <guilabel>Enter</guilabel> to shut down the status server.</para>
+</step>
+
+</substeps>
+</step>
+</procedure>
+
+<section id="recovering_from_full_disk">
+	<title>Recovering From a Full Disk</title>
+	<procedure>
+		<step><para>Reboot the &PB; host.</para></step>
+		<step><para>While the &PB; boot screen is displayed, press and hold <keycap>Shift</keycap>.</para></step>
+		<step><para>Boot into the <guilabel>console access</guilabel> option.</para></step>
+		<step><para>When a console is available, log in as <literal>root</literal>.</para></step>
+		<step><para>Delete the file <filename>/storage/xc-reserved</filename>:</para>
+		<screen>rm /storage/xc-reserved</screen>
+		<para>This will free up sufficient disk space to allow you to boot into &PB; and back up your VMs to &BACKEND;.</para></step>
+	</procedure>	
+</section>
+
+
+		<!--
+		<procedure><title>To Troubleshoot a &PORTICA; <literal>Driver Protocol error</literal></title>
+		<step><para>Close &DAZZLE;.</para></step>
+
+		<step><para>Shutdown the &PORTICA_VIEW; VM.</para></step>
+		<step><para>Shutdown the &PORTICA_SHARE; VMs.</para></step>
+		<step><para>Start the &PORTICA_VIEW; VM.</para></step>
+		<step><para>Start the &PORTICA_SHARE; VMs.</para></step>
+		<step><para>Wait until the disk activity in the &PORTICA_SHARE; VMs has stopped.</para></step>
+		<step><para>Restart &DAZZLE;.</para></step>
+	</procedure>
+			-->  
+
+		
+			
+					
+</section>	
+			
+<section id="installation_troubleshooting">
+	<title>Installation Troubleshooting
+	<indexterm><primary>&PB;</primary><secondary>troubleshooting installation</secondary></indexterm>
+	<indexterm><primary>Troubleshooting</primary><secondary>installation</secondary></indexterm>
+	</title>
+	<para>This section describes some troubleshooting tips to use during &PB; installation. You may also want to visit the XenClient forums at <ulink url="http://forums.citrix.com/forum.jspa?forumID=1551">http://forums.citrix.com/forum.jspa?forumID=1551</ulink> for solutions.</para>
+<para>While running the &PB; installer you can switch what you see using the following key strokes:</para>
+<variablelist>
+<varlistentry><term><keycap>Alt + F1</keycap> 
+</term><listitem><para>Switch back to the installer.</para></listitem>
+</varlistentry>
+<varlistentry><term><keycap>Alt + F2</keycap></term><listitem><para>Show the installation log file.</para></listitem>
+</varlistentry>
+<varlistentry><term><keycap>Alt + F3</keycap>, <keycap>Alt + F5</keycap> or <keycap>Alt + F6</keycap>.</term><listitem><para>Show a login prompt to a console window. Log in as <literal>root</literal>.</para>
+<note><para>To use this functionality external SSH access must be enabled. To enable SSH, run the following command in a terminal window in &BC;: <command>xec -x enable-ssh true</command>.</para></note></listitem>
+</varlistentry>
+<varlistentry><term><keycap>Alt + F4</keycap></term><listitem><para>Show the system log file.</para></listitem>
+</varlistentry>
+<varlistentry><term><keycap>Alt + F7</keycap></term><listitem><para>Enter the interactive status-report generation tool.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<section id="generating_installation_status_report">
+	<title>To Generate an Installation Status Report<indexterm><primary>Installation status report</primary></indexterm></title>
+	<procedure>
+		<step><para>During installation, press <keycap>Alt + F7</keycap> and select <guilabel>Continue</guilabel>.</para></step>
+		<step><para>Enter a description of the issues you are experiencing with the installation and select <guilabel>OK</guilabel>. The system will start to generate a status report.</para></step>
+		<step><para>When report generation is complete, the status report filename is displayed. Select <guilabel>Web Server</guilabel>. </para></step>
+		<step><para>The URL of a web server is displayed. Point your web browser to the address displayed to download the installation status report.</para></step>
+	</procedure>
+</section>
+
+<section id="troubleshooting_pxe_installations">
+	<title>To Troubleshoot PXE Installation Issues</title>
+	<procedure>
+		<step><para>&PB; &PRODUCT_VERSION; uses a customized <filename>pxelinux.0</filename> file, which can be found on the installer CD at <filename>/isolinux/pxelinux.0</filename>. This file must be copied to your PXE server.</para></step>
+	</procedure>
+</section>
+
+</section>
+</chapter>
+	
+
+	
+<appendix role="die" id="licenses">
+	<title>Licenses</title>
+<section><title>Intel Graphics and Sound Drivers</title>
+<section><title>INTEL SOFTWARE LICENSE AGREEMENT (OEM / IHV / ISV Distribution &amp; Single User)</title>
+
+
+
+<para>IMPORTANT - READ BEFORE COPYING, INSTALLING OR USING. 
+Do not use or load this software and any associated materials (collectively, the "Software") until you have carefully read the following terms and conditions. By loading or using the Software, you agree to the terms of this Agreement. If you do not wish to so agree, do not install or use the Software.</para>
+
+<para>Please Also Note:</para>
+	<itemizedlist>
+	<listitem><para>If you are an Original Equipment Manufacturer (OEM), Independent Hardware Vendor (IHV), or Independent Software Vendor (ISV), this complete LICENSE AGREEMENT applies;</para></listitem>
+	<listitem><para>If you are an End-User, then only Exhibit A, the INTEL SOFTWARE LICENSE AGREEMENT, applies.</para></listitem>
+</itemizedlist>
+<para>For OEMs, IHVs, and ISVs:</para>
+
+<para>LICENSE. This Software is licensed for use only in conjunction with Intel component products.  Use of the Software in conjunction with non-Intel component products is not licensed hereunder. Subject to the terms of this Agreement, Intel grants to You a nonexclusive, nontransferable, worldwide, fully paid-up license under Intel's copyrights to:</para>
+<orderedlist numeration="loweralpha">
+<listitem><para>use, modify and copy Software internally for Your own development and maintenance purposes; and</para></listitem>
+<listitem><para>modify, copy and distribute Software, including derivative works of the Software, to Your end-users, but only under a license agreement with terms at least as restrictive as those contained in Intel's Final, Single User License Agreement, attached as Exhibit A; and</para></listitem>
+<listitem><para>modify, copy and distribute the end-user documentation which may accompany the Software, but only in association with the Software.</para></listitem>
+</orderedlist>
+<para>If You are not the final manufacturer or vendor of a computer system or software program incorporating the Software, then You may transfer a copy of the Software, including derivative works of the Software (and related end-user documentation) to Your recipient for use in accordance with the terms of this Agreement, provided such recipient agrees to be fully bound by the terms hereof.  You shall not otherwise assign, sublicense, lease, or in any other way transfer or disclose Software to any third party. You shall not reverse- compile, disassemble or otherwise reverse-engineer the Software.</para>
+
+<para>Except as expressly stated in this Agreement, no license or right is granted to You directly or by implication, inducement, estoppel or otherwise. 	Intel shall have the right to inspect or have an independent auditor inspect Your relevant records to verify Your compliance with the terms and conditions of this Agreement.</para>
+
+<para>CONFIDENTIALITY.   If You wish to have a third party consultant or subcontractor ("Contractor") perform work on Your behalf which involves access to or use of Software, You shall obtain a written confidentiality agreement from the Contractor which contains terms and obligations with respect to access to or use of Software no less restrictive than those set forth in this Agreement and excluding any distribution rights, and use for any other purpose.
+Otherwise, You shall not disclose the terms or existence of this Agreement or use Intel's name in any publications, advertisements, or other announcements without Intel's prior written consent.  You do not have any rights to use any Intel trademarks or logos.</para>
+
+<para>OWNERSHIP OF SOFTWARE AND COPYRIGHTS. Title to all copies of the Software remains with Intel or its suppliers. The Software is copyrighted and protected by the laws of the United States and other countries, and international treaty provisions. You may not remove any copyright notices from the Software. Intel may make changes to the Software, or to items referenced therein, at any time and without notice, but is not obligated to support or update the Software. Except as otherwise expressly provided, Intel grants no express or implied right under Intel patents, copyrights, trademarks, or other intellectual property rights. You may transfer the Software only if the recipient agrees to be fully bound by these terms and if you retain no copies of the Software.</para>
+
+<para>LIMITED MEDIA WARRANTY.  If the Software has been delivered by Intel on physical media, Intel warrants the media to be free from material physical defects for a period of ninety (90) days after delivery by Intel. If such a defect is found, return the media to Intel for replacement or alternate delivery of the Software as Intel may select.</para>
+
+<para>EXCLUSION OF OTHER WARRANTIES. EXCEPT AS PROVIDED ABOVE, THE SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY EXPRESS OR IMPLIED WARRANTY OF ANY KIND, INCLUDING WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT, OR FITNESS FOR A PARTICULAR PURPOSE.  Intel does not warrant or assume responsibility for the accuracy or completeness of any information, text, graphics, links or other items contained within the Software.</para>
+
+<para>LIMITATION OF LIABILITY. IN NO EVENT SHALL INTEL OR ITS SUPPLIERS BE LIABLE FOR ANY DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, LOST PROFITS, BUSINESS INTERRUPTION OR LOST INFORMATION) ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN IF INTEL HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. SOME JURISDICTIONS PROHIBIT EXCLUSION OR LIMITATION OF LIABILITY FOR IMPLIED WARRANTIES OR CONSEQUENTIAL OR INCIDENTAL DAMAGES, SO THE ABOVE LIMITATION MAY NOT APPLY TO YOU. YOU MAY ALSO HAVE OTHER LEGAL RIGHTS THAT VARY FROM JURISDICTION TO JURISDICTION. </para>
+
+<para>TERMINATION OF THIS AGREEMENT. Intel may terminate this Agreement at any time if you violate its terms. Upon termination, you will immediately destroy the Software or return all copies of the Software to Intel.</para>
+ 
+<para>APPLICABLE LAWS. Claims arising under this Agreement shall be governed by the laws of California, excluding its principles of conflict of laws and the United Nations Convention on Contracts for the Sale of Goods. You may not export the Software in violation of applicable export laws and regulations. Intel is not obligated under any other agreements unless they are in writing and signed by an authorized representative of Intel.</para>
+
+<para>GOVERNMENT RESTRICTED RIGHTS. The Software is provided with "RESTRICTED RIGHTS." Use, duplication, or disclosure by the Government is subject to restrictions as set forth in FAR52.227-14 and DFAR252.227-7013 et seq. or their successors. Use of the Software by the Government constitutes acknowledgment of Intel's proprietary rights therein. Contractor or Manufacturer is Intel Corporation, 2200 Mission College Blvd., Santa Clara, CA 95052.</para>
+
+ 
+<para>EXHIBIT A</para>
+<para>INTEL SOFTWARE LICENSE AGREEMENT (Final, Single User)</para>
+
+<para>IMPORTANT - READ BEFORE COPYING, INSTALLING OR USING. 
+Do not use or load this software and any associated materials (collectively, the 'Software' until you have carefully read the following terms and conditions. By loading or using the Software, you agree to the terms of this Agreement. If you do not wish to so agree, do not install or use the Software.</para>
+
+<para>LICENSE. You may copy the Software onto a single computer for your personal, noncommercial use, and you may make one back-up copy of the Software, subject to these conditions:</para> 
+<orderedlist><listitem><para>This Software is licensed for use only in conjunction with Intel component products.  Use of the Software in conjunction with non-Intel component products is not licensed hereunder.</para></listitem> 
+<listitem><para>You may not copy, modify, rent, sell, distribute or transfer any part of the Software except as provided in this Agreement, and you agree to prevent unauthorized copying of the Software.</para></listitem>
+<listitem><para>You may not reverse engineer, decompile, or disassemble the Software.</para></listitem> 
+<listitem><para>You may not sublicense or permit simultaneous use of the Software by more than one user.</para></listitem>
+<listitem><para>The Software may contain the software or other property of third party suppliers, some of which may be identified in, and licensed in accordance with, any enclosed <filename>license.txt</filename> file or other text or file.</para></listitem> </orderedlist> 
+
+<para>OWNERSHIP OF SOFTWARE AND COPYRIGHTS. Title to all copies of the Software remains with Intel or its suppliers. The Software is copyrighted and protected by the laws of the United States and other countries, and international treaty provisions. You may not remove any copyright notices from the Software. Intel may make changes to the Software, or to items referenced therein, at any time without notice, but is not obligated to support or update the Software. Except as otherwise expressly provided, Intel grants no express or implied right under Intel patents, copyrights, trademarks, or other intellectual property rights. You may transfer the Software only if the recipient agrees to be fully bound by these terms and if you retain no copies of the Software.</para>
+
+<para>LIMITED MEDIA WARRANTY.  If the Software has been delivered by Intel on physical media, Intel warrants the media to be free from material physical defects for a period of ninety (90) days after delivery by Intel. If such a defect is found, return the media to Intel for replacement or alternate delivery of the Software as Intel may select.</para>
+
+<para>EXCLUSION OF OTHER WARRANTIES. EXCEPT AS PROVIDED ABOVE, THE SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY EXPRESS OR IMPLIED WARRANTY OF ANY KIND INCLUDING WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT, OR FITNESS FOR A PARTICULAR PURPOSE.  Intel does not warrant or assume responsibility for the accuracy or completeness of any information, text, graphics, links or other items contained within the Software.</para>
+
+<para>LIMITATION OF LIABILITY. IN NO EVENT SHALL INTEL OR ITS SUPPLIERS BE LIABLE FOR ANY DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, LOST PROFITS, BUSINESS INTERRUPTION, OR LOST INFORMATION) ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN IF INTEL HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. SOME JURISDICTIONS PROHIBIT EXCLUSION OR LIMITATION OF LIABILITY FOR IMPLIED WARRANTIES OR CONSEQUENTIAL OR INCIDENTAL DAMAGES, SO THE ABOVE LIMITATION MAY NOT APPLY TO YOU. YOU MAY ALSO HAVE OTHER LEGAL RIGHTS THAT VARY FROM JURISDICTION TO JURISDICTION.</para> 
+
+<para>TERMINATION OF THIS AGREEMENT. Intel may terminate this Agreement at any time if you violate its terms. Upon termination, you will immediately destroy the Software or return all copies of the Software to Intel.</para>
+ 
+<para>APPLICABLE LAWS. Claims arising under this Agreement shall be governed by the laws of California, excluding its principles of conflict of laws and the United Nations Convention on Contracts for the Sale of Goods. You may not export the Software in violation of applicable export laws and regulations. Intel is not obligated under any other agreements unless they are in writing and signed by an authorized representative of Intel.</para>
+
+<para>GOVERNMENT RESTRICTED RIGHTS. The Software is provided with "RESTRICTED RIGHTS." Use, duplication, or disclosure by the Government is subject to restrictions as set forth in FAR52.227-14 and DFAR252.227-7013 et seq. or their successors. Use of the Software by the Government constitutes acknowledgment of Intel's proprietary rights therein. Contractor or Manufacturer is Intel Corporation, 2200 Mission College Blvd., Santa Clara, CA 95052.</para>
+
+ 
+<para>SLA/OEM/IHV/RBK/ April 23, 2004</para>
+</section>
+<section><title>DISCLAIMER</title>
+<para>Intel is making no claims of usability, efficacy or warranty. The INTEL SOFTWARE LICENSE AGREEMENT contained herein completely defines the license and use of this software.</para>
+
+<para>Information in this document is provided in connection with Intel products. Except as expressly stated in the INTEL SOFTWARE LICENSE AGREEMENT contained herein, no license, express or implied, by estoppel or otherwise, to any intellectual property rights is granted by this document.
+Except as provided in Intel's Terms and Conditions of Sale
+for such products, Intel assumes no liability whatsoever,
+and Intel disclaims any express or implied warranty,
+relating to sale and/or use of Intel products, including
+liability or warranties relating to fitness for a 
+particular purpose, merchantability or infringement of any
+patent, copyright or other intellectual property right. 
+Intel products are not intended for use in medical, 
+lifesaving, or life-sustaining applications.</para>
+
+
+<para>Intel Corporation disclaims all warranties and liabilities for the use of this document, the software and the information contained herein, and assumes no responsibility for any errors which may appear in this document or the software, nor does Intel make a commitment to update the information or software contained herein. Intel reserves the right to make changes to this document or software at any time, without notice.</para>
+
+
+<para>Other names and brands may be claimed as the property of others.</para>
+
+<para>Copyright (c) Intel Corporation, 2010</para>
+
+
+<para>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</para>
+
+<para>Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</para>
+
+<para>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</para>
+
+<para>Neither the name of 3Dlabs Inc. Ltd. nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.</para>
+
+<para>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</para>
+
+<para>Copyright (C) 2002-2009  3Dlabs Inc. Ltd.</para>
+<para>All rights reserved</para>
+</section>
+</section>
+<section>
+<title>Intel Wireless Drivers</title>
+<para>Copyright (c) 2006-2009, Intel Corporation.
+All rights reserved.</para>
+
+<para>Redistribution.  Redistribution and use in binary form, without modification, are permitted provided that the following conditions are met:</para>
+<itemizedlist>
+<listitem><para>Redistributions must reproduce the above copyright notice and the following disclaimer in the documentation and/or other materials provided with the distribution.</para></listitem>
+<listitem><para>Neither the name of Intel Corporation nor the names of its suppliers may be used to endorse or promote products derived from this software  without specific prior written permission.</para></listitem> 
+<listitem><para>No reverse engineering, decompilation, or disassembly of this software is permitted.</para></listitem>
+</itemizedlist>
+<para>Limited patent license.  Intel Corporation grants a world-wide, royalty-free, non-exclusive license under patents it now or hereafter owns or controls to make, have made, use, import, offer to sell and sell ("Utilize") this software, but solely to the extent that any such patent is necessary to Utilize the software alone, or in combination with an operating system licensed under an approved Open Source license as listed by the Open Source Initiative at http://opensource.org/licenses.  The patent license shall not apply to any other combinations which include this software.  No hardware per se is licensed hereunder.</para>
+<para>DISCLAIMER.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
+OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
+DAMAGE.</para>
+</section>
+
+<section><title>3rd Party Copyrights</title>
+<para>Software covered by the following third party copyrights may be included with this product and will also be subject to the software license
+agreement: Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 2000--2006 Kevin Atkinson, Copyright (C) 2002, 2003, 2004, 2006 Kevin Atkinson, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (c) Lennart Kolmodin, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 19yy	&lt;name of author&gt;, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1996-2006 Julian R Seward., Copyright (C) 1996-2007 Julian R Seward., Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1998-2009 Texas Instruments. All rights reserved, Copyright (C) 2000-2005 by David Brownell, Copyright (C) 2000-2005 by David Brownell &lt;dbrownell@users.sourceforge.net&gt;, Copyright (C) 2001 Intersil Americas Inc, Copyright (C) 2002 David S. Miller, Copyright (C) 2002 David S. Miller (davem@redhat.com), Copyright (C) 2002 NetChip Technology, Inc. (http, Copyright (C) 2003 Conexant Americas Inc. All Rights Reserved, Copyright (C) 2003 David Brownell, Copyright (C) 2003-2005 David Hollis &lt;dhollis@davehollis.com&gt;, Copyright (C) 2003-2005 Pontus Fuchs, Giridhar Pemmasani, Copyright (C) 2003-2005 by David Brownell, Copyright (C) 2003-2006, Marvell International Ltd, Copyright (C) 2004 - 2006 rt2x00 SourceForge Project, Copyright (C) 2004 - 2009 Felix Fietkau &lt;nbd@openwrt.org&gt;, Copyright (C) 2004 - 2009 Gertjan van Wingerde &lt;gwingerde@gmail.com&gt;, Copyright (C) 2004 - 2009 Ivo van Doorn &lt;IvDoorn@gmail.com&gt;, Copyright (C) 2004 Florian Schirmer (jolt@tuxbox.org), Copyright (C) 2004 Pekka Pietikainen (pp@ee.oulu.fi), Copyright (C) 2004, 2005, 2006 Nokia Corporation, Copyright (C) 2004, Intel Corporation &lt;jketreno@linux.intel.com&gt;, Copyright (C) 2004-2005 Intel Corporation &lt;jketreno@linux.intel.com&gt;, Copyright (C) 2005 Andreas Jaggi &lt;andreas.jaggi@waterwave.ch&gt;, Copyright (C) 2005 Danny van Dyk &lt;kugelfang@gentoo.org&gt;, Copyright (C) 2005 Martin Langer &lt;martin-langer@gmx.de&gt;, Copyright (C) 2005 Nokia Corporation (taken from islsm_pda.h), Copyright (C) 2005 Stefano Brivio &lt;st3@riseup.net&gt;, Copyright (C) 2005 Stefano Brivio &lt;stefano.brivio@polimi.it&gt;, Copyright (C) 2005 Texas Instruments Incorporated, Copyright (C) 2005 by David Brownell, Copyright (C) 2005, 2006 Michael Buesch &lt;mb@bu3sch.de&gt;, Copyright (C) 2005-2006 Michael Buesch &lt;mb@bu3sch.de&gt;, Copyright (C) 2005-2007 Derek Smithies &lt;derek@indranet.co.nz&gt;, Copyright (C) 2005-2007 Michael Buesch &lt;mb@bu3sch.de&gt;, Copyright (C) 2005-2007 Ulrich Kunitz &lt;kune@deine-taler.de&gt;, Copyright (C) 2005-2008 Michael Buesch &lt;mb@bu3sch.de&gt;, Copyright (C) 2006 - 2007 Ivo van Doorn, Copyright (C) 2006 Broadcom Corporation, Copyright (C) 2006 Felix Fietkau (nbd@openwrt.org), Copyright (C) 2006 by Ole Andre Vadla Ravnas (ActiveSync), Copyright (C) 2006, Red Hat, Inc. /, Copyright (C) 2006-2007 Daniel Drake &lt;dsd@gentoo.org&gt;, Copyright (C) 2006-2007 Michael Wu &lt;flamingice@sourmilk.net&gt;, Copyright (C) 2007 Conexant Systems, Inc, Copyright (C) 2007 Dmitry Torokhov, Copyright (C) 2007 Ivo van Doorn, Copyright (C) 2007 Larry Finger &lt;Larry.Finger@lwfinger.net&gt;, Copyright (C) 2007 Michael Buesch &lt;mb@bu3sch.de&gt;, Copyright (C) 2007 by Bjorge Dijkstra &lt;bjd@jooz.net&gt;, Copyright (C) 2007, Red Hat, Inc, Copyright (C) 2007, Red Hat, Inc. /, Copyright (C) 2007-2008 Luis R. Rodriguez &lt;mcgrof@winlab.rutgers.edu&gt;, Copyright (C) 2008 Christian Lamparter &lt;chunkeey@web.de&gt;, Copyright (C) 2008 Felix Fietkau &lt;nbd@openwrt.org&gt;, Copyright (C) 2008 Google Inc, Copyright (C) 2008 Nokia Corporation, Copyright (C) 2008 Nokia Corporation and/or its subsidiary(-ies), Copyright (C) 2008, cozybit Inc, Copyright (C) 2008-2009 Marvell Semiconductor Inc, Copyright (C) 2008-2009 Nokia Corporation, Copyright (C) 2008-2009 by Jussi Kivilinna &lt;jussi.kivilinna@mbnet.fi&gt;, Copyright (C) 2009 Alban Browaeys  prahal@yahoo.com&gt;, Copyright (C) 2009 Albert Herranz, Copyright (C) 2009 Axel Kollhofer &lt;rain_maker@root-forum.org&gt;, Copyright (C) 2009 Bart Zolnierkiewicz &lt;bzolnier@gmail.com&gt;, Copyright (C) 2009 Bartlomiej Zolnierkiewicz, Copyright (C) 2009 Bartlomiej Zolnierkiewicz &lt;bzolnier@gmail.com&gt;, Copyright (C) 2009 Bob Copeland (me@bobcopeland.com), Copyright (C) 2009 Felix Fietkau &lt;nbd@openwrt.org&gt;, Copyright (C) 2009 Gertjan van Wingerde &lt;gwingerde@gmail.com&gt;, Copyright (C) 2009 Intel Corporation &lt;ilw@linux.intel.com&gt;, Copyright (C) 2009 Intel Corporation. All rights reserved, Copyright (C) 2009 Ivo van Doorn &lt;IvDoorn@gmail.com&gt;, Copyright (C) 2009 Luis Correia &lt;luis.f.correia@gmail.com&gt;, Copyright (C) 2009 M&amp;N Solutions GmbH, 61191 Rosbach, Germany, Copyright (C) 2009 Mark Asselstine &lt;asselsm@gmail.com&gt;, Copyright (C) 2009 Mattias Nissler &lt;mattias.nissler@gmx.de&gt;, Copyright (C) 2009 Michael Buesch &lt;mb@bu3sch.de&gt;, Copyright (C) 2009 Nokia Corporation, Copyright (C) 2009 Xose Vazquez Perez &lt;xose.vazquez@gmail.com&gt;, Copyright (C) Pekka Pietikainen, Copyright (c) 1997-2007 Jean Tourrilhes, All Rights Reserved, Copyright (c) 1998-2007 Texas Instruments Incorporated, Copyright (c) 2001-2002, SSH Communications Security Corp and Jouni Malinen, Copyright (c) 2002 - 2003 Oliver Kurth, Copyright (c) 2002,2003 Oliver Kurth, Copyright (c) 2002-2003 Patrick Mochel &lt;mochel@osdl.org&gt;, Copyright (c) 2002-2003, Jouni Malinen &lt;j@w1.fi&gt;, Copyright (c) 2002-2003, Jouni Malinen &lt;jkmaline@cc.hut.fi&gt;, Copyright (c) 2002-2004, Jouni Malinen &lt;j@w1.fi&gt;, Copyright (c) 2002-2005 Sam Leffler, Errno Consulting, Copyright (c) 2002-2007 Sam Leffler, Errno Consulting, Copyright (c) 2003, 2004 David Young. All rights reserved, Copyright (c) 2003, Jouni Malinen &lt;j@w1.fi&gt;, Copyright (c) 2003-2004, Jouni Malinen &lt;j@w1.fi&gt;, Copyright (c) 2004 Balint Seeber &lt;n0_5p4m_p13453@hotmail.com&gt;, Copyright (c) 2004 Joerg Albert &lt;joerg.albert@gmx.de&gt;, Copyright (c) 2004 Nick Jones, Copyright (c) 2004 Sam Leffler, Errno Consulting, Copyright (c) 2004 Video54 Technologies, Inc, Copyright (c) 2004, Intel Corporation, Copyright (c) 2004-2005 Atheros Communications, Inc, Copyright (c) 2004-2005, Intel Corporation, Copyright (c) 2004-2007 Reyk Floeter &lt;reyk@openbsd.org&gt;, Copyright (c) 2004-2007, Michael Wu &lt;flamingice@sourmilk.net&gt;, Copyright (c) 2004-2008 Reyk Floeter &lt;reyk@openbsd.org&gt;, Copyright (c) 2004-2009 Atheros Communications, Inc, Copyright (c) 2004-2009 Reyk Floeter &lt;reyk@openbsd.org&gt;, Copyright (c) 2005 Andreas Jaggi &lt;andreas.jaggi@waterwave.ch&gt;, Copyright (c) 2005 Danny van Dyk &lt;kugelfang@gentoo.org&gt;, Copyright (c) 2005 John Bicket, Copyright (c) 2005 Martin Langer &lt;martin-langer@gmx.de&gt;, Copyright (c) 2005 Martin Langer &lt;martin-langer@gmx.de&gt;,, Copyright (c) 2005 Michael Buesch &lt;mb@bu3sch.de&gt;, Copyright (c) 2005 Stefano Brivio &lt;st3@riseup.net&gt;, Copyright (c) 2005 Stefano Brivio &lt;stefano.brivio@polimi.it&gt;, Copyright (c) 2005, 2006 Andreas Jaggi &lt;andreas.jaggi@waterwave.ch&gt;, Copyright (c) 2005, 2006 Danny van Dyk &lt;kugelfang@gentoo.org&gt;, Copyright (c) 2005, 2006 Michael Buesch &lt;mb@bu3sch.de&gt;, Copyright (c) 2005, 2006 Stefano Brivio &lt;stefano.brivio@polimi.it&gt;, Copyright (c) 2005, Devicescape Software, Inc, Copyright (c) 2005-2007 Michael Buesch &lt;mb@bu3sch.de&gt;, Copyright (c) 2005-2007 Michael Buesch &lt;mbuesch@freenet.de&gt;, Copyright (c) 2005-2007 Stefano Brivio &lt;stefano.brivio@polimi.it&gt;, Copyright (c) 2005-2008 Michael Buesch &lt;mb@bu3sch.de&gt;, Copyright (c) 2005-2008 Stefano Brivio &lt;stefano.brivio@polimi.it&gt;, Copyright (c) 2005-2009 Michael Buesch &lt;mb@bu3sch.de&gt;, Copyright (c) 2006	Jiri Benc &lt;jbenc@suse.cz&gt;, Copyright (c) 2006 Devicescape Software, Inc, Copyright (c) 2006 Jiri Benc &lt;jbenc@suse.cz&gt;, Copyright (c) 2006 Michael Buesch &lt;mb@bu3sch.de&gt;, Copyright (c) 2006, 2006 Michael Buesch &lt;mb@bu3sch.de&gt;, Copyright (c) 2006, Michael Wu &lt;flamingice@sourmilk.net&gt;, Copyright (c) 2006-2007 Greg Kroah-Hartman &lt;greg@kroah.com&gt;, Copyright (c) 2006-2007 Nick Kossifidis &lt;mickflemm@gmail.com&gt;, Copyright (c) 2006-2007 Novell Inc, Copyright (c) 2006-2008 Nick Kossifidis &lt;mickflemm@gmail.com&gt;, Copyright (c) 2006-2009 Nick Kossifidis &lt;mickflemm@gmail.com&gt;, Copyright (c) 2007 - 2009, Christian Lamparter &lt;chunkeey@web.de&gt;, Copyright (c) 2007 Bruno Randolf &lt;bruno@thinktube.com&gt;, Copyright (c) 2007 Dmitry Torokhov, Copyright (c) 2007 Guido Guenther &lt;agx@sigxcpu.org&gt;, Copyright (c) 2007 Jiri Slaby &lt;jirislaby@gmail.com&gt;, Copyright (c) 2007 Kalle Valo &lt;kalle.valo@iki.fi&gt;, Copyright (c) 2007 Larry Finger &lt;Larry.Finger@lwfinger.net&gt;, Copyright (c) 2007 Luis R. Rodriguez &lt;mcgrof@winlab.rutgers.edu&gt;, Copyright (c) 2007 Michael Buesch &lt;mb@bu3sch.de&gt;, Copyright (c) 2007-2008 Atheros Communications, Inc, Copyright (c) 2007-2008 Bruno Randolf &lt;bruno@thinktube.com&gt;, Copyright (c) 2007-2008 Jiri Slaby &lt;jirislaby@gmail.com&gt;, Copyright (c) 2007-2008 Luis Rodriguez &lt;mcgrof@winlab.rutgers.edu&gt;, Copyright (c) 2007-2008 Matthew W. S. Bell &lt;mentor@madwifi.org&gt;, Copyright (c) 2007-2008 Michael Taylor &lt;mike.taylor@apprion.com&gt;, Copyright (c) 2007-2008 Pavel Roskin &lt;proski@gnu.org&gt;, Copyright (c) 2007-2009, Christian Lamparter &lt;chunkeey@web.de&gt;, Copyright (c) 2008 Atheros Communications Inc, Copyright (c) 2008 Michael Buesch &lt;mb@bu3sch.de&gt;, Copyright (c) 2008, 2009 open80211s Ltd, Copyright (c) 2008, Christian Lamparter &lt;chunkeey@web.de&gt;, Copyright (c) 2008, John W. Linville &lt;linville@tuxdriver.com&gt;, Copyright (c) 2008, Jouni Malinen &lt;j@w1.fi&gt;, Copyright (c) 2008-2009 Atheros Communications Inc, Copyright (c) 2008-2009 Felix Fietkau &lt;nbd@openwrt.org&gt;, Copyright (c) 2008-2009 Michael Buesch &lt;mb@bu3sch.de&gt;, Copyright (c) 2009 Albert Herranz &lt;albert_herranz@yahoo.es&gt;, Copyright (c) 2009 Atheros Communications Inc, Copyright (c) 2009 Bob Copeland &lt;me@bobcopeland.com&gt;, Copyright (c) 2009 Gabor Juhos &lt;juhosg@openwrt.org&gt;, Copyright (c) 2009 GÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡bor Stefanik &lt;netrolller.3d@gmail.com&gt;, Copyright (c) 2009 Herton Ronaldo Krzesinski &lt;herton@mandriva.com.br&gt;, Copyright (c) 2009 Imre Kaloz &lt;kaloz@openwrt.org&gt;, Copyright (c) 2009 Michael Buesch &lt;mb@bu3sch.de&gt;, Copyright (c) 2009 Nick Kossifidis &lt;mickflemm@gmail.com&gt;, Copyright (c) 2009 Tobias Doerffel &lt;tobias.doerffel@gmail.com&gt;, Copyright (c) 2009, Jouni Malinen &lt;j@w1.fi&gt;, Copyright (c) Realtek Semiconductor Corp. All rights reserved, Extensions 0.26 package and copyright (c) 1997-2003 Jean Tourrilhes, Some parts copyright (c) 2003 by David Young &lt;dyoung@pobox.com&gt;, Copyright (c) Alan Cox, Copyright (C) 1993 Eugene G. Crosser, Copyright (C) 1993 Risto Kankkunen, Copyright (C) 1994 H. Peter Anvin, Copyright (C) 1994-1998 Andries E. Brouwer, Copyright (C) 2007 Free Software Foundation, Inc., Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 2007 Free Software Foundation, Inc., Copyright (C) 2007 Free Software Foundation, Inc., Copyright (C) 2007 Free Software Foundation, Inc., Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 2003-2004 Lawrence E. Rosen. All rights, Copyright (c) 2003 by Bitstream, Inc. All Rights Reserved, Copyright (c) 2006 by Tavmjong Bah. All Rights Reserved, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (c) 1995-2003 by Internet Software Consortium, Copyright (c) 2004-2009 by Internet Systems Consortium, Inc. ("ISC"), Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 2007 Free Software Foundation, Inc., Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc. , Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 2002-2005, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (c) 1998, 1999, 2000 Thai Open Source Software Center Ltd, Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006 Expat maintainers, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (C) 2003 Corey Bowers &lt;cobowers@indiana.edu&gt;, Copyright (C) 2003 James Willcox &lt;jwillcox@gnome.org&gt;, Copyright (C) 2004 Daniel Veillard &lt;veillard@redhat.com&gt;, Copyright (C) 2000-2003 Erik Meijer, Danny van Velzen, and Peter Thiemann, Copyright (C) 2007 Free Software Foundation, Inc., Copyright (c) 1997-2003, Alastair Reid, Copyright (c) 2001-2002, Manuel M T Chakravarty &amp; Gabriele Keller, Copyright (c) 2002 Manuel M. T. Chakravarty, Copyright (c) 2002 Simon Peyton Jones, Copyright (c) 2003-2008, Isaac Jones, Simon Marlow, Martin Sogren,, Copyright (c) 2006, Esa Ilari Vuokko, Copyright (c) 2006-2007, Manuel M T Chakravarty &amp; Roman Leshchinskiy, Copyright (c) 2007, Galois Inc, Copyright (c) Don Stewart 2005-2009, Copyright (c) Ian Lynagh, 2007-2008, Copyright (c) Lennart Kolmodin, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (c) 2007 - 2009, Intel Corporation, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 2007 Free Software Foundation, Inc., Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 2003-2004 Lawrence E. Rosen. All rights, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 2003-2004 Lawrence E. Rosen. All rights, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (c) 2007 - 2010, Intel Corporation, Copyright (c) 2007 - 2010, Intel Corporation, Copyright (c) 1995-2005 International Business Machines Corporation and others, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (c) 2006-2009, Intel Corporation, Copyright (c) 2006-2009, Intel Corporation, Copyright (c) 2006-2010, Intel Corporation, Copyright (c) 2006-2010, Intel Corporation, Copyright (C) 1988 Richard M. Stallman, Copyright (C) 1988 by Jef Poskanzer, Copyright (C) 1989 Aladdin Enterprises. All rights reserved, Copyright (C) 1989 by Jef Poskanzer, Copyright (C) 1991, 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc, Copyright (C) 1991-1994, Thomas G. Lane, Copyright (C) 1991-1995, Thomas G. Lane, Copyright (C) 1991-1996, Thomas G. Lane, Copyright (C) 1991-1997, Thomas G. Lane, Copyright (C) 1991-1998, Thomas G. Lane, Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc, Copyright (C) 1992, 93, 94, 95, 96, 1997 Free Software Foundation, Inc, Copyright (C) 1992, Thomas G. Lane, Copyright (C) 1992-1996, Thomas G. Lane, Copyright (C) 1992-1997, Thomas G. Lane, Copyright (C) 1994-1996, Thomas G. Lane, Copyright (C) 1994-1997, Thomas G. Lane, Copyright (C) 1994-1998, Thomas G. Lane, Copyright (C) 1995-1997, Thomas G. Lane, Copyright (C) 1995-1998, Thomas G. Lane, Copyright (C) 1996-1998 Free Software Foundation, Inc, Copyright (C) 1997, Thomas G. Lane, Copyright (C) 1998, Thomas G. Lane, This software is copyright (C) 1991-1998, Thomas G. Lane, Copyright (c) Galois, Inc. 2007, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1992 Rickard E. Faith, Copyright (C) 1993 Eugene G. Crosser, Copyright (C) 1993 Risto Kankkunen, Copyright (C) 1994 H. Peter Anvin, Copyright (C) 1994-1999 Andries E. Brouwer, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,, Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, Copyright (C) 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001,, Copyright (C) 1994 X Consortium, Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,, Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,, Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005,, Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006, 2007 2008 Free Software Foundation, Inc, Copyright (C) 1996, 1997, 1999, 2000, 2002, 2003, 2004, 2005, 2006, Copyright (C) 1996, 1997, 2000, 2001, 2003, 2005, Copyright (C) 1997, 1999, 2000, 2001, 2003, 2004, 2005, Copyright (C) 1997, 2000, 2001, 2003, 2004, 2005, 2006, Copyright (C) 1999 Wittawat Yamwong, Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2008, Copyright (C) 1999, 2000, 2003, 2004, 2005, 2006 Free Software, Copyright (C) 2001, 2002, 2003, 2005 Free Software Foundation, Inc, Copyright (C) 2001, 2002, 2003, 2005, 2008 Free Software Foundation, Inc, Copyright (C) 2001, 2003, 2005 Free Software Foundation, Inc, Copyright (C) 2002, 2003, 2005, 2006, 2007, 2008 Free Software Foundation, Inc, Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc, Copyright (C) 2003, 2005 Free Software Foundation, Inc, Copyright (C) 2003-2006 by XGI Technology, Taiwan, Copyright (C) 2004 Free Software Foundation, Inc, Copyright (C) 2004, 2005 Free Software Foundation, Inc, Copyright (C) 2004, 2005, 2007 Free Software Foundation, Inc, Copyright (C) 2004, 2005, 2007, 2008 Free Software Foundation, Inc, Copyright (C) 2004-2005 Nicolai Haehnle et al, Copyright (C) 2006 Free Software Foundation, Inc, Copyright (C) 2006-2008 , Copyright (C) 2008 Free Software Foundation, Inc, Copyright (c) 2007 Dave Airlie &lt;airlied@linux.ie&gt;, Copyright (c) 2007 Jakob Bornecrantz &lt;wallbraker@gmail.com&gt;, Copyright (c) 2007-2008 Dave Airlie &lt;airlied@linux.ie&gt;, Copyright (c) 2007-2008 Intel Corporation, Copyright (c) 2007-2008 Jakob Bornecrantz &lt;wallbraker@gmail.com&gt;, Copyright (c) 2007-2008 Tungsten Graphics, Inc., Cedar Park, TX., USA, Copyright (c) 2007-2008 Tungsten Graphics, Inc., Cedar Park, Texas, Copyright (c) 2008 Red Hat Inc, Copyright (c) 1991, 1999 Free Software Foundation, Inc, Copyright (c) 1998-2001 by Juliusz Chroboczek, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 2000 The XFree86 Project, Inc. All Rights Reserved, Copyright (c) 2008 Juan Romero Pardines, Copyright (c) 2008 Mark Kettenis, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc, Copyright (c) 1996, 1997 Andreas Dilger, Copyright (c) 1998, 1999 Glenn Randers-Pehrson, and are, Copyright (c) 1998-2008 Greg Roelofs. All rights reserved, Copyright (c) 2000-2002 Glenn Randers-Pehrson, and are, Copyright (c) 2004, 2006-2009 Glenn Randers-Pehrson, and are, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008 Free Software Foundation, Copyright (C) 2007 Free Software Foundation, Inc., Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (c) 2000-2003 Johannes Erdfelt &lt;johannes@erdfelt.com&gt;, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (C) 1994-2002 The XFree86 Project, Inc. All Rights Reserved, Copyright (C)  X Consortium, Copyright (c) 1993 The Regents of the University of California. All rights, Copyright (c) 1994-1999 Silicon Graphics, Inc, Copyright (c) 1994-1999 Silicon Graphics, Inc. All Rights Reserved, Copyright (c) 1996 NVIDIA, Corp. All rights reserved, Copyright (c) 1996 NVIDIA, Corp. NVIDIA design patents pending in the U.S, Copyright (c) 1998-1999 by The XFree86 Project, Inc, Copyright (C) 2001-2006 Bart Massey, Jamey Sharp, and Josh Triplett, Copyright (c) 1994, 1995 Hewlett-Packard Company, Copyright (c) 1996 Digital Equipment Corporation, Maynard, Massachusetts, Copyright (c) 1997 by Silicon Graphics Computer Systems, Inc, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (c) 2003-2006 Benedikt Meurer &lt;benny@xfce.org&gt;, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (c) 1991, 1993, Copyright (c) 1997 by Mark Leisher, Copyright (c) 1998 Go Watanabe, All rights reserved, Copyright (c) 1998 Kazushi (Jam) Marukawa, All rights reserved, Copyright (c) 1998 Takuya SHIOZAKI, All rights reserved, Copyright (c) 1998 X-TrueType Server Project, All rights reserved, Copyright (c) 1998-1999 Shunsuke Akiyama &lt;akiyama@jp.FreeBSD.org&gt;, Copyright (c) 1998-1999 X-TrueType Server Project, All rights reserved, Copyright (c) 1998-2003 by Juliusz Chroboczek, Copyright (c) 1999 The XFree86 Project Inc, Copyright (c) 2003-2004 After X-TT Project, All rights reserved, Copyright (c) 1994-1996 by Silicon Graphics Computer Systems, Inc, Copyright (C) 1998-2003 Daniel Veillard. All Rights Reserved, Copyright (c) 1998 by The XFree86 Project, Inc, Copyright (C) 1989-95 GROUPE BULL, Copyright (c) 2002 XFree86 Inc, Copyright (C) 2001-2002 Daniel Veillard. All Rights Reserved, Copyright (C) 2001-2002 Thomas Broyer, Charlie Bozeman and Daniel Veillard, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 2007 Free Software Foundation, Inc., Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1995 Peter Tobias &lt;tobias@et-inf.fho-emden.de&gt;, Copyright (C) 1995, 1996 Peter Tobias &lt;tobias@et-inf.fho-emden.de&gt;, Copyright (C) 2004 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (c) 1983, 1990, 1992, 1993, 1995, Copyright (c) 1995 Tatu Ylonen &lt;ylo@cs.hut.fi&gt;, Espoo, Finland, Copyright (c) 1998 CORE SDI S.A., Buenos Aires, Argentina, Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com), Copyright (c) 1998-2008 The OpenSSL Project. All rights reserved, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 2007 David Zeuthen, Copyright (C) 2007-2008 David Zeuthen &lt;davidz@redhat.com&gt;, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (c) 1998 Red Hat Software, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (c) 2007 - 2009, Intel Corporation, Copyright (c) 2007 - 2010, Intel Corporation, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (c) 2007, Christopher Kuklewicz, Copyright (c) 2007, Christopher Kuklewicz, Copyright (C) 2007 Free Software Foundation, Inc., Copyright (c) 1998 Red Hat Software, Copyright (C) 1989, 1991 Free Software Foundation, Inc. , Copyright (c) 2009, Realtek Semiconductor Corporation , Copyright (C) 2003 Joe English and other parties, Copyright (c) 1998-1999 UNIFIX. , Copyright (c) 2001-2002 ActiveState Corp. , Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,, Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, Copyright (C) 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001,, Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,, Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005,, Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006, 2007 2008 Free Software Foundation, Inc, Copyright (C) 2004 Free Software Foundation, Inc, Copyright (C) 2004, 2005, 2007 Free Software Foundation, Inc, Copyright (C) 2004, 2005, 2007, 2008 Free Software Foundation, Inc, Copyright (C) 2008 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (C) 1991 Paul Kranenburg, Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,, Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,, Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,, Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, Copyright (C) 1996, 1997, 1999, 2000, 2002, 2003 , Copyright (C) 1996, 1997, 2000, 2001, 2003, 2005, Copyright (C) 1996, 1998, 2000, 2001, 2002, 2003, 2004, 2005, Copyright (C) 1997, 1999, 2000, 2001, 2003, 2005, Copyright (C) 1997, 2000, 2001, 2003, 2004, 2005, Copyright (C) 1998 by Richard Braakman &lt;dark@xs4all.nl&gt;, Copyright (C) 1998-2001 Wichert Akkerman &lt;wakkerma@deephackmode.org&gt;, Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc, Copyright (C) 2001, 2002, 2003, 2005 Free Software Foundation, Inc, Copyright (C) 2001, 2003, 2005 Free Software Foundation, Inc, Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc, Copyright (C) 2003 Free Software Foundation, Inc, Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc, Copyright (C) 2003, 2005 Free Software Foundation, Inc, Copyright (C) 2004, 2005 Free Software Foundation, Inc, Copyright (c) 1991, 1992 Paul Kranenburg &lt;pk@cs.few.eur.nl&gt;, Copyright (c) 1993 Branko Lankester &lt;branko@hacktic.nl&gt;, Copyright (c) 1993 Ulrich Pegelow &lt;pegelow@moorea.uni-muenster.de&gt;, Copyright (c) 1993, 1994, 1995 Rick Sladkey &lt;jrs@world.std.com&gt;, Copyright (c) 1993, 1994, 1995, 1996 Rick Sladkey &lt;jrs@world.std.com&gt;, Copyright (c) 1995, 1996 Michael Elizabeth Chastain &lt;mec@duracef.shout.net&gt;, Copyright (c) 1996 Rick Sladkey &lt;jrs@world.std.com&gt;, Copyright (c) 1996-1999 Wichert Akkerman &lt;wichert@cistron.nl&gt;, Copyright (c) 1996-2000 Wichert Akkerman &lt;wichert@cistron.nl&gt;, Copyright (c) 1996-2001 Wichert Akkerman &lt;wichert@cistron.nl&gt;, Copyright (c) 1999 IBM Deutschland Entwicklung GmbH, IBM Corporation, Copyright (c) 1999, 2001 Hewlett-Packard Co, Copyright (c) 2000 IBM Deutschland Entwicklung GmbH, IBM Coporation, Copyright (c) 2000 PocketPenguins Inc. Linux for Hitachi SuperH, Copyright (c) 2000, GaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â«l Roualland &lt;gael.roualland@iname.com&gt;, Copyright (c) 2001 Hewlett-Packard, Matthew Wilcox, Copyright (c) 2001 Wichert Akkerman &lt;wichert@cistron.nl&gt;, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc, Copyright (c) 1996, 1997 Andreas Dilger, Copyright (c) 1998, 1999 Glenn Randers-Pehrson, and are, Copyright (c) 2000-2002 Glenn Randers-Pehrson, and are, Copyright (c) 2004 Glenn Randers-Pehrson, and is, Copyright (c) 2004, Intel Corporation, Copyright (C) 1991-2004 Miquel van Smoorenburg, Copyright (C) 1995-2004 Miquel van Smoorenburg, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (c) 2008-2009, Tom Harper, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1999 by Lineo, inc. and Erik Andersen , Copyright (C) 1999-2003 Erik Andersen &lt;andersen@codepoet.org&gt; , Copyright (C) 1989, 1991 Free Software Foundation, Inc.,, Copyright (C) 1991, 1999 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (c) 1989 The Regents of the University of California, Copyright (c) 2000-2001 Gunnar Ritter. All rights reserved, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (c) 2007, 2008, 2009, Copyright (c) 1992-2003 by The XFree86 Project, Inc, Copyright (c) 1999-2003 by The XFree86 Project, Inc, Copyright (C) 1994-2003 The XFree86 Project, Inc. All Rights Reserved, Copyright (c) 2000 by Conectiva S.A., Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (C) 1989, 1991 Free Software Foundation, Inc, Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc, Copyright (C) 1991-2000 Silicon Graphics, Inc. All Rights Reserved, Copyright (C) 1994-2003 The XFree86 Project, Inc. All Rights Reserved, Copyright (C) 1996-1999 SciTech Software, Inc, Copyright (C) 1999 Egbert Eich, Copyright (C) 1999,2000 by Eric Sunshine &lt;sunshine@sunshineco.com&gt;, Copyright (C) 2000 Jakub Jelinek (jakub@redhat.com), Copyright (C) 2000 Keith Packard, Copyright (C) 2001-2004 Harold L Hunt II All Rights Reserved, Copyright (C) 2001-2005 by Thomas Winischhofer, Vienna, Austria, Copyright (C) 2003 Anders Carlsson, Copyright (C) 2005 Bogdan D. bogdand@users.sourceforge.net, Copyright (C) 2008 Bart Trojanowski, Symbio Technologies, LLC, Copyright (C) Colin Harrison 2005-2008, Copyright (C) David Mosberger-Tang, Copyright (c) 1987 by the Regents of the University of California, Copyright (c) 1987, 1989-1990, 1992-1995 X Consortium, Copyright (c) 1989, 1990, 1993, 1994, Copyright (c) 1991, 1996-1997 Digital Equipment Corporation, Maynard, Massachusetts, Copyright (c) 1994, 1995 Hewlett-Packard Company, Copyright (c) 1994-2003 by The XFree86 Project, Inc, Copyright (c) 1995 X Consortium, Copyright (c) 1997 Matthieu Herrb, Copyright (c) 1997 Metro Link Incorporated, Copyright (c) 1998 Todd C. Miller &lt;Todd.Miller@courtesan.com&gt;, Copyright (c) 2000 by Conectiva S.A. (http, Copyright (c) 2000, 2001 Nokia Home Communications, Copyright (c) 2001 Andreas Monitzer, Copyright (c) 2001, Andy Ritger aritger@nvidia.com, Copyright (c) 2001-2004 Greg Parker, Copyright (c) 2001-2004 Torrey T. Lyons, Copyright (c) 2002 Apple Computer, Inc, Copyright (c) 2002, 2008, 2009 Apple Computer, Inc, Copyright (c) 2002-2003 Apple Computer, Inc, Copyright (c) 2002-2009 Apple Inc, Copyright (c) 2003 Torrey T. Lyons, Copyright (c) 2003 by the XFree86 Project, Inc, Copyright (c) 2003-2004 Torrey T. Lyons, Copyright (c) 2004, X.Org Foundation, Copyright (c) 2004-2005 Alexander Gottwald, Copyright (c) 2005 Alexander Gottwald, Copyright (c) 2007 Jeremy Huddleston, Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, Copyright (C) 1994 X Consortium, Copyright (c) 1984, 1985 by X Consortium, Copyright (c) 1987, 1988 X Consortium, Copyright (c) 2001 by Juliusz Chroboczek, Copyright (C) 1989, 1991 Free Software Foundation, Inc
+</para>
+<para>This contains work of the U.S. Government that is not subject to copyright protection in the United States. Foreign copyrights may apply.</para>
+</section>
+
+<section id="bsd_licenses">
+<title>BSD License Variants</title>
+<section><title>4-clause License (original "BSD License")</title>
+<para>Copyright (c) &lt;year&gt;, &lt;copyright holder&gt;</para>
+<para>All rights reserved.</para>
+
+<para>Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:</para>
+<itemizedlist>
+<listitem><para>Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.</para></listitem>
+<listitem><para>Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.</para></listitem>
+<listitem><para>All advertising materials mentioning features or use of this software
+   must display the following acknowledgement:
+   This product includes software developed by the &lt;organization&gt;.</para></listitem>
+<listitem><para>Neither the name of the &lt;organization&gt; nor the
+   names of its contributors may be used to endorse or promote products
+   derived from this software without specific prior written permission.</para></listitem>
+</itemizedlist>
+<para>THIS SOFTWARE IS PROVIDED BY &lt;COPYRIGHT HOLDER&gt; ''AS IS'' AND ANY
+EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL &lt;COPYRIGHT HOLDER&gt; BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</para>
+</section>
+<section><title>3-clause License ("New BSD License")</title>
+<para>Copyright (c) &lt;year&gt;, &lt;copyright holder&gt;</para>
+<para>All rights reserved.</para>
+
+<para>Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:</para>
+<orderedlist>
+<listitem><para>Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.</para></listitem>
+<listitem><para>Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.</para></listitem>
+<listitem><para>Neither the name of the &lt;organization&gt; nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.</para></listitem>
+</orderedlist>
+<para>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL &lt;COPYRIGHT HOLDER&gt; BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</para>
+
+</section>
+
+<section><title>2-clause License ("Simplified BSD License" or "FreeBSD License")</title>
+<para>Copyright (c) &lt;year&gt;, &lt;copyright holder&gt;. All rights reserved.</para>
+<para>Redistribution and use in source and binary forms, with or without modification, are
+permitted provided that the following conditions are met:</para>
+<orderedlist>
+<listitem><para>Redistributions of source code must retain the above copyright notice, this list of
+      conditions and the following disclaimer.</para></listitem>
+<listitem><para>Redistributions in binary form must reproduce the above copyright notice, this list
+      of conditions and the following disclaimer in the documentation and/or other materials
+      provided with the distribution.</para></listitem>
+</orderedlist>
+<para>THIS SOFTWARE IS PROVIDED BY &lt;COPYRIGHT HOLDER&gt; ''AS IS'' AND ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL &lt;COPYRIGHT HOLDER&gt; OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</para>
+<para>The views and conclusions contained in the software and documentation are those of the
+authors and should not be interpreted as representing official policies, either expressed
+or implied, of &lt;copyright holder&gt;.</para>
+</section>
+
+</section>
+</appendix>
+<index/>
+
+<!--
+
+&colophon;
+-->
+
+</book><!--
+<warning><para>&PB; on the Dell E6510, Dell E6410 and HP 8440p models provides limited support in this release for the use of external monitors. Basic external monitor support is only provided when running a VM that has &HDX; enabled. Additionally &PB; does not support power management (sleep and hibernate of VMs) in this release. &COMPANY_NAME_SHORT; recommends disabling power management for VMs running on these device models.</para></warning>--><!--
+<note><para>&PB; provides limited experimental support for Broadcom WiFi. If you wish to experiment with using a device with Broadcom WiFi, please ensure that you disable power management as sleep and hibernate do not function correctly on such a device.</para></note>
+
+<procedure><title>Disabling power management in XP</title>
+<step><para>Open Control Panel and click <guilabel>Power Options</guilabel>.</para></step>
+<step><para>Select the <guilabel>Power Schemes</guilabel> tab in the <guilabel>Power Options Properties</guilabel> dialog.</para></step>
+<step><para>Set <guilabel>System Standby</guilabel> and <guilabel>System Hibernates</guilabel> options to <literal>Never</literal> for both the <guilabel>Plugged in</guilabel> and <guilabel>Running on batteries</guilabel> schemes.
+</para></step>
+</procedure>
+<procedure><title>Disabling power management in Vista</title>
+<step><para>Open Control Panel and click <guilabel>System Maintenance</guilabel>.</para></step>
+<step><para>In the <guilabel>Power Options</guilabel> section click <guilabel>Change when the computer sleeps</guilabel>.</para></step>
+<step><para>Set the <guilabel>Put the computer to sleep</guilabel> setting to <literal>Never</literal>.</para></step>
+</procedure>
+<procedure><title>Disabling power management in Windows 7</title>
+<step><para>Open Control Panel and click <guilabel>Power Options</guilabel>.</para></step>
+<step><para>In the <guilabel>Power saver</guilabel> section click <guilabel>Change plan settings</guilabel>.</para></step>
+<step><para>Select <literal>Never</literal> in both the <guilabel>Turn off the display</guilabel> dropdown lists.</para></step>
+<step><para>Click <literal>Change advanced power settings</literal>.</para></step>
+<step><para>Expand <literal>Sleep</literal>.</para></step>
+<step><para>Expand <literal>Hibernate after</literal>.</para></step>
+<step><para>Enter <literal>0</literal> in both the <literal>On battery</literal> and <literal>Plugged in (Minutes)</literal> fields.</para></step>
+<step><para>Click <literal>OK</literal>.</para></step>
+</procedure>
+-->

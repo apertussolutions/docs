@@ -9,5 +9,13 @@
 
 -------------------------------------------------------------
 
-Static repo containing the documentation from releases prior
-to the open source project OpenXT coming on line.
+This is the OpenXT documention repository.
+
+origins:
+
+Contains the original Docbook source code for generating the XT documentation.
+
+snapshot:
+
+Contains a snapshot of the documentation from releases prior
+to the open source project OpenXT coming on line in PDF format.

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+  Copyright 2014 by Citrix Systems, Inc.  Created by Gordon Stretch <Gordon.Stretch@citrix.com>. This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+-->
+
+
+<!DOCTYPE book PUBLIC "docbook" "../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+  <!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+  <!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+  <!ENTITY shared_upgrade_and_install_steps PUBLIC "shared_upgrade_and_install_steps" "../shared/shared_upgrade_and_install_steps.ent">
+  <!ENTITY procedures PUBLIC "procedures" "../shared/procedures.ent">
+  <!ENTITY % local PUBLIC "local" "../shared/local.ent">
+  %local;
+]>
+<book lang="en" id="user_guide"><?dbhtml dir="ProcedureLibrary"?>
+
+ <bookinfo id="bookinfo_titlestuff" role="die">
+  <title>&COMPANY_NAME_SHORT;<trademark class="registered" role="die"/> &PB;<trademark class="trade" role="die" /> &PRODUCT_VERSION; Procedure Library</title>
+
+  <pubdate><?dbtimestamp format="d B Y"?></pubdate>
+ </bookinfo>
+	<chapter><title>Procedures</title>
+	&procedures;
+	</chapter>
+	&colophon; 
+</book>	

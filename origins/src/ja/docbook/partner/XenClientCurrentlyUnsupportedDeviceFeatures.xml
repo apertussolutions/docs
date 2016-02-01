@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+  Copyright 2014 by Citrix Systems, Inc.  Created by Gordon Stretch <Gordon.Stretch@citrix.com>. This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+-->
+
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+<!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+<!ENTITY % local PUBLIC "local" "../shared/local.ent">
+  %local;
+]>
+<book lang="en" id="not_supported">
+	<?dbhtml dir="out/html/XenClientCurrentlyUnsupportedDeviceFeatures"?>
+
+	<bookinfo id="bookinfo_titlestuff" role="die">
+		<title>&COMPANY_NAME_SHORT;<trademark class="registered" role="die" /> &PB;<trademark class="trade" role="die" /> &PRODUCT_VERSION; - Currently Unsupported Device Features</title>
+
+		<pubdate>
+			<?dbtimestamp format="d B Y"?> 
+		</pubdate>
+
+  &legal;
+		<releaseinfo>This document list features that function differently under &PB; &PRODUCT_VERSION;, as oppposed to a bare-metal installation.</releaseinfo>
+
+	</bookinfo>
+
+	<chapter>
+		<title>Functional limitations of &PB; versus a bare-metal install</title>
+		<section><title>All manufacturers</title>
+			<para>The following &PB; limitation apply to all supported devices:</para>
+			<itemizedlist>
+				<listitem><para>eSATA is not supported.</para></listitem>
+				<listitem><para>FireWire and IEEE 1394 device are not supported.</para></listitem>
+				<listitem><para>External monitors can only mirror the device display (no 'extend desktop to this monitor' feature).</para></listitem>
+				<listitem><para>I/O cards (network, SAN and modem cards) in expansion slots are not supported.</para></listitem>
+				<listitem><para>Full Disk Encryption (FDE) is not supported.</para></listitem>				
+				<listitem><para>Display rotation on external monitors is only supported on &HDX; VMs.</para></listitem>
+				<listitem><para>WPA-Enterprise is limited to Linux-based WLAN supplicant limits.</para></listitem>
+				<listitem><para>Network Access Protection (NAP) is not supported.</para></listitem>
+				<listitem><para>Internal dial-up modems are not supported.</para></listitem>
+				<listitem><para>The middle button of a built-in track pad is not supported.</para></listitem>
+				<listitem><para>Upgrading the device BIOS in Windows is not supported.</para></listitem>
+				<listitem><para>PCIe devices are currently not supported.</para></listitem>
+				<listitem><para>Display Port(DP) is currently not supported.</para></listitem>
+				<listitem><para>SD/MMC cards are currently not supported.</para></listitem>
+				<listitem><para>Expresscard is not supported.</para></listitem>
+				<listitem><para>Intel Matrix Storage Manager is not supported.</para></listitem>
+				<listitem><para>The use of Blu-ray disks is not supported.</para></listitem>
+				<listitem><para>All laptop batteries are displayed as a single battery.</para></listitem>
+				</itemizedlist>
+		</section>
+		<section><title>Dell-specific limitations</title>
+		<para>This section lists Dell device features that have no or limited support under &PB;:</para>
+			<itemizedlist>
+				<listitem><para>On-Demand Desktop Streaming (ODDS) solution with Dell EasyConnect technology is not supported.</para></listitem>
+				<listitem><para>Dell PC Suite is not supported.</para></listitem>
+				<listitem><para>Dell Control Point Software (DCP), which drives the fingerprint reader and ambient light sensor, is not supported.</para></listitem>
+			</itemizedlist>
+		</section>
+		<section><title>HP-specific limitations</title>
+		<para>HP Value Add Software is not supported under &PB;:</para>
+<!--
+		<section><title>HP Value Add Software</title>
+<itemizedlist>
+<listitem><para>HP 3D Drive guard - HP 3D drive guard is not supported. The support will be included with a future release.</para></listitem>
+<listitem><para>HP Power Assistant is not supported.</para></listitem>
+<listitem><para>HP Connection Manager will be supported once WWAN support is implemented.</para></listitem> 
+<listitem><para>HP connection Manager is not supported.</para></listitem>
+<listitem><para>HP Quick look is not supported.</para></listitem>
+<listitem><para>HP Quick web is not supported.</para></listitem>
+<listitem><para>HP System Software Manager (SSM) is not supported.</para></listitem> 
+<listitem><para>HP Quick Launch Button FN + F3 (System Standby) is not supported.</para></listitem>
+
+</itemizedlist>-->
+</section>
+<section><title>HP Protect Tools</title>
+
+<itemizedlist>
+<listitem><para>Java Card Security is not supported.</para></listitem>
+<listitem><para>Drive Encryption is not supported.</para></listitem>
+<listitem><para>Embedded Security is not supported.</para></listitem>
+<listitem><para>LoJack is not supported.</para></listitem>
+<listitem><para>Pre-boot authentication is not supported with HP Protect tools software.</para></listitem>
+</itemizedlist>
+</section>
+<section><title>Other</title>
+<para>CDRW/DVDRW Light Scribe Drives are not supported.</para> 
+</section>
+	
+		<section><title>Lenovo-specific limitations</title>
+		<para>This section lists Lenovo device features that have no or limited support under &PB;:</para>
+
+		</section>
+		<section><title>Panasonic-specific limitations</title>
+		<para>This section lists Panasonic device features that have no or limited support under &PB;:</para>
+
+		</section>
+
+	</chapter>
+
+
+&colophon;
+
+</book>	

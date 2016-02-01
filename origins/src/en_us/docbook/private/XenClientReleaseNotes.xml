@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+
+<!--
+  Copyright 2014 by Citrix Systems, Inc.  Created by Gordon Stretch <Gordon.Stretch@citrix.com>. This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+-->
+
+
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+<!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+<!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+<!ENTITY xc_relnotes_shared PUBLIC "xc_relnotes_shared" "../shared/xc_relnotes_shared.ent">
+<!ENTITY % local PUBLIC "local" "../shared/local.ent">
+
+  %local;
+]><article lang="en"><?dbhtml dir="XenClientReleaseNotes"?>
+	<articleinfo id="bookinfo_titlestuff" role="die">
+		<title>&COMPANY_NAME_SHORT;<trademark class="registered"/> &PB;<trademark class="trade"/> &PRODUCT_VERSION; Release Notes</title>
+		<pubdate><?dbtimestamp format="d B Y"?></pubdate>
+  &legal;
+		<releaseinfo>This document serves as a list of new features, known issues, and workarounds for the &COMPANY_NAME_SHORT; &PB; &PRODUCT_VERSION; release.</releaseinfo>
+
+	</articleinfo>
+<?hard-pagebreak?>
+<!--
+<section id="whats_new"><title>What's New in &PB; &PRODUCT_VERSION;</title>
+<para>This section describes the new features in this version of &PB;.</para>
+
+	
+</section>
+-->
+
+<section id="known_issues"><title>Known Issues</title>
+<para>This document details known issues with this release and any
+    workarounds that can be applied. Please report any other issues to
+    your &COMPANY_NAME_SHORT; support representative.
+		</para>
+		<informaltable frame="none" width="6.5in">
+			<tgroup cols="1">
+
+				<colspec colwidth="6.5in"/>
+				<colspec colwidth="5.50in"/>
+
+			<tbody>
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Intel Centrino Advanced + WiMax 6250 is listed as a device to add in &BC;</para>
+							<para><emphasis role="bold">Issue:</emphasis> On the Panasonic CF-N10 laptop, a WiMax device shows up in the &BC; for assignment as a USB device. It can be safely ignored.</para>
+						</entry>
+                    </row>						
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Users with Names Containing Non-ASCII Characters Cannot Connect to &BACKEND; (Japanese and Simplified Chinese versions)</para>
+							<para><emphasis role="bold">Issue:</emphasis> It is possible to set up a user on the &BACKEND; with double-byte characters in the username, but these cannot be input on the secure authentication screen. This issue is due to a limitation in third-party software used by &BACKEND; which &COMPANY_NAME_SHORT; is actively trying to address.</para>
+							<para><emphasis role="bold">Workaround:</emphasis> Use only ASCII characters in setting user names with &BACKEND;.</para>
+						</entry>
+                    </row>			
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Apparent problem reestablishing a session after interruption when logged in with Synchronizer admin privileges</para>
+							<para><emphasis role="bold">Issue:</emphasis> If you are using &PB; as an &BACKEND; admin user or as a user allowed to author VM images, and you attempt to change the version of a VM (<guilabel>VM details &gt; Synchronization &gt; Edit &gt; Change version</guilabel>) and the network connectivity during your session was interrupted, the login prompt immediately obscures the "not connected" message which should appear first. When you log in, the earlier message is exposed. This makes it appear as if logging back in did not reestablish a session. The message can be safely dismissed.</para>
+						</entry>
+					</row>	   
+					
+&xc_relnotes_shared;
+	
+					</tbody>   
+			</tgroup>
+		</informaltable>
+
+	</section>
+	<section id="workarounds"><title>Workarounds</title>
+	
+			<procedure id="keyring_reset"><title>To Reset the Master Password for Wireless Networking Credentials</title>
+			&OPEN_CONSOLE;
+			<step><para>Run the following commands:</para>
+			<screen>sshv4v uivm
+rm -f ~/.gnome2/keyrings/default.keyring
+exit</screen>
+<note><para>This will also delete all stored wireless network credentials so you will have to recreate all your wireless network connections.</para></note>
+			</step>
+</procedure>	
+	
+	
+			<procedure id="upgrading_tools_from_dylan"><title>To Upgrade &PV_TOOLS; from Version 1.0 SP1 on a &VM_SHARED_MODE; VM</title>
+			<step><para>In the Windows VM, click <guilabel>Start &gt; Control Panel &gt; Programs and Features</guilabel>.</para></step>
+			<step><para>Right click and select <guilabel>Uninstall</guilabel> on the following programs:</para>
+			<itemizedlist>
+			<listitem><para>Citrix Dazzle plug-in</para></listitem>
+			<listitem><para>Citrix online plug-in</para></listitem>
+			<listitem><para>Citrix Receiver</para></listitem>
+			<listitem><para>Citrix XenClient Application Sharing</para></listitem>
+			<listitem><para>Citrix XenClient Application Viewing</para></listitem>
+			</itemizedlist>
+			<warning><para>Do not uninstall the <filename>Citrix Tools for Virtual Machines</filename> package.</para></warning></step>
+			<step><para>Reboot the VM.</para></step>
+			<step><para>On the &PV_TOOLS; install media, run <filename>Packages/xensetup.exe</filename>.</para></step>
+			<step><para>Reboot the VM.</para></step>
+			<step><para>Run the &PV_TOOLS; installer.</para></step>
+			
+			</procedure>
+
+	
+	</section>
+	<!--
+
+<procedure id="amt_workaround"><title>To enable AMT</title>
+	<step><para>In &BC;, press <keycap>Shift + Ctrl + t</keycap> to bring up the control domain terminal window.</para></step>
+	<step><para>Enter the user name and password your entered during &PB; installation.</para></step>
+	<step><para>Run the following commands:</para>
+	<screen>mv /lib/modules/*/extra/e1000e.ko /lib/modules/
+cd /lib/modules/*
+depmod -a</screen></step>
+	<step><para>Close the terminal window.</para></step>
+	<step><para>In &PB;, click <guilabel>Power</guilabel> and select <guilabel>Restart</guilabel>.</para></step>
+	<step><para>When your device has rebooted, switch to VM detail view.</para></step>
+	<step><para>On the VM you want to enable AMT on, click <guilabel>View Details</guilabel>.</para></step>
+	<step><para>Click the <guilabel>Advanced</guilabel> tab.</para></step>
+	<step><para>Click <guilabel>Edit</guilabel>.</para></step>
+	<step><para>From the <guilabel>Intel AMT ME Pass-through</guilabel> dropdown list, select  <guilabel>Enabled</guilabel>.</para></step>
+	<step><para>In &PB;, click <guilabel>Power</guilabel> and select <guilabel>Restart</guilabel>.</para></step>
+	
+	</procedure> 
+&colophon;
+	-->
+
+</article>

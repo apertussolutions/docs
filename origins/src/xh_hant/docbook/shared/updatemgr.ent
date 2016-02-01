@@ -1,0 +1,31 @@
+      
+  <section xmlns:tp="http://telepathy.freedesktop.org/wiki/DbusSpec#extensions-v0"><title>
+				Interface <phrase role="die">com.citrix.xenclient.updatemgr</phrase></title><para>Primary update manager interface.</para><section><title>Methods:</title><section><title>
+				Method <phrase role="die">check_update</phrase></title><para>Download update metadata and check update applicability</para><para>The arguments are:</para><informaltable frame="none"><tgroup cols="4"><colspec colwidth="0.5in"/><colspec colwidth="2in"/><colspec colwidth="1.5in"/><colspec colwidth="2.5in"/><thead><row><entry>Type</entry><entry>Name</entry><entry>Direction</entry><entry>Description</entry></row></thead><tbody><row><entry>s</entry><entry><phrase role="die">url</phrase></entry><entry>in</entry><entry/></row><row><entry>s</entry><entry><phrase role="die">version</phrase></entry><entry>out</entry><entry>XC version on the server (human readable)</entry></row><row><entry>s</entry><entry><phrase role="die">release</phrase></entry><entry>out</entry><entry>XC version on the server (strict format)</entry></row><row><entry>s</entry><entry><phrase role="die">status</phrase></entry><entry>out</entry><entry><para>Update applicability. Possible values are:</para>
+	  
+	    <listitem><para>can-upgrade</para></listitem>
+	    <listitem><para>cannot-upgrade</para></listitem>
+	    <listitem><para>up-to-date</para></listitem>
+	  
+	</entry></row></tbody></tgroup></informaltable></section><section><title>
+				Method <phrase role="die">download_update</phrase></title><para>Start the download of the pending update.</para><para>The arguments are:</para><informaltable frame="none"><tgroup cols="4"><colspec colwidth="0.5in"/><colspec colwidth="2in"/><colspec colwidth="1.5in"/><colspec colwidth="2.5in"/><thead><row><entry>Type</entry><entry>Name</entry><entry>Direction</entry><entry>Description</entry></row></thead><tbody><row><entry>s</entry><entry><phrase role="die">url</phrase></entry><entry>in</entry><entry/></row></tbody></tgroup></informaltable></section><section><title>
+				Method <phrase role="die">apply_update_and_reboot</phrase></title><para>Start the process of applying the update (if update pending, otherwise error). After success, reboot</para><para>This method has no arguments.</para></section><section><title>
+				Method <phrase role="die">apply_update_and_shutdown</phrase></title><para>Start the process of applying the update (if update pending, otherwise error). After success, shutdown</para><para>This method has no arguments.</para></section><section><title>
+				Method <phrase role="die">cancel_update</phrase></title><para>Cancel the update in progress (if possible, otherwise error)</para><para>This method has no arguments.</para></section></section><section><title>Properties:</title><informaltable frame="none"><tgroup cols="4"><colspec colwidth="2in"/><colspec colwidth="0.5in"/><colspec colwidth="1in"/><colspec colwidth="3in"/><thead><row><entry>Name</entry><entry>Type</entry><entry>Access</entry><entry>Description</entry></row></thead><tbody><row><entry><phrase role="die">update-url</phrase></entry><entry>s</entry><entry>read</entry><entry>Update's URL</entry></row><row><entry><phrase role="die">update-applicable</phrase></entry><entry>s</entry><entry>read</entry><entry><para>Whether currently selected update is applicable or not. Possible values:</para>
+	  
+	    <listitem><para>can-upgrade</para></listitem>
+	    <listitem><para>cannot-upgrade</para></listitem>
+	    <listitem><para>up-to-date</para></listitem>
+	  
+      </entry></row><row><entry><phrase role="die">update-state</phrase></entry><entry>s</entry><entry>read</entry><entry><para>State of pending update. Possible states are:</para>
+	<listitem><para>empty string when no update pending/nothing being done</para></listitem>
+	<listitem><para>downloading-meta</para></listitem>
+	<listitem><para>downloaded-meta</para></listitem>
+	<listitem><para>downloading-files</para></listitem>
+	<listitem><para>downloaded-files</para></listitem>
+	<listitem><para>applying</para></listitem>
+	<listitem><para>failed</para></listitem>
+	<listitem><para>done</para></listitem>
+	
+      </entry></row><row><entry><phrase role="die">update-description</phrase></entry><entry>s</entry><entry>read</entry><entry>Description of the pending update.</entry></row><row><entry><phrase role="die">update-download-percent</phrase></entry><entry>d</entry><entry>read</entry><entry>Download percentage complete.</entry></row><row><entry><phrase role="die">update-download-speed</phrase></entry><entry>d</entry><entry>read</entry><entry>Download speed.</entry></row><row><entry><phrase role="die">update-fail-reason</phrase></entry><entry>s</entry><entry>read</entry><entry>Reason of failure in case something went wrong, otherwise empty.</entry></row></tbody></tgroup></informaltable></section><section><title>Signals:</title><section><title><phrase role="die">update_state_change</phrase></title><para>Singal that the update state has changed.</para><para>The arguments are:</para><informaltable frame="none"><tgroup cols="4"><colspec colwidth="1in"/><colspec colwidth="1in"/><colspec colwidth="1in"/><colspec colwidth="3.5in"/><thead><row><entry>Type</entry><entry>Name</entry><entry>Direction</entry><entry>Description</entry></row></thead><tbody><row><entry>s</entry><entry><phrase role="die">state</phrase></entry><entry>in</entry><entry/></row></tbody></tgroup></informaltable></section><section><title><phrase role="die">update_download_progress</phrase></title><para>The arguments are:</para><informaltable frame="none"><tgroup cols="4"><colspec colwidth="1in"/><colspec colwidth="1in"/><colspec colwidth="1in"/><colspec colwidth="3.5in"/><thead><row><entry>Type</entry><entry>Name</entry><entry>Direction</entry><entry>Description</entry></row></thead><tbody><row><entry>d</entry><entry><phrase role="die">percent_complete</phrase></entry><entry>in</entry><entry/></row><row><entry>d</entry><entry><phrase role="die">speed</phrase></entry><entry>in</entry><entry/></row></tbody></tgroup></informaltable></section></section></section>
+

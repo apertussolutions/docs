@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+  Copyright 2014 by Citrix Systems, Inc.  Created by Gordon Stretch <Gordon.Stretch@citrix.com>. This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+-->
+
+
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % local SYSTEM "../local.ent">
+%local;
+]>
+
+<article lang="en">
+	<articleinfo id="titlestuff">
+		<title>&PB; QuickBoot VM Specification [Citrix Confidential]</title>
+		<subtitle>Release &PRODUCT_VERSION;</subtitle>
+		<pubdate>Published <?dbtimestamp format="B Y"?>
+		</pubdate>
+	<productnumber>Version &PRODUCT_VERSION;</productnumber>
+	<edition>&DOC_EDITION_NUMBER;</edition>
+		<copyright>
+			<year>2008</year>
+			<holder>Citrix Systems, Inc.</holder>
+		</copyright>
+	</articleinfo>
+	<section><title>Overview</title>
+	<para>The &PB; &IOVM; is a fast-loading VM that starts at &PB; boot time, read from a disk image. The &IOVM; component of &PB; acts as the primary management gateway to &PB;, using either a CLI over <command>ssh</command> or &BRAND_CONSOLE;, a web based UI served up by the &IOVM;.</para>
+	<para>The &IOVM; can run either as a Primary VM (pvm) or as a Secondary VM (svm). As an svm the &IOVM; serves simply to provide access to the &BRAND_CONSOLE; and WiFi configuration. It has no hardware assignments, and the blanker protocol is be disabled. </para>
+<para>When running as the pvm, the &IOVM; is assigned the GPU, and runs the blanker protocol to provide graphics rendering and the ability to switch between VMs. This is default mode after &PB; installation.</para> 
+<para>In the event of pvm failure the user can reload the &IOVM; in pvm mode. This process shuts down the failed pvm and frees the GPU, then switches the &IOVM; to pvm mode.</para>
+<para>The &IOVM; configuration file contains all the extra packages that are required to setup a graphical environment in the &IOVM;. It uses <literal>uClibc</literal>, a small C library optimized for embedded environments. </para>
+</section>
+<section><title>The <literal>iovmd</literal> daemon</title>
+<para><literal>iovmd</literal> is a control daemon running inside the &IOVM; that communicates with the control domain via <literal>xenstored</literal>. <literal>iovmd</literal> has several responsibilities:</para>
+<itemizedlist>
+ <listitem><para>Communicates with  the control domain to control and report the different states that the &IOVM; can be in, including the preparatory stages needed to create the resumable snapshots that provide very fast startup.</para></listitem>
+<listitem><para>Implements the blanker protocol, with the aid of a helper application running in the X-session the user is in on the &IOVM;.</para></listitem>
+<listitem><para>Proxies <literal>D-Bus</literal> events from <literal>xennmd</literal> in the control domain over <literal>PV D-Bus</literal> so that &BRAND_CONSOLE; can be used for wireless networking configuration in the &IOVM;.</para></listitem>
+</itemizedlist>
+
+</section>
+<section><title>&BRAND_CONSOLE;</title>
+<para>The &BRAND_CONSOLE; is the management UI component of &IOVM;. It consists of:</para>
+<orderedlist>
+<listitem><para>A lightweight window manager and task-bar / panel with a launcher for a browser for &BRAND_CONSOLE; to run in, and <literal>xennmd</literal>.</para></listitem>
+<listitem><para>A UI that talks to <literal>xenmgr</literal>, the management daemon.</para></listitem>
+<listitem><para>A VM switcher.</para></listitem>
+</orderedlist>
+</section>
+<section><title>Dependencies</title>
+<orderedlist>
+<listitem><para><literal>xennmd</literal>, the network management daemon</para></listitem>
+<listitem><para><literal>PV D-Bus</literal>, the transport layer for para-virtualized operating systems</para></listitem>
+<listitem><para><literal>pvfb</literal>, for PVM framebuffer rendering</para></listitem>
+</orderedlist>
+</section>
+</article>

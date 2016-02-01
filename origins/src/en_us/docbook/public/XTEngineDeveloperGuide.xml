@@ -1,0 +1,2745 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+
+<!--
+  Copyright 2014 by Citrix Systems, Inc.  Created by Gordon Stretch <Gordon.Stretch@citrix.com>. This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+-->
+
+
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+  <!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+  <!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+
+  <!ENTITY % generated_entity_declarations PUBLIC "generated_entity_declarations" "../shared/generated_entity_declarations.ent">
+  %generated_entity_declarations;
+  <!ENTITY generated_entity_references PUBLIC "generated_entity_references" "../shared/generated_entity_references.ent">  
+  
+  
+  <!ENTITY % local PUBLIC "local" "../shared/local.ent">
+  %local;
+]><book id="XTEngineDeveloperGuide" lang="en"><?dbhtml dir="XTEngineDeveloperGuide"?>
+<bookinfo id="bookinfo_titlestuff" role="die">
+<title>&COMPANY_NAME_SHORT;<trademark class="registered" role="die"/> &PRODUCT_BRAND;<trademark class="trade"/> &PRODUCT_VERSION; Developer Guide</title>
+
+<pubdate><?dbtimestamp format="d B Y"?></pubdate>
+  
+&legal;
+<releaseinfo>High-assurance isolation &amp; security for virtual environments</releaseinfo>  
+</bookinfo>
+ 
+
+<chapter id="about_this_doc"><title>About This Document</title>
+
+<para>This document is intended for software developers building extensions to the &PB; platform. The SDK detailed in this chapter is subject to change without notice. Please contact &COMPANY_NAME_SHORT; if you are integrating with this SDK for information about license enforcement and support responsibilities.</para>
+
+</chapter>
+
+<chapter id="devguide-adding_extension_packs"><title>Manually Adding Extension Packs to a &PB; Installation</title>
+
+<para>An official means of adding extension packs to a &PB; installation is not yet available. As a workaround for our early customers, this chapter contains instructions and a set of scripts to walk you through manually adding customizations to a &PB; release repository (<filename>packages.main</filename>).</para>
+
+<section id="devguide-adding_extension_packs-getting_started">
+<title>Getting Started</title>
+
+<para>This chapter assumes that you have a relatively advanced level of Linux experience. Every attempt has been made to be as explicit and thorough in these instructions as possible, but some minor details have been omitted, as they are assumed to be general knowledge.</para>
+
+<para>To follow these instructions, create a directory somewhere on your system to hold your work. In this chapter we will refer to this directory as <literal>${WORK_DIR}</literal>. Copy your &PB; installation ISO to this directory. Create a subdirectory to mount the ISO on. We'll call this <literal>mnt</literal>. Mount the ISO using a loopback device:</para>
+
+<screen>sudo losetup /dev/loopX ./<replaceable>XT_iso_name</replaceable>.iso
+sudo mount /dev/loopX ./mnt</screen>
+
+<para>Copy the <filename>packages.main</filename> directory from the mounted ISO to the <literal>${WORK_DIR}</literal>. Also create a new directory which we'll call <literal>packages.main.custom</literal> which is where we'll build a new repository that will have our customizations. Create a directory <literal>bin</literal> to hold the scripts described in this document and add it to your shell's path. There are a number of ways to accomplish this, and depending on your shell, they are often different. For bash, it suffices to append the path to your <literal>PATH</literal> environment variable: </para>
+
+<screen>export PATH=${PATH}:${WORK_DIR}/bin</screen>
+
+<para>Finally, create a directory named <literal>crypto</literal> to hold your crypto keys and certs. Your <literal>${WORK_DIR}</literal> should now look like this:</para>
+<screen>${WORK_DIR}/bin
+${WORK_DIR}/crypto
+${WORK_DIR}/packages.main
+${WORK_DIR}/packages.main.custom
+${WORK_DIR}/mnt
+${WORK_DIR}/XenClient-XT-<replaceable>&PRODUCT_VERSION;</replaceable>-installer.iso</screen>
+</section>
+
+<section id="devguide-adding_extension_packs-certificates">
+<title>Certificates</title>
+<para>Certificate management is a complex topic that is outside the scope of this document. It is assumed that if you or your organization manages their own certificate authority, then they have the appropriate protections and processes in place to manage, sign and distribute certificates. For the purposes of this tutorial, we will use a simple 512-bit RSA key (<filename>priv.key</filename>) and a self signed certificate (<filename>cacert.pem</filename>): </para>
+
+<screen>openssl genrsa -out ${WORK_DIR}/crypto/priv.key
+openssl req -new -x509 -key ${WORK_DIR}/crypto/priv.key -out ${WORK_DIR}/crypto/cacert.pem -days 1095</screen>
+
+<para>&COMPANY_NAME_SHORT; recommends consulting the <ulink url="http://www.openssl.org/docs/">OpenSSL certificate documentation</ulink><footnote><para>http://www.openssl.org/docs/</para></footnote> for authoritative information.</para>
+
+</section>
+
+<section id="devguide-adding_extension_packs-customizing_root_file_systems">
+<title>Customizing root file systems</title>
+<para>The first step to customizing a &PB; root file system is knowing what customizations you'd like to make. This will be specific to your project, so this tutorial uses a simple and generic example of adding a new CA certificate to the repository of trusted certificates. This allows for a system with these customizations to be upgraded over the air with a repository signed with a certificate tied to this new CA. This certificate must be installed into the control domain (dom0).</para>
+
+<para>We start by copying the root filesystem from the release repository to our new repository in <literal>packages.main.custom</literal>:</para>
+
+<screen>cp ${WORK_DIR}/packages.main/dom0-rootfs.i686.xc.ext3.gz ${WORK_DIR}/packages.main.custom</screen>
+
+<para>We uncompress the root filesystem and mount it on a temporary directory:</para>
+
+<screen>gunzip ${WORK_DIR}/packages.main.custom/dom0-rootfs.i686.xc.ext3.gz
+mkdir ${WORK_DIR}/mnt
+sudo mount -o loop ${WORK_DIR}/packages.main.custom/dom0-rootfs.i686.xc.ext3 ${WORK_DIR}/mnt</screen>
+
+<para>We then add our new certificate to the trusted certificates in &PB;:</para>
+
+<screen>sudo cp ${WORK_DIR}/crypto/cacert.pem ${WORK_DIR}/mnt/usr/share/xenclient/repo-certs/prod
+pushd ${WORK_DIR}/mnt/usr/share/xenclient/repo-certs/prod
+sudo ln -s cacert.pem $(openssl x509 -noout -hash -in cacert.pem).0
+popd</screen>
+
+<para>Finally we unmount and recompress the updated root file system:</para>
+
+<screen>sudo umount ${WORK_DIR}/mnt
+gzip ${WORK_DIR}/packages.main.custom/dom0-rootfs.i686.xc.ext3</screen>
+
+<section id="devguide-adding_extension_packs-customizing_root_file_systems-OPKG_package_manager">
+<title>The OPKG Package Manager</title>
+
+<para>File systems for the VMs in &PB; use <literal>opkg</literal> for package management. &COMPANY_NAME_SHORT; highly recommends packaging your modifications to &PB; using <literal>opkg</literal> packages. When installing packages into an extracted root file system using the method above, be sure to instruct <literal>opkg</literal> to install packages to the directory to which you extracted the root file system.</para>
+
+<note><para>The <literal>opkg</literal> binary supplied in the extracted root file system is a 32-bit i686 binary and might not be compatible with your development system.</para></note>
+
+</section>
+</section>
+
+<section id="devguide-adding_extension_packs-signing_a_repository">
+<title>Signing a repository</title>
+
+<para>There are three files that together constitute the repository signature. As part of signing the modified repository, we will generate these files, explain their significance and how they are related.</para>
+
+<section id="devguide-adding_extension_packs-signing_a_repository-packages">
+<title>XC-PACKAGES</title>
+
+<para>The <literal>XC-PACKAGES</literal> file is a description of the individual files that make up the repository. Its format is as follows:</para>
+
+<screen><![CDATA[<shortname> <filesize> <sha256sum> <format> <required> <filename>                  <unpackdir>
+dom0        106147834  hash        ext3gz   required   dom0-rootfs.i686.xc.ext3.gz /
+...]]></screen>
+
+<para>You can consult the <literal>XC-PACKAGES</literal> in the source repository at <literal>${WORK_DIR}/packages.main/XC-PACKAGES</literal> for a reference. The only bits that will change in this file are the hashes on the archives that you chose to modify. To assist in generating a new <literal>XC-PACKAGES</literal> file for your custom repository, we have provided the <literal>gen-packages.sh</literal> script.</para>
+
+<para>This script should be downloaded and copied to the <literal>${WORK_DIR}/bin</literal> directory. If you've followed this document closely and used the recommended file paths, you should simply be able to run the <literal>gen-packages.sh</literal> script from the root <literal>${WORK_DIR}</literal> directory. If you've used different file paths, you can specify the locations of important files and directories on the command line. See the usage message from the script below:</para>
+
+<screen>gen-packages.sh [-s packages.main] [-d packages.main.custom] [-o out-file]</screen>
+
+<para>In short, the <literal>gen-packages.sh</literal> script copies all missing files from the original repository to the new one, leaving the ones you've modified intact. It then re-hashes all of the files from the repository and generates the <literal>XC-PACKAGES</literal> for your custom repository. The only difference between the original and your custom <literal>XC-PACKAGES</literal> should be the hashes.</para>
+
+<para>The <literal>gen-packages.sh</literal> script is included in the &PB; SDK.</para>
+
+</section>
+
+
+
+<section id="devguide-adding_extension_packs-signing_a_repository-repository">
+<title>XC-REPOSITORY</title>
+
+<para>The <literal>XC-PACKAGES</literal> file contains information only about the supplied files that constitute the repository. The repository itself also needs data to describe it with regard to release numbers, versions for upgrade, and so on. Basically it needs identifying information and a way to tie this to the packages.</para>
+
+<para>The <literal>XC-REPOSITORY</literal> file does exactly this. The important bits with regard to modifying the repository is recalculating the hash in the <literal>hash</literal> field of the <literal>XC-REPOSITORY</literal> file. The hash is of the <literal>XC-REPOSITORY</literal> file which has changed per our last step. To automate the generation of an <literal>XC-REPOSITORY</literal> file for your custom repository, we have provided the <literal>gen-repository.sh</literal> script.</para>
+
+<para>Copy this script to your path. <literal>${WORK_DIR}/bin</literal> is a good place. If you've followed these instructions closely simply running the <literal>gen-repository.sh</literal> script from within <literal>${WORK_DIR}</literal> will generate a new <literal>XC-REPOSITORY</literal> file in <literal>${WORK_DIR}/packages.main.custom</literal>.  If you've used different file paths, you can specify the locations of important files and directories on the command line. The usage message for this script can be displayed with the <literal>-h</literal> option and it is identical to the <literal>gen-repository.sh</literal> script shown above.</para>
+
+<note><para>All information aside from the hash is copied verbatim from the <literal>XC-REPOSITORY</literal> file from the source <filename>packages.main</filename> repository. Changing the values of the other metadata should be done with caution and only if you know what you're doing.</para></note>
+
+<note><para>The <literal>gen-repository.sh</literal> script is included on the &PB; SDK ISO.</para></note>
+
+</section>
+<section id="devguide-adding_extension_packs-signing_a_repository-signature">
+<title>XC-SIGNATURE</title>
+ 
+<para>Finally, once the <literal>XC-REPOSITORY</literal> file has been generated, we sign it with our private key and attach the corresponding certificate for verification. The steps to do so are automated in the <literal>gen-signature.sh</literal> script. Copy this file on to your shell's path as described above. When executed with no options, the script assumes a directory layout as recommended in this document. Alternatively you can supply the script with the necessary information on the command line. Again the usage message is available through the <literal>-h</literal> option.</para>
+
+<para>Once this signature has been generated, you can verify it using the <literal>XC-SIGNATURE</literal> file and the certificate of the authority from which the signing key/certificate were generated. In this example, we've used a self-signed certificate so these are the same. Again, a script to automate verification is provided, the <literal>verify-signature.sh</literal> script, and this script has a usage message that can be viewed by passing it the <literal>-h</literal> option.</para>
+
+<note><para>The <literal>gen-signature.sh</literal> script is included on the &PB; SDK ISO.</para></note>
+
+</section>
+</section>
+
+<section id="devguide-adding_extension_packs-distributing_a_custom_repository">
+<title>Distributing a custom repository</title>
+<para>There are a number of mechanisms by which your custom repository can be installed/distributed. The simplest is the Over-the-air (OTA) Upgrade mechanism. We also provide instructions for installation over PXE. The method for PXE and the authoring of a custom installation CD-ROM are similar, but we omit instructions for creating a custom install CD, as they are beyond the scope of this document.</para>
+
+<section id="devguide-adding_extension_packs-signing_a_repository-packages-ota_upgrade">
+<title>Over-the-air (OTA) upgrade</title>
+
+<para>An existing &PB; installation will reject any upgrade repository that isn't signed with a key that is part of the database of trusted keys on the platform. Currently this database contains only the &PB; production key. To configure an existing &PB; installation such that it will accept an upgrade repository signed with any other key, you must add the corresponding CA certificate to its database of trusted certs. To accomplish this, first copy the CA cert on to the &PB; platform, into the <filename>/tmp</filename> directory which is not read-only. Then install it using the following commands:</para>
+
+<screen>cp cacert.pem /usr/share/xenclient/repo-certs/prod/
+pushd /usr/share/xenclient/repo-certs/prod
+ln -s cacert.pem $(openssl x509 -noout -hash -in cacert.pem).0
+popd</screen>
+
+<para>This creates the link necessary for the <literal>openssl</literal> libraries to locate the certificate. Your &PB; systems should then be able to upgrade to the repository signed with your key.</para>
+
+</section>
+<section id="devguide-adding_extension_packs-signing_a_repository-packages-pxe_installation">
+<title>PXE installation</title>
+
+<para>To distribute your custom XC repository over PXE is a bit more complicated than the OTA upgrade method. It is, however, extremely useful. Begin by setting up a PXE environment using the instructions supplied in <olink targetdoc="XTEngineAdministratorGuide" targetptr="pxe_install" />.</para>
+
+<para>Once you've verified your PXE configuration works with a stock &PB; repository, you can copy your custom repository from <literal>${WORK_DIR}/packages.main.custom</literal> to your FTP or web server. Installing this repository will fail since the installer's root file system does not have the CA certificate for the key that your custom repository was signed with. Populating the installer's root file system with your CA's certificate is very similar to adding your CA cert to the control domain root file system from our example above. The only difference is we're installing the certificate on to a different root filesystem.</para>
+
+<para>Extract the installer root filesystem from the installation ISO to a temporary directory and install the CA cert as we've done previously:</para>
+
+<screen>mkdir ${WORK_DIR}/tmp
+pushd ${WORK_DIR}/tmp
+gunzip ../mnt/isolinux/rootfs.gz | sudo cpio -i
+cp ../crypto/cacert.pem ./usr/share/xenclient/repo-certs/prod
+pushd ./usr/share/xenclient/repo-certs/prod
+ln -s cacert.pem $(openssl x509 -noout -hash -in cacert.pem).0
+popd
+popd</screen>
+
+<para>Then package the root filesystem back up in a <literal>gzip</literal> archive:</para>
+
+<screen>pushd ${WORK-DIR}/tmp
+sudo find . -print | sudo cpio -o -H newc | gzip > ../rootfs.gz
+popd</screen>
+
+<para>The installer root filesystem will now be available in your <literal>${WORK_DIR}</literal> with the CA cert installed. You can then copy this on to your TFTP directory in place of the default <literal>rootfs.gz</literal>  supplied in the stock &PB; <literal>isolinux</literal> directory.</para>
+
+</section>
+
+</section>
+
+</chapter>
+<chapter  id="service_vms"><title>Service VMs</title>
+<section id="service_vms_creating"><title>Creating a service VM</title>
+<para>This section describes how to create a service VM based on a Debian Linux distribution.</para>
+
+<note><para>Please use the latest stable i386 32-bit Debian release. Debian is currently the most-tested operating system for &PB; service VMs. Using other operating systems might limit the capabilities of your service VM.</para></note>
+
+<procedure id="proc-creating-service-vm"><title>To Create a Service VM</title>
+	<step><para>Create a VM using &BC;. Do <emphasis>not</emphasis> enable encryption for the VM disk.</para></step>
+	
+	<step><para>In the &PB; UI, select <guilabel>Details > Advanced</guilabel> for the VM and ensure that <guilabel>Stub Domain</guilabel> is set as <emphasis>Enabled</emphasis>.</para></step>
+
+	<step><para>Install the latest stable i386 32-bit Debian release. The following settings are recommended:</para>
+		<itemizedlist>
+			<listitem><para>use the graphical installation</para></listitem>
+			<listitem><para>select the <emphasis>SSH server</emphasis> option</para></listitem>
+			<listitem><para>install grub as the bootloader</para></listitem>
+	</itemizedlist>
+	<para>Reboot the VM at the end of the installation.</para></step>
+
+	<step><para>Once the new VM starts up, log in.</para></step>
+
+	<step><para>Locate the file <filename>xctools-debian-repo.tar.gz</filename> provided in the &PB; release and copy it to the service VM filesystem.</para></step>
+
+	<step><para>Unpack the archive:</para>
+	<screen>gunzip xctools-debian-repo.tar.gz 
+tar -xvf xctools-debian-repo.tar</screen>
+	</step>
+
+	<step><para>Edit <filename>/etc/apt/sources.list</filename> and add an entry to point to the unpacked Debian xctools repo:</para>
+	<screen>echo "deb file:/<replaceable>filepath</replaceable>/debian wheezy main" >> /etc/apt/sources.list</screen>
+	<note><para><emphasis>wheezy</emphasis> is the current version codename at the time of writing, which will change when the future version are available.</para></note></step>
+
+	<step><para>Install the Debian xctools:</para>
+	<screen>apt-get update
+apt-get install linux-image-3.11.10.4 v4v-module libv4v-1.0-0</screen>
+	</step>
+
+    <step><para>Configure TTY login on the virtual serial console:</para>
+    <screen>echo "S:2345:respawn:/sbin/getty 38400 hvc0" >> /etc/inittab</screen>
+    <para>When you have finished configuring your service VM and it is running, you will be able to login to it through the virtual serial console. This requires use of the <filename>screen</filename> program in the control domain. To determine which <filename>pts</filename> in the control domain corresponds to the console in your service VM, execute the following command:</para>
+      <screen>xenstore-read /local/domain/$(xec-vm --name <replaceable>service_vm_name</replaceable> get domid)/console/tty</screen>
+      <para>You may then use the <filename>screen</filename> command to login to your service VM through this device.</para>
+    <note><para>Use of the <command>screen</command> program is limited to the SELinux system administrator role. For instructions for entering into this role see <olink targetdoc="XTEngineAdministratorGuide" targetptr="selinux_administration_mode" />.</para></note>
+    </step>
+
+	<step><para>Set the <command>v4v</command> module to auto-load:</para>
+	<screen>echo "v4v" >> /etc/modules</screen>
+	</step>
+
+	<step><para>Add the following lines to <filename>/etc/init.d/ssh</filename>:</para>
+	<itemizedlist>
+		<listitem><para>At the end of the <emphasis>start</emphasis> section, <emphasis>before</emphasis> the regular ssh daemon is invoked starts (<command>log_end_msg</command> exits the script).</para>
+		<screen>LD_PRELOAD=/usr/lib/libv4v-1.0.so.0.0.0 INET_IS_V4V=1 /usr/sbin/sshd -p 2222</screen>
+		<para>&COMPANY_NAME_SHORT; advises against using the start-stop-daemon, which does not support this kind of environment variable declaration.</para>
+		</listitem>	
+		<listitem><para>At the end of the <emphasis>stop</emphasis> section, add:</para>
+		<screen>killall sshd</screen>
+		</listitem>
+	</itemizedlist>
+	</step>    
+
+	<step><para>Shut down the service VM.</para></step>
+	
+	<!--
+	<step><para>Open a command prompt (<keycap>CTRL+SHIFT+T</keycap>), then restart <emphasis>xenmgr</emphasis> on the control domain with the following commands:</para>
+	<screen>killall xenmgr
+xenmgr</screen>
+	<para> After restarting xenmgr, <command>xec-vm</command> should list the new service VM.</para></step>   
+	-->
+	
+	<!--
+	<step><para>Edit <filename>service-nilfvm</filename> and replace the VHD path with the VHD of the <emphasis>nilf</emphasis>. This can usually be found by the command:</para>
+	<screen>xec-vm -n nilf &#8208;&#8208;disk 1 get phys-path</screen>
+	</step>
+	-->
+	
+	<step><para>&OC;</para></step>
+	<step><para>Set the following firewall rules for the new VM:</para>
+	<screen>xec-vm -n <replaceable>service_vm_name</replaceable> add-v4v-firewall-rule '0 -> myself:2222'
+xec-vm -n <replaceable>service_vm_name</replaceable> add-v4v-firewall-rule 'myself:2222 -> 0'</screen></step>
+
+	<step><para>Close the command prompt.</para></step>
+	
+	<step><para>Back in &BC;, open the <guilabel>Details</guilabel> dialog for the service VM, select <guilabel>Advanced</guilabel>, and set the following properties:</para>
+	<itemizedlist>
+		<listitem>
+			<para>Under <emphasis role="bold">Isolation Policies</emphasis>:</para>
+			<itemizedlist>
+				<listitem><para><emphasis role="bold">Stub Domain:</emphasis> set to <emphasis>Disabled</emphasis>.</para></listitem>
+			</itemizedlist>
+		</listitem>
+		
+		<listitem>
+			<para>Under <emphasis role="bold">Virtual Compatibility</emphasis>:</para>
+			<itemizedlist>
+				<listitem><para><emphasis role="bold">Hardware Virtual Machine:</emphasis> set to <emphasis>Disabled</emphasis>.</para></listitem>
+		
+				<listitem><para><emphasis role="bold">Kernel Extraction Path:</emphasis> set to <replaceable>disk_id_in_database</replaceable>,<replaceable>partition_number</replaceable>:/vmlinuz. (The default is <emphasis>1,1:/vmlinuz</emphasis>.)</para></listitem>
+			
+				<listitem><para><emphasis role="bold">Command Line:</emphasis> set to <literal>root=/dev/xvda1 xencons=hvc0 console=hvc0 rw</literal>.</para></listitem>
+		
+				<listitem><para><emphasis role="bold">Initial Ramdisk:</emphasis> leave this blank.</para></listitem>
+			</itemizedlist>
+		</listitem>		
+	</itemizedlist>
+	</step>
+	
+	<step><para>&OC;</para></step>
+	<step><para>Enter the following commands to make the VM a service VM:</para>
+	<screen>xec-vm -n <replaceable>service_vm_name</replaceable> --disk 1 set virt-path xvda
+xec-vm -n <replaceable>service_vm_name</replaceable> set flask-label "system_u:system_r:nilfvm_t"
+xec-vm -n <replaceable>service_vm_name</replaceable> set hvm false
+xec-vm -n <replaceable>service_vm_name</replaceable> set qemu-dm-path ""
+xec-vm -n <replaceable>service_vm_name</replaceable> set slot -1
+xec-vm -n <replaceable>service_vm_name</replaceable> set type servicevm</screen>
+<note><para>The flask-label assigned to the example service VM in this section is the label for the legacy NILFVM from the 2.x &PB; releases. The permissions associated with this type are sufficient to boot the para-virtualized service VM and perform network interposition. We do however expect that developers will build service VMs for other purposes.
+</para>
+<para>Custom service VMs will require custom policy suited to their function. A "one-size-fits-all" flask-label would contradict the isolation goals of the &PB; flask policy. Currently developers requiring custom policy must modify and recompile the flask policy manually. The source code for the policy that ships with &PB; is available on the provided source ISO. In the near future we expect to support a modular XSM policy in the same way we currently support a modular SELinux policy.</para></note>
+</step>
+
+	<step><para>Boot the VM and verify that you can <command>sshv4v</command> to it:</para>
+	<screen>xec-vm -n <replaceable>service_vm_name</replaceable> start
+sshv4v <replaceable>service_vm_name</replaceable></screen>
+<note><para>If that doesn't work, grep <replaceable>service_vm_name</replaceable> in <filename>/var/log/messages</filename> to see if you can learn why.</para></note>
+</step>
+	
+</procedure>
+
+</section>
+
+<section><title>Networking Backend Service VMs</title>
+<para>This section introduces basic information about Service VMs that provide networking backends for guest VMs. This kind of Service VM can be used to process network packets flowing from guest VMs to XenClient XT NDVMs. Typical uses are:</para>
+<itemizedlist>
+<listitem><para>packet filtering</para></listitem>
+<listitem><para>transparent VPN</para></listitem>
+</itemizedlist>
+<para>There are no strict rules how network backend Service VMs should be built. The only thing that is required from a backend Service VM is that it can handle backend Virtual Interfaces (VIFs) of guest VMs and somehow provide network connectivity for these VIFs. This requires the <literal>xen-netback</literal> driver to be loaded (see <xref linkend="proc-creating-nilf" />). Typical network backend Service VMs create a bridge interface and attach all backend VIFs that will be created inside this VM to the bridge. This is typically done using a <literal>udev</literal> rule invoking a script that takes care of VIFs.  See <xref linkend="vifittyvifvif" /> for an example. The above "plumbing" is common for all the types of backend Service VMs. The next step is to provide network connectivity for the VMs attached to the bridge. This is simple in the transparent bridging case. Since transparent bridging works below layer 3 nothing needs to be done: it is enough to attach an interface provided by a network backend used by the backend Service VM to the bridge. In that case all packets, including DHCP configuration packets, will be transparently forwarded to a network backend for processing. The case of transparent bridging running over a VPN is similar. In the case of a VPN VM not using transparent bridging there are additional considerations:</para>
+<itemizedlist>
+<listitem><para>explicit routing rules or policy entries are required to direct packets through the VPN</para></listitem>
+<listitem><para>unless all the VMs using the network backend Service VM have static network configurations there is a need to run a DHCP server answering DHCP requests on the bridge interface</para></listitem>
+<listitem><para>depending on the VPN configuration used there may be a need to NAT packages exiting through the VPN</para></listitem>
+<listitem><para>VMs need to be given an address of a DNS server behind the VPN or the local DNS caching server running inside the network backend Service VM (in which case please ensure that the caching server uses a DNS server behind the VPN).</para></listitem>
+</itemizedlist>
+<para>The next section provides a detailed guide about how to create a transparent packet filtering VM (NILF VM). &COMPANY_NAME_SHORT; advises reading and understanding the entire section before attempting to create your own network backend Service VM.</para>
+</section>
+
+<section id="service_vms-nilf"><title>Configuring NILF Functionality</title>
+<para>A popular feature of the 2.X &PB; release was the Network InLine Filter (NILF) VM. In replacing our custom NILF VM with a more generic toolkit for partners to use in creating their own Debian-based service VMs the NILF functionality was lost. This section provides instructions to recreate a NILF VM based on a Debian service VM as built with the instructions in <olink targetdoc="XTEngineDeveloperGuide" targetptr="service_vms_creating" />.
+</para>
+<procedure id="proc-creating-nilf"><title>To Configure a Service VM to act as a NILF</title>
+<step><para>To function as a NILF, the Debian VM must first be configured to act as a network backend. This allows it to provide networking services to guests.</para>
+<para>Begin by adding the <literal>xen-netback</literal> driver to the modules list in your Service VM so that it is loaded on boot:</para>
+<screen>echo "xen-netback" >> /etc/modules</screen>
+</step>
+<step><para>
+Next install the packages required to create and configure a network bridge as well as those for interacting with xenstore:</para>
+<screen>apt-get install bridge-utils xenstore-utils</screen>
+</step>
+<step><para>With these utilities installed we can then add an <filename>iface</filename> block in <filename>/etc/network/interfaces</filename> to create a bridge when the VM boots.
+This is an example of a configuration block which creates a bridge and adds the <filename>eth0</filename> interface to it:</para>
+<screen>auto brnilf
+iface brnilf inet manual
+        up brctl addbr brnilf &amp;&amp; brctl addif brnilf eth0 &amp;&amp; ip link set up dev brnilf
+        down brctl delif brnilf eth0 &amp;&amp; ip link set down dev brnilf &amp;&amp; brctl delbr brnilf</screen>
+</step>
+<step><para>
+If you would like the NILF VM to be transparent on layer 3 you can modify the default network configuration for the <filename>eth0</filename> interface to prevent it from obtaining an address through dhcp:</para>
+<screen>allow-hotplug eth0
+iface eth0 inet manual
+        up ip link set up dev eth0
+        down ip link set down dev eth0</screen>
+</step>
+<step><para>
+Next we need a script to configure the network plumbing as virtual interfaces are added and removed from the NILF by the <filename>xen-netback</filename> driver.
+We provide an example script here which does two things:</para>
+<itemizedlist>
+  <listitem><para>The required communication with the toolstack through xenstore. This is signaling necessary to let the toolstack know that the network backend has been configured successfully.</para></listitem>
+  <listitem><para>Add the newly created <filename>vif</filename> to the bridge created in the previous step.</para></listitem>
+</itemizedlist>
+<para>This is only an example and it is expected that this script will be modified to meet the needs of your deployment.</para>
+<figure id="vifittyvifvif"><title>VIF Plugging</title>
+<screen>#!/bin/sh
+
+TYPE=`echo "${XENBUS_PATH}" | cut -f 2 -d /`
+DOMID=`echo "${XENBUS_PATH}" | cut -f 3 -d /`
+DEVID=`echo "${XENBUS_PATH}" | cut -f 4 -d /`
+XAPI="/xapi/${DOMID}/hotplug/${TYPE}/${DEVID}"
+VIF="vif${DOMID}.${DEVID}"
+BRIDGE=brnilf
+NIC_OUT=eth0
+
+logger -s "backend_vif_notify bridge for backend/${TYPE}/${DOMID}/${DEVID}: $1"
+
+case "$1" in
+add)
+            mount -t xenfs xenfs /proc/xen 2>/dev/null
+
+            xenstore-write "${XAPI}/vif" "${VIF}"
+            xenstore-write "${XAPI}/hotplug" "online"
+
+            if [ ! -d "/sys/class/net/${BRIDGE}" ] ; then
+                brctl addbr "${BRIDGE}"
+                ip link set up dev "${BRIDGE}"
+                brctl addif "${BRIDGE}" "${NIC_OUT}"
+            fi
+
+            brctl addif "${BRIDGE}" "${VIF}"
+            ip link set up dev "${VIF}"
+            ;;
+
+remove)
+            ip link set down "${VIF}"
+            brctl delif "${BRIDGE}" "${VIF}"
+
+            xenstore-rm "${XAPI}/hotplug"
+            ;;
+esac 
+</screen>
+</figure>
+<para>
+&COMPANY_NAME_SHORT; recommends locating this script at <filename>/etc/xen/scripts/vif-nilf</filename>. Be sure to make this script executable:</para>
+<screen>chmod 755 /etc/xen/scripts/vif-nilf</screen>
+</step>
+<step><para>
+We also need two udev rules to handle the creation of Xen devices:</para>
+<screen>SUBSYSTEM=="xen-backend", KERNEL=="vif*", RUN+="/etc/xen/scripts/vif-nilf $env{ACTION}"
+KERNEL=="evtchn", NAME="xen/%k",SYMLINK+="xen/eventchn"</screen>
+<para>The first rule ties the <filename>vif</filename> creation events to the execution of the <filename>vif-nilf</filename> script.
+The second rule handles the creation of the Xen event channel device. Save these two udev rules to the file <filename>/etc/udev/rules.d/xen-backend.rules</filename>.
+</para></step>
+<step><para>
+Finally guest VMs need to be configured to use this service VM as a network backend.
+This can be done by manually setting the backend UUID for the guest network.</para>
+<itemizedlist>
+<listitem><para>
+Identify the UUID of the NILF VM:
+<screen>xec-vm --name <replaceable>nilf_vm_name</replaceable> get uuid</screen>
+</para></listitem>
+<listitem><para>
+Set the <literal>backend-uuid</literal> for the guest to the UUID of the NILF VM:
+<screen>xec-vm --name <replaceable>guest_vm_name</replaceable> --nic 0 set backend-uuid <replaceable>nilf-vm-uuid</replaceable></screen>
+</para></listitem>
+</itemizedlist>
+</step>
+<step><para>&COMPANY_NAME_SHORT; recommends that the NILF VM be configured to boot when the platform boots:</para>
+<screen>xec-vm --name <replaceable>nilf_vm_name</replaceable> set start-on-boot true</screen>
+<para>And that the toolstack be configured to track dependencies for guests using the NILF:</para>
+<screen>xec-vm --name <replaceable>guest_vm_name</replaceable> set track-dependencies true</screen>
+<note><para>
+It is important to note that the example <filename>vif-nilf</filename> script accounts for a situation where <filename>vifs</filename> are created in the NILF before the standard Debian <filename>networking</filename> scripts are able to create the bridge.
+The VM dependency tracking provided by &PB; ensures that VMs are launched in the proper order, however it cannot guarantee all desired processing in the NILF will happen before the guest is started.
+<filename>vif</filename> scripts must be written to handle such situations with care.
+</para></note>
+</step>
+</procedure>
+</section>
+
+<section id="service_vms-allowing_memory_introspection"><title>Allowing Memory Introspection of Other VMs</title>
+
+	<para>Virtual Machine Introspection is a technique for externally monitoring the runtime state of a virtual machine. The runtime state can include CPU registers, memory, disk, network, and any other hardware-level events.</para>
+
+	<para>&PB; can use a Service VM to perform memory introspection on any of the VMs running on it.</para>
+ 
+	<para>The following command allows a Service VM to perform memory introspection of other VMs on the host:</para>
+	<screen>xec-vm -n <replaceable>service_vm_name</replaceable> set extra-xenvm xci-service=true</screen>
+
+	<para>To disable this service:</para>
+
+	<screen>xec-vm -n <replaceable>service_vm_name</replaceable> set extra-xenvm ""</screen>
+	
+	<note>
+		<para>A service VM with which you intend to perform memory introspection must be built with the kernel compiled with the configuration option</para>
+		<screen>CONFIG_STUBDOMAIN=y</screen>
+		<para>Without this, the default privcmd driver in the service VM will prevent execution of the introspection hypercalls.</para>
+
+		<para>There are many ways to build a kernel; you can follow whatever procedure you are comfortable with. Citrix recommends following <ulink url="http://www.debian.org/releases/stable/i386/ch08s06.html.en">the Debian documentation</ulink><footnote><para>http://www.debian.org/releases/stable/i386/ch08s06.html.en</para></footnote>.</para>
+	</note>
+
+</section>
+
+<section id="service_vms-disk_read_only_mode_on_tapdisk_level"><title>Setting Read-only Mode for a Disk on the Tapdisk Level</title>
+	<para>Although VMs can opt to use read-only filesystems just using their own logic, extra security can be achieved if read-only mode is toggled on the tapdisk level, so that it is actually guarded by the Control Domain.</para>
+	
+	<para>To turn on read-only mode for a disk:</para>
+	<screen>xec-vm -n <replaceable>service_vm_name</replaceable> --disk <replaceable>disk_num</replaceable> set mode r</screen>
+
+	<para>To turn on read/write mode for a disk:</para>
+	<screen>xec-vm -n <replaceable>service_vm_name</replaceable> --disk <replaceable>disk_num</replaceable> set mode w</screen>
+
+	<para>This is enough for service VMs which do not use the template system. Some service VMs (for example, ndvm and uivm) are using the template system, and for them, modifying the config file directly is necessary. They are already read-only. If you want to enable read/write mode for development purposes, this can be achieved via editing the file <filename>/usr/share/xenmgr-1.0/templates/kent/service-<replaceable>vm_tag</replaceable></filename> file, where <emphasis>vm-tag</emphasis> is <emphasis>ndvm</emphasis> or <emphasis>uivm</emphasis>. In that file, in the <emphasis>json</emphasis> section pertaining to the appropriate disk, <emphasis>"mode": "r"</emphasis> can be changed into <emphasis>"mode": "w"</emphasis>. To reset the default mode, edit the file again and change <emphasis>"mode": "w"</emphasis> back to <emphasis>"mode": "r"</emphasis>.</para>
+</section>
+
+<section id="service_vms-adding_to_sync_xt"><title>Adding a Service VM to &BACKEND; XT</title>
+
+<para>The example below demonstrates how the Debian service VM built in <olink targetdoc="XTEngineDeveloperGuide" targetptr="service_vms_creating" /> can be deployed via &BACKEND; XT. This uses the command-line interface and assumes that the VHD file for the service VM has already been copied to the &BACKEND; XT server.</para>
+
+<procedure id="proc-adding-service-vm-to-sync-xt">
+<title>To Deploy a Debian Service VM via &BACKEND; XT</title>
+
+<step><para>First add the VHD file as a disk:
+<screen>DISK_UUID=$(sync-admin add-disk -q <replaceable>disk_name</replaceable> <replaceable>file_path</replaceable>)</screen></para></step>
+
+<step><para>Write the VM configuration items to a file:
+<screen>nic/0:network:/wired/0/bridged
+v4v:0 -> myself,2222:true
+v4v:myself -> 0,5556:true
+v4v:myself,2222 -> 0:true
+vm:apic:true
+vm:cmd-line:root=/dev/hda1 xencons=xvc0 console=xvc0 rw
+vm:boot:c
+vm:flask-label:system_u:system_r:nilfvm_t
+vm:hap:true
+vm:hvm:false
+vm:kernel-extract:0,1:/vmlinuz
+vm:measured:false
+vm:memory:256
+vm:notify:dbus
+vm:nx:true
+vm:os:linux
+vm:pae:true
+vm:slot:-1
+vm:stubdom:false
+vm:type:servicevm
+vm:v4v:true
+vm:vcpus:1
+vm:viridian:false
+vm:xci-cpuid-signature:true
+vmparam:acpi:true</screen></para></step>
+
+<step><para>Add a VM. The configuration items are listed in full here but could be read from a file instead:
+<screen>VM_UUID=$(sync-admin add-vm -q -d "$DISK_UUID" -f <replaceable>config_file</replaceable> <replaceable>service_vm_name</replaceable>)</screen></para></step>
+
+<step><para>Finally assign the VM instance to a device:
+<screen>sync-admin add-vm-instance <replaceable>device_uuid</replaceable> "$VM_UUID" <replaceable>vm_instance_name</replaceable></screen></para></step>
+
+</procedure>
+
+</section>
+
+</chapter>
+
+<chapter id="guest_vms"><title>Windows VMs</title>
+
+<section id="guest_vms_xen_platform"><title>Accessing Xen platform functionality from kernel mode</title>
+
+<para>The XenPlatform package contains a library that can be used to access basic Xen platform functionality from kernel mode in Windows.</para>
+
+<para>The package is included in the &PB; SDK ISO. It consists of source code that can be built into a project to allow a custom driver to link with the Xen platform API:</para>
+
+<informaltable align="left" frame="none" width="6.5in">
+	<tgroup cols="2">
+		<colspec colname="c1" colwidth="2.2in"/>
+		<colspec colname="c2"/>
+		<thead>
+			<row>
+				<entry><para>File Name</para></entry>
+				<entry><para>Description</para></entry>
+			</row>
+		</thead>
+		<tbody>
+			<row>
+				<entry><para><filename>xenplatform_api.h</filename></para></entry>
+				<entry><para>Definitions and comments for the Xen platform API functions.</para></entry>
+			</row>
+			<row>
+				<entry><para><filename>xenplatform_link.h</filename></para></entry>
+				<entry><para>Header defining the interface for accessing the Xen platform API.</para></entry>
+			</row>
+			<row>
+				<entry><para><filename>xenplatform_link.c</filename></para></entry>
+				<entry><para>Implementation of the interface for accessing the Xen platform API.</para></entry>
+			</row>
+			<row>
+				<entry><para><filename>xenplatform_samples.c</filename></para></entry>
+				<entry><para>Sample code showing how the Xen platform API is used.</para></entry>
+			</row>
+		</tbody>
+	</tgroup>
+</informaltable>
+
+<para>Please refer to the header files for more in-depth information on the Xen platform API functions and the function used to link to the Xen platform API.</para>
+
+<para>To use just one or two functions from the Xen platform API:</para>
+
+	<itemizedlist>
+		<listitem><para>Call <filename>XenPlatformLink</filename> to link to the Xen platform drivers and get the base pointer.</para></listitem>
+		<listitem><para>Pass the base pointer to <filename>XenPlatformResolveEntryPoint</filename> to fetch a function pointer for as many of the functions defined in <filename>XenPlatformFunctions</filename> as are needed.</para></listitem>
+		<listitem><para>When the Xen platform API is no longer needed, call <filename>XenPlatformUnlink</filename>.</para></listitem>
+	</itemizedlist>
+
+<para>Alternately, as a convenience, all the functions in the Xen platform API can be fetched in a single call to <filename>XenPlatformRegisterApiFunctions</filename>. This will return a struct <filename>XenPlatformApiCalls</filename> with the function pointers set. Note that if some functions are not found, they may be <filename>NULL</filename> in the structure, so this should be tested for.</para>
+
+</section>
+
+</chapter>
+
+<chapter id="devguide-db-access-control">
+<title>Database Access Control</title>
+<para>You can access the control domain database using <command>db-*-dom0</command> commands in a service VM. This can be useful for creating persistent data, for example VPN certificates, in a secure location in the control domain. To be able to do database requests, you have to add the corresponding rules in <filename>/etc/rpc-proxy.rules</filename> on the control domain file system. For example to allow read access from a VM with the UUID <literal>00000000-0000-0000-0000-000000000003</literal>:</para>
+<screen>echo "allow dom-uuid 00000000-0000-0000-0000-000000000003 \
+destination org.freedesktop.DBus interface \
+org.freedesktop.DBus" >> /etc/rpc-proxy.rules
+
+echo "allow dom-uuid 00000000-0000-0000-0000-000000000003 \
+destination com.citrix.xenclient.db \
+interface com.citrix.xenclient.db read" >> /etc/rpc-proxy.rules
+
+echo "allow dom-uuid 00000000-0000-0000-0000-000000000003 \
+destination com.citrix.xenclient.db \
+interface com.citrix.xenclient.db read_binary" >> /etc/rpc-proxy.rules
+</screen>
+<para>To enable write access, replace <literal>read</literal> with <literal>write</literal> and <literal>read_binary</literal> with <literal>write_binary</literal> in the preceding example.</para>
+</chapter>
+
+<chapter id="devguide-vhd_encryption"><title>VHD File Encryption</title>
+
+<para>You can remove encryption from an encrypted VHD, or add encryption to an unencrypted VHD.</para>
+
+<procedure><title>To Remove Encryption From a VHD</title>
+	<step><para>&OPEN_CONSOLE;</para></step>
+	<step><para>Enter the SElinux administrator role:</para>
+	<screen>newrole -r sysadm_r</screen></step>
+   <step><para>Run the command:</para>
+   <screen>vhd-copy --src <replaceable>source_vhd</replaceable>.vhd --srckeydir <replaceable>key_dir</replaceable> --dest <replaceable>destination_vhd</replaceable>.vhd</screen>
+   <para>Where:</para>
+   <itemizedlist>
+   <listitem><para><emphasis role="bold">source_vhd</emphasis> is the name of the VHD file from which you wish to remove encryption.</para></listitem>
+   <listitem><para><emphasis role="bold">key_dir</emphasis> is either <filename>/config/platform-crypto-keys</filename> if the VHD is from a local VM or <filename>/config/sync/<replaceable>synchroniser_name</replaceable></filename> if the VHD is from a VM deployed by &BACKEND;.</para></listitem>
+    <listitem><para><emphasis role="bold">destination_vhd</emphasis> is the name of the unencrypted VHD to be created.</para></listitem>
+   </itemizedlist>
+   </step>	
+    <step><para>Delete the encrypted disk and key:</para>
+	<screen>rm <replaceable>key_dir</replaceable>/<replaceable>source_vhd</replaceable>,<replaceable>encryption_type</replaceable>,<replaceable>key_size</replaceable>.key
+rm <replaceable>source_vhd</replaceable>.vhd</screen></step>
+
+<caution><para>Please do not include the <literal>.vhd</literal> suffix in the first command.</para></caution>
+
+    <step><para>Rename the plaintext VHD:</para>
+	<screen>mv <replaceable>destination_vhd</replaceable>.vhd <replaceable>source_vhd</replaceable>.vhd</screen></step>
+</procedure>
+
+
+<procedure><title>To Encrypt a VHD</title>
+	<step><para>&OPEN_CONSOLE;</para></step>
+	<step><para>Enter the SElinux administrator role:</para>
+	<screen>newrole -r sysadm_r</screen></step>
+   <step><para>Run the commands:</para>
+   <screen>dd if=/dev/random of=<replaceable>key_dir</replaceable>/<replaceable>source_vhd</replaceable>,aes-xts-plain,512.key bs=1 count=64</screen>
+   <caution><para>Please do not include the <literal>.vhd</literal> suffix in the first command.</para></caution>
+   <note><para>The above command may take some time to return.</para></note>
+	<screen>vhd-copy --src <replaceable>source_vhd</replaceable>.vhd --dest <replaceable>destination_vhd</replaceable>.vhd --destkeydir <replaceable>key_dir</replaceable></screen>
+   <para>Where:</para>
+   <itemizedlist>
+   <listitem><para><emphasis role="bold">source_vhd</emphasis> is the name of the VHD file to be encrypted.</para></listitem>
+   <listitem><para><emphasis role="bold">key_dir</emphasis> is either <filename>/config/platform-crypto-keys</filename> if the VHD is intended for a local VM or <filename>/config/sync/<replaceable>synchroniser_name</replaceable></filename> if the VHD is intended for a VM deployed by &BACKEND;.</para></listitem>
+    <listitem><para><emphasis role="bold">destination_vhd</emphasis> is the name of the encrypted VHD to be created.</para></listitem>
+   </itemizedlist>
+   </step>	
+    <step><para>Delete the unencrypted disk:</para>
+	<screen>rm <replaceable>source_vhd</replaceable></screen></step>
+    <step><para>Rename the encrypted VHD:</para>
+	<screen>mv <replaceable>destination_vhd</replaceable>.vhd <replaceable>source_vhd</replaceable>.vhd</screen></step>
+</procedure>
+
+</chapter>
+
+<chapter id="devguide-uivm-co-branding">
+<title>User Interface Co-branding Specification</title>
+
+<para>The &PB; co-branding specification is a component of the overall &COMPANY_NAME_SHORT; branding strategy. Our goal is to provide our OEM licensee partners with the ability to incorporate their unique brand into the end user interface while still maintaining a unified "look and feel" across our range of virtual desktop solutions.</para>
+
+<para>This chapter describes the various customizable components in the &PB; user interface and provides guidelines and specifications describing how to properly format components for inclusion. All graphics within this document are included as examples only. Artwork files will be provided separately.</para>
+
+<para>&COMPANY_NAME_SHORT; will need to review co-branded components before being incorporated into the product. Please work with your partner product management team to help with the approval process.</para>
+
+<para>Included in &PB; Co-Branding Visual Assets zip folder are:</para>
+
+<itemizedlist>
+	<listitem><para>&COMPANY_NAME_SHORT; logo (for reference size and dimensions)</para></listitem>
+	<listitem><para>Sample wallpaper (.png format)</para></listitem>
+	<listitem><para>Virtual Machine Thumbnail (.png format)</para></listitem>
+</itemizedlist>
+
+<para>Please contact your &COMPANY_NAME_SHORT; representative or email your &COMPANY_NAME_SHORT; partner for questions related to visual assets such as logos, button styles, background images, and related artwork.</para>
+
+<section id="devguide-uivm_co-branding-customizeable_components"><title>Customizable components</title>
+
+<mediaobject>
+	<imageobject>
+		<imagedata align="left" fileref="images/co-branding_spec-ui_components.png" width="5.5in" />
+	</imageobject>
+</mediaobject>
+
+<orderedlist>
+	<listitem><para><emphasis role="bold">Company logo</emphasis></para></listitem>
+	<listitem><para><emphasis role="bold">Custom wallpaper</emphasis></para></listitem>
+	<listitem><para><emphasis role="bold">Wallpaper icon</emphasis></para></listitem>
+	<listitem><para><emphasis role="bold">Virtual machine thumbnail</emphasis></para></listitem>
+	<listitem><para><emphasis role="bold">Service logos</emphasis></para></listitem>
+	<listitem><para><emphasis role="bold">Custom message accessed via Info link</emphasis></para></listitem>
+</orderedlist>
+
+<section id="devguide-uivm_co-branding-customizeable_components-logo_specs"><title>Company logo specifications</title>
+
+<mediaobject>
+	<imageobject>
+		<imagedata align="left" fileref="images/co-branding_spec-citrix_logo.png" width="5.5in" />
+	</imageobject>
+</mediaobject>
+
+<itemizedlist>
+	<listitem><para>Located at <filename>plugins/branding/logo.png</filename></para></listitem>
+	<listitem><para>Logo should be same height as the &COMPANY_NAME_SHORT; logo (25 pixels), maximum width of 200 pixels, and in png format</para></listitem>
+	<listitem><para>Greyscale</para></listitem>
+	<listitem><para>Transparent background with no border or box around it</para></listitem>
+	<listitem><para>Placed in the center of the product screen, to the left of the &COMPANY_NAME_SHORT; logo</para></listitem>
+</itemizedlist>
+
+</section>
+
+<section id="devguide-uivm_co-branding-customizeable_components-wallpaper_specs"><title>Custom wallpaper specifications</title>
+
+<mediaobject>
+	<imageobject>
+		<imagedata align="left" fileref="images/co-branding_spec-custom_wallpaper.png" width="5.5in" />
+	</imageobject>
+</mediaobject>
+
+<itemizedlist>
+	<listitem><para>Located in <filename>plugins/wallpaper/</filename></para></listitem>
+	<listitem><para>Dimensions: both 4:3 (1024 x 768 px) and 16:9 (1280 x 800 px) sizes are supported. Wallpaper thumbnail dimensions are 130 x 80 px.</para></listitem>
+	<listitem><para>Color depth should not impact the visibility of the text shown around the virtual machine icons</para></listitem>
+	<listitem><para>Any logo displayed as part of the wallpaper image should be no larger in any dimension than the virtual machine thumbnails</para></listitem>
+	<listitem><para>3 images need to be provided with each wallpaper (4:3, 16:9, thumbnail)</para></listitem>
+</itemizedlist>
+
+</section>
+
+<section id="devguide-uivm_co-branding-customizeable_components-wallpaper_icon_specs"><title>Wallpaper icon specifications</title>
+
+<mediaobject>
+	<imageobject>
+		<imagedata align="left" fileref="images/co-branding_spec-custom_wallpaper_icon.png" width="5.5in" />
+	</imageobject>
+</mediaobject>
+
+<itemizedlist>
+	<listitem><para>Located in <filename>plugins/branding/</filename></para></listitem>
+	<listitem><para>The icon can be positioned in one of four positions. The desired position is indicated in the filename used:</para>
+		<itemizedlist>
+			<listitem><para>Top right: <filename>badge_TR.png</filename></para></listitem>
+			<listitem><para>Bottom right: <filename>badge_BR.png</filename></para></listitem>
+			<listitem><para>Bottom left: <filename>badge_BL.png</filename></para></listitem>
+			<listitem><para>Top left: <filename>badge_TL.png</filename></para></listitem>		
+		</itemizedlist>	
+	</listitem>
+	<listitem><para>Color depth should not impact the visibility of the text shown around the virtual machine icons</para></listitem>
+	<listitem><para>The logo in the wallpaper icon should be no larger in any dimension than the virtual machine thumbnails</para></listitem>
+	<listitem><para>The wallpaper icon should use a transparent background to position the visible part the desired distance from the bounds of the user interface</para></listitem>
+</itemizedlist>
+
+</section>
+
+<section id="devguide-uivm_co-branding-customizeable_components-vm_thumbnail_specs"><title>Virtual Machine thumbnail specifications</title>
+
+<mediaobject>
+	<imageobject>
+		<imagedata align="left" fileref="images/co-branding_spec-vm_thumbnail.png" width="3.5in" />
+	</imageobject>
+</mediaobject>
+
+<itemizedlist>
+	<listitem><para>Located in <filename>plugins/vmimages/</filename></para></listitem>
+	<listitem><para>Users can select a thumbnail from: Details > Icon</para></listitem>		
+	<listitem><para>The Virtual Machine thumbnail is 256 x 256 pixels, with the customizable area of the thumbnail (shown above as transparent) being 211 x 132 pixels. This thumbnail gets shown at smaller sizes throughout the user interface.</para></listitem>
+	<listitem><para>Hovering over a VM thumbnail provides a magnifying animation, along with power control options to turn VM on/off and a details link to the Advanced settings:</para>
+	<mediaobject>
+		<imageobject>
+			<imagedata align="left" fileref="images/co-branding_spec-hover_over_vm.png" width="5.5in" />
+		</imageobject>
+	</mediaobject>
+	</listitem>
+</itemizedlist>
+
+</section>
+
+
+
+<section id="devguide-uivm_co-branding-customizeable_components-service_logo_specs"><title>Service logo specifications</title>
+
+<mediaobject>
+	<imageobject>
+		<imagedata align="left" fileref="images/co-branding_spec-service_logo.png" width="5.5in" />
+	</imageobject>
+</mediaobject>
+
+<itemizedlist>
+	<listitem><para>Located in <filename>plugins/serviceimages/</filename></para></listitem>
+	<listitem><para>Logos should be same height as the &COMPANY_NAME_SHORT; logo (25 pixels), maximum width of 100 pixels, and in .png format</para></listitem>
+	<listitem><para>Greyscale</para></listitem>
+	<listitem><para>Transparent background with no border or box around it</para></listitem>
+	<listitem><para>To display an image, the service virtual machine will need to have its image-path property set to <emphasis>plugins/serviceimages/[filename].png</emphasis>. This can be done using the CLI.</para></listitem>
+</itemizedlist>
+
+</section>
+
+
+<section id="devguide-uivm_co-branding-customizeable_components-custom_messaging_specs"><title>Custom messaging specifications</title>
+
+<mediaobject>
+	<imageobject>
+		<imagedata align="left" fileref="images/co-branding_spec-custom_messaging.png" width="5.5in" />
+	</imageobject>
+</mediaobject>
+
+<itemizedlist>
+	<listitem><para>Located in <filename>plugins/branding/branding.html</filename></para></listitem>
+	<listitem><para>Custom message can include basic HTML including lists and relative images - no hyperlinks or JavaScript can be included. Styles are outlined using an inline style block in the HTML. Refer to the example <filename>branding.html</filename> file.</para></listitem>
+	<listitem><para>Custom messaging box size is 420 x 220 pixels. If the area grows larger than this, then it will scroll vertically.</para></listitem>
+	<listitem><para>Custom messaging can be displayed from the System details layer, under Software</para></listitem>
+	<listitem><para>Header text: Arial, 12 px, Bold, #333333</para></listitem>
+	<listitem><para>Regular text: Arial, 12 px, #333333</para></listitem>
+	<listitem><para>Bulleted lists may be used</para></listitem>
+</itemizedlist>
+
+</section>
+
+</section>
+
+<section id="devguide-uivm_co-branding-included_assets"><title>Assets included in the sample zip file</title>
+
+<para>All the sample assets used in the screenshots are included in the zip file. These include:</para>
+
+<variablelist>
+	<varlistentry>
+		<term><emphasis role="bold">&COMPANY_NAME_SHORT; logo (for reference)</emphasis></term>
+		<listitem>
+			<mediaobject>
+				<imageobject>
+					<imagedata align="left" fileref="images/co-branding_spec-asset_list_logo.png" width="21.179mm" />
+				</imageobject>
+			</mediaobject>
+		</listitem>
+	</varlistentry>
+	<varlistentry>
+		<term><emphasis role="bold">Sample wallpaper (16:9, 4:3, thumbnail)</emphasis></term>
+		<listitem>
+			<mediaobject>
+				<imageobject>
+					<imagedata align="left" fileref="images/co-branding_spec-asset_list_sample_wallpaper.png" width="6in"/>
+				</imageobject>
+			</mediaobject>
+		</listitem>
+	</varlistentry>
+	<varlistentry>
+		<term><emphasis role="bold">Sample wallpaper icon (top right)</emphasis></term>
+		<listitem>
+			<mediaobject>
+				<imageobject>
+					<imagedata align="left" fileref="images/co-branding_spec-asset_list_sample_wallpaper_icon.png" width="47mm" />
+				</imageobject>
+			</mediaobject>
+		</listitem>
+	</varlistentry>
+	<varlistentry>
+		<term><emphasis role="bold">Virtual Machine Thumbnail with blank screen (256 x 256 pixels)</emphasis></term>
+		<listitem>
+			<mediaobject>
+				<imageobject>
+					<imagedata align="left" fileref="images/co-branding_spec-asset_list_vm_thumbnail.png" width="2in"/>
+				</imageobject>
+			</mediaobject>
+		</listitem>
+	</varlistentry>
+</variablelist>
+	
+<bridgehead>Structure of the branding assets:</bridgehead>
+<variablelist>
+	<varlistentry>
+		<term></term>
+		<listitem><para>citrix.png</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term></term>
+		<listitem><para>branding/</para>
+			<variablelist>
+				<varlistentry>
+					<term></term>
+					<listitem><para>branding.html</para></listitem>
+				</varlistentry>		
+				<varlistentry>
+					<term></term>
+					<listitem><para>logo.png</para></listitem>
+				</varlistentry>
+				<varlistentry>
+					<term></term>
+					<listitem><para>badge_TR.png</para></listitem>
+				</varlistentry>
+			</variablelist>
+		
+		</listitem>
+	</varlistentry>
+	
+	<varlistentry>
+		<term></term>
+		<listitem><para>wallpaper/</para>
+			<variablelist>
+				<varlistentry>
+					<term></term>
+					<listitem><para>acme_smoke_thumb.png</para></listitem>
+				</varlistentry>
+				<varlistentry>
+					<term></term>
+					<listitem><para>acme_smoke_1024.png</para></listitem>
+				</varlistentry>
+				<varlistentry>
+					<term></term>
+					<listitem><para>acme_smoke_1280.png</para></listitem>
+				</varlistentry>
+			</variablelist>	
+		</listitem>
+	</varlistentry>
+	
+	<varlistentry>
+		<term></term>
+		<listitem><para>vmimages/</para>
+			<variablelist>
+				<varlistentry>
+					<term></term>
+					<listitem><para>acme_vm.png</para></listitem>
+				</varlistentry>
+				<varlistentry>
+					<term></term>
+					<listitem><para>vm_image_template.png</para></listitem>
+				</varlistentry>
+			</variablelist>		
+		
+		</listitem>
+	</varlistentry>
+	
+	<varlistentry>
+		<term></term>
+		<listitem><para>serviceimages/</para>
+			<variablelist>
+				<varlistentry>
+					<term></term>
+					<listitem><para>acme_logo.png</para></listitem>
+				</varlistentry>
+			
+			</variablelist>				
+		
+		</listitem>
+	</varlistentry>
+</variablelist>
+
+</section>
+ 
+</chapter>
+
+<chapter id="devguide-input_plugin_api"><title>Input Plug-in API</title>
+
+<para>The input plug-in API provides the ability to filter the input events, such as keyboard and mouse events, which would normally be sent to one VM and optionally redirect them to another VM.</para>
+
+<para>This is based on a client/server architecture. The input server, a standard process which runs in the control domain, acts as the server. The input plug-in, a custom process which also runs in the control domain, acts as the client. The input server provides a Unix domain socket, <literal>/var/run/input_socket</literal>, to which the plug-in connects.</para>
+
+<para>The plug-in can request to receive the input events for a particular VM. The input server will then send the plug-in any input events which it would normally send to the VM. In the plug-in does nothing with the events, no VM will receive them. However, the plug-in can send the events back to the input server, having first indicated which VM should receive them.</para>
+
+<note>
+	<para>&PB; can be configured to display multiple VMs simultaneously on different monitors. In this configuration, when the user moves the mouse from one monitor to another, the VM on the first monitor will continue to receive keyboard events, but will no longer receive mouse events until the mouse is moved back to the first monitor. The VM on the second monitor will now receive mouse events, but will not receive keyboard events until the user clicks the mouse.</para>
+    
+        <para>The same behavior occurs when the input plug-in is in use. If the plug-in has requested input events for the first VM, it will only receive keyboard events. If the plug-in has requested input events for the second VM, it will only receive mouse events.</para></note>
+
+<section id="devguide-input_plugin_api-event_records">
+<title>Event Records</title>
+
+<para>Input events are passed between the input server and the plug-in in the form of event records. The format is based on Linux EV event records, but has been extended with two additional event types. Each event record consists of the following fields:</para>
+
+<informaltable>
+	<tgroup cols='3'>
+		<colspec colwidth='0.75in'/>
+		<colspec colwidth='0.75in'/>
+		<colspec colwidth='*'/>
+		<thead>
+			<row>
+				<entry>Type</entry>
+				<entry>Name</entry>
+				<entry>Description</entry>
+			</row>
+		</thead>
+		<tbody>
+			<row>
+				<entry><para>uint32</para></entry>
+				<entry><para>magic</para></entry>
+				<entry><para>This value is always <literal>0xAD9CBCE9</literal>.  If reading the stream, you get a different value, it indicates a programmatic error.</para></entry>
+			</row>
+			<row>
+				<entry><para>uint16</para></entry>
+				<entry><para>type</para></entry>
+				<entry><para>Type of record, including EV_KEY (key/button), EV_REL (relative scalar), EV_ABS (absolute scalar), EV_SYN (Synchronization events.) or EV_DEV (Device change events).</para></entry>
+			</row>
+			<row>
+				<entry><para>uint16</para></entry>
+				<entry><para>code</para></entry>
+				<entry><para>This indicated which item (be it a key or axis) this record represents.</para></entry>
+			</row>
+			<row>
+				<entry><para>uint32</para></entry>
+				<entry><para>value</para></entry>
+				<entry><para>This is the new value for the item indicated by two field above. For a button or key, this would be a Boolean.</para></entry>
+			</row>
+		</tbody>
+	</tgroup>
+</informaltable>
+
+<para>The event record format can accommodate a wide range of types of input event. Furthermore, events can be aggregated to form more complex events. Each input device is only able to send a small subset of all possible events. Events of type EV_DEV and EV_VM are not emitted by any device, but are an extension to the Linux EV system, to allow for the handling of multiple devices and multiple VMs.</para>
+
+<!-- FIXME: How does EV_DEV indicate "which types of events are possible"? -->
+<!-- FIXME: Looks like EV_DEV also indicates which devices may send events? -->
+<para>The input server sends an EV_DEV event to the plug-in to indicate which device is emitting the events which follow, as well as to indicate which types of event are possible. For example, a tablet stylus emits absolute X and Y events, while a traditional mouse emits relative X and Y events.</para>
+
+<para>The plug-in sends an EV_VM event as a command to the input server, either to request that it receives the events for a particular VM or to indicate which VM should receive any events it sends back to the input server. The input server may also send an EV_VM event to the plug-in as an error response to such a command.</para>
+
+<para>The following sections describe the new events types EV_VM and EV_DEV and a subset of the standard event types. A complete list of event types can be found at <ulink url="http://lxr.free-electrons.com/source/include/linux/input.h">here</ulink><footnote><para>http://lxr.free-electrons.com/source/include/linux/input.h</para></footnote> with descriptions at <ulink url="http://www.kernel.org/doc/Documentation/input/event-codes.txt">here</ulink><footnote><para>http://www.kernel.org/doc/Documentation/input/event-codes.txt</para></footnote>.</para>
+
+<para>Details of the multitouch protocol can be found <ulink url="http://www.kernel.org/doc/Documentation/input/multi-touch-protocol.txt">here</ulink><footnote><para>http://www.kernel.org/doc/Documentation/input/multi-touch-protocol.txt</para></footnote>.</para>
+
+<section id="devguide-input_plugin_api-event_records_ev_vm">
+<title>Type EV_VM (0x7): VM</title>
+
+<para>This event type is an extension to the Linux EV system to support the input plug-in API.</para>
+
+<para>EV_VM events represent commands sent from the plug-in to the input server and responses sent from the input server back to the plug-in.</para>
+
+<informaltable>
+	<tgroup cols='4'>
+		<colspec colwidth='0.6in'/>
+		<colspec colwidth='1.6in'/>
+		<colspec colwidth='0.7in'/>
+		<colspec colwidth='*'/>
+		<thead>
+			<row>
+				<entry>Code</entry>
+				<entry>Name</entry>
+				<entry>Direction</entry>
+				<entry>Description</entry>
+			</row>
+		</thead>
+		<tbody>
+			<row>
+				<entry><para>0x1</para></entry>
+				<entry><para>VM_SEND_TO</para></entry>
+				<entry><para>From plug-in</para></entry>
+				<entry><para>Sending this code to the input server indicates that all subsequent events should be sent to the specified VM. The VM is specified by domain ID.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x2</para></entry>
+				<entry><para>VM_TAKE_FROM</para></entry>
+				<entry><para>From plug-in</para></entry>
+				<entry><para>Sending this code to the input server indicates that all subsequent events intended for the specified VM should be sent to to the plug-in. The VM is specified by domain ID. The plug-in can only ever take events from one VM, which will be the VM specified by the most recent use of this command. Sending a bad domain ID results in a "bad domain" error, and the plug-in not taking events from any domain.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x3</para></entry>
+				<entry><para>VM_ERROR</para></entry>
+				<entry><para>From input server</para></entry>
+				<entry><para>The input server sends this to the plug-in to indicate that a previous command resulted in an error. The first byte is the error code (1 = bad domain, 2 = bad code). The second byte is the code from the failed command. The third byte is the domain ID from the failed command.</para></entry>
+			</row>
+		</tbody>
+	</tgroup>
+</informaltable>
+
+</section>
+
+<section id="devguide-input_plugin_api-event_records_ev_dev">
+<title>Type EV_DEV (0x6): Device Change</title>
+
+<para>This event type is an extension to the Linux EV system to support the input plug-in API.</para>
+
+<!-- FIXME: What does "not subject to synchronization events" mean? -->
+<para>EV_DEV events describe actions relating to the device emitting the events which follow. EV_DEV events are not subject to synchronization events.</para>
+
+<informaltable>
+	<tgroup cols='3'>
+		<colspec colwidth='0.6in'/>
+		<colspec colwidth='1.6in'/>
+		<colspec colwidth='*'/>
+		<thead>
+			<row>
+				<entry>Code</entry>
+				<entry>Name</entry>
+				<entry>Description</entry>
+			</row>
+		</thead>
+		<tbody>
+			<row>
+				<entry><para>0x1</para></entry>
+				<entry><para>DEV_SET</para></entry>
+				<entry><para>Events which follow originate from the device indicated by <emphasis>value</emphasis>. A <emphasis>value</emphasis> of -1 indicates that they are from an unknown source. Currently, keyboards always report -1, while other types of input device report a valid number.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x2</para></entry>
+				<entry><para>DEV_CONF</para></entry>
+				<entry><para>A new device has been created, which from this point will be identified as <emphasis>value</emphasis>. The number corresponds to the device node <literal>/dev/input/event<emphasis>N</emphasis></literal> in the control domain. This information is expected to be considered before attempting to decode the events for this device.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x3</para></entry>
+				<entry><para>DEV_RESET</para></entry>
+				<entry><para>Device <emphasis>value</emphasis> is no longer valid, and any resources associated with this may be freed. If <emphasis>value</emphasis> is 0xFFFF, all devices are existing invalid &mdash; such an event is sent on start up.</para></entry>
+			</row>
+		</tbody>
+	</tgroup>
+</informaltable>
+
+</section>
+
+<section id="devguide-input_plugin_api-event_records_ev_syn">
+<title>Type EV_SYN (0x0): Synchronization</title>
+
+<informaltable>
+	<tgroup cols='3'>
+		<colspec colwidth='0.6in'/>
+		<colspec colwidth='1.6in'/>
+		<colspec colwidth='*'/>
+		<thead>
+			<row>
+				<entry>Code</entry>
+				<entry>Name</entry>
+				<entry>Description</entry>
+			</row>
+		</thead>
+		<tbody>
+			<row>
+				<entry><para>0x0</para></entry>
+				<entry><para>SYN_REPORT</para></entry>
+				<!-- FIXME: "added to the buffer, an interrupt is generated" - what does this mean? -->
+				<entry><para>This is used as a barrier to indicate that all events of other types (excluding EV_VM and EV_DEV events) which occur between the same pair of SYN_REPORT events occurred at the same time. That is to say, events between pairs of SYN_REPORT events are to be aggregated. For example, when moving a mouse, it is common for both the X and Y coordinate to change together, so an event for each would be emitted, and because they were emitted between a pair of SYN_REPORT events, they would be aggregated. If however, only one axis changed, then only an event for that axis would be emitted. After this event has been added to the buffer, an interrupt is generated.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x2</para></entry>
+				<entry><para>SYN_MT_REPORT</para></entry>
+				<entry><para>This is used for less able multitouch devices, to separate multiple sets of X/Y coordinates.
+				<!-- FIXME: Is this relevant to the reader? What does "we" mean?
+					We currently have no devices which do this.
+				-->
+				</para></entry>
+			</row>
+			<row>
+				<entry><para>0x3</para></entry>
+				<entry><para>SYN_DROPPED</para></entry>
+				<!-- FIXME: What's the "EV_DEV input buffer"? -->
+				<entry><para>This informs the client when input events have been dropped from the EV_DEV input buffer due to a buffer overrun. The client should use this event as a hint to reset its state or ignore all following events until the next packet begins. The client should ignore all events up to and including next SYN_REPORT.</para></entry>
+			</row>
+		</tbody>
+	</tgroup>
+</informaltable>
+
+</section>
+
+<section id="devguide-input_plugin_api-event_records_ev_rel">
+<title>Type EV_REL (0x2): Relative</title>
+
+<informaltable>
+	<tgroup cols='3'>
+		<colspec colwidth='0.6in'/>
+		<colspec colwidth='1.6in'/>
+		<colspec colwidth='*'/>
+		<thead>
+			<row>
+				<entry>Code</entry>
+				<entry>Name</entry>
+				<entry>Description</entry>
+			</row>
+		</thead>
+		<tbody>
+			<row>
+				<entry><para>0x0</para></entry>
+				<entry><para>REL_X</para></entry>
+				<entry><para>Movement on the X axis.</para>
+				<note><para>Relative events are used before a mouse driver is installed in a VM.</para></note></entry>
+			</row>
+			<row>
+				<entry><para>0x1</para></entry>
+				<entry><para>REL_Y</para></entry>
+				<entry><para>Movement on the Y axis.</para>
+				<note><para>Relative events are used before a mouse driver is installed in a VM.</para></note></entry>
+			</row>
+			<row>
+				<entry><para>0x8</para></entry>
+				<entry><para>REL_WHEEL</para></entry>
+				<entry><para>Vertical wheel movement.</para></entry>
+			</row>
+		</tbody>
+	</tgroup>
+</informaltable>
+
+</section>
+
+<section id="devguide-input_plugin_api-event_records_ev_abs">
+<title>Type EV_ABS (0x3): Absolute</title>
+
+<informaltable>
+	<tgroup cols='3'>
+		<colspec colwidth='0.6in'/>
+		<colspec colwidth='1.6in'/>
+		<colspec colwidth='*'/>
+		<thead>
+			<row>
+				<entry>Code</entry>
+				<entry>Name</entry>
+				<entry>Description</entry>
+			</row>
+		</thead>
+		<tbody>
+			<row>
+				<entry><para>0x00</para></entry>
+				<entry><para>ABS_X</para></entry>
+				<entry><para>Position on the X axis.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x01</para></entry>
+				<entry><para>ABS_Y</para></entry>
+				<entry><para>Position on the Y axis.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x18</para></entry>
+				<entry><para>ABS_PRESSURE</para></entry>
+				<entry><para>The pressure with which the pen/tool is being applied.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x2F</para></entry>
+				<entry><para>ABS_MT_SLOT</para></entry>
+				<entry><para>Each finger/pen in contact with the screen is given a slot number, and this is maintained until it is released. Multitouch events on the current device are henceforth for this slot. If only one finger/pen is in contact with the screen, then only one slot is required, and so this event may be omitted. If multiple fingers/pens are in contact with the screen, it would be common for many slot changes to occur during one pair of SYN_REPORT events, to indicate that each finger moved at the same time.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x35</para></entry>
+				<entry><para>ABS_MT_POSITION_X</para></entry>
+				<entry><para>X coordinate for the current slot (finger/pen).</para></entry>
+			</row>
+			<row>
+				<entry><para>0x36</para></entry>
+				<entry><para>ABS_MT_POSITION_Y</para></entry>
+				<entry><para>Y coordinate for the current slot (finger/pen).</para></entry>
+			</row>
+			<row>
+				<entry><para>0x39</para></entry>
+				<entry><para>ABS_MT_TRACING_ID</para></entry>
+				<entry><para>Unique ID of initiated contact. A <emphasis>value</emphasis> of -1 indicates that the finger/pen has been released.</para></entry>
+			</row>
+		</tbody>
+	</tgroup>
+</informaltable>
+
+</section>
+
+<section id="devguide-input_plugin_api-event_records_ev_key">
+<title>Type EV_KEY (0x1): Key/Button</title>
+
+<informaltable>
+	<tgroup cols='3'>
+		<colspec colwidth='0.6in'/>
+		<colspec colwidth='1.6in'/>
+		<colspec colwidth='*'/>
+		<thead>
+			<row>
+				<entry>Code</entry>
+				<entry>Name</entry>
+				<entry>Description</entry>
+			</row>
+		</thead>
+		<tbody>
+			<row>
+				<entry><para>0x110</para></entry>
+				<entry><para>BTN_LEFT</para></entry>
+				<entry><para>The left button on a mouse.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x111</para></entry>
+				<entry><para>BTN_RIGHT</para></entry>
+				<entry><para>The right button on a mouse.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x112</para></entry>
+				<entry><para>BTN_MIDDLE</para></entry>
+				<entry><para>The middle button on a mouse.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x113</para></entry>
+				<entry><para>BTN_SIDE</para></entry>
+				<entry><para>The side button on a mouse.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x114</para></entry>
+				<entry><para>BTN_EXTRA</para></entry>
+				<entry><para>The extra button on a mouse.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x115</para></entry>
+				<entry><para>BTN_FORWARD</para></entry>
+				<entry><para>The forward button on a mouse.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x116</para></entry>
+				<entry><para>BTN_BACK</para></entry>
+				<entry><para>The back button on a mouse.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x117</para></entry>
+				<entry><para>BTN_TASK</para></entry>
+				<entry><para>The task button on a mouse.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x140</para></entry>
+				<entry><para>BTN_TOOL_PEN</para></entry>
+				<entry><para>The current tool is now a pen.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x141</para></entry>
+				<entry><para>BTN_TOOL_RUBBER</para></entry>
+				<entry><para>The current tool is now a rubber.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x145</para></entry>
+				<entry><para>BTN_TOOL_FINGER</para></entry>
+				<entry><para>The current tool is now a finger.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x146</para></entry>
+				<entry><para>BTN_TOOL_MOUSE</para></entry>
+				<entry><para>The current tool is now a mouse.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x14A</para></entry>
+				<entry><para>BTN_TOUCH</para></entry>
+				<entry><para>The current tool touched the surface.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x14B</para></entry>
+				<entry><para>BTN_STYLUS</para></entry>
+				<entry><para>The first button on the stylus was pressed.</para></entry>
+			</row>
+			<row>
+				<entry><para>0x14C</para></entry>
+				<entry><para>BTN_STYLUS2</para></entry>
+				<entry><para>The second button on the stylus was pressed.</para></entry>
+			</row>
+		</tbody>
+	</tgroup>
+</informaltable>
+
+</section>
+
+</section>
+
+<section id="devguide-input_plugin_api-example">
+<title>Example</title>
+
+<para>This section contains an example communication stream between the input server and the input plug-in. The plug-in first connects to the socket. It requests to receive events for the VM with domain ID 5 and indicates that any events it sends back should be directed to the VM with domain ID 6:</para>
+
+<screen>VM_TAKE_FROM 5
+VM_SEND_TO 6</screen>
+
+<para>The input server sends the events which would otherwise have been sent to the VM with domain ID 5:</para>
+
+<screen keep-together="auto">DEV_RESET 0xFFFF
+DEV_CONF 4               # New device: associated config indicates it's a pen
+DEV_CONF 7               # New device: associated config indicates it's a multi-touch device
+
+DEV_SET 4                # Subsequent events from pen
+ABS_X 345
+ABS_Y 987
+BTN_TOOL_PEN 1           # Pen hovering over the surface
+SYN_REPORT
+
+ABS_X 346
+SYN_REPORT
+
+ABS_Y 986
+SNY_REPORT
+
+ABS_X 344
+ABS_Y 985
+ABS_PRESSURE 45
+BTN_TOUCH 1              # Pen touches the surface
+SYN_REPORT
+
+ABS_PRESSURE 48
+SYN_REPORT
+
+ABS_X 300
+ABS_PRESSURE 20
+SYN_REPORT
+
+BTN_TOUCH 0              # Pen no longer touching the surface
+ABS_X 388
+SYN_REPORT
+
+ABS_Y 810
+ABS_X 320
+BTN_TOOL_PEN 0           # Pen no longer hovering over the surface
+SYN_REPORT
+
+DEV_SET 7                # Subsequent events from multi-touch device
+ABS_MT_SLOT 0            # First finger goes down
+ABS_MT_TRACKING_ID 45
+ABS_MT_POSITION_X 200
+ABS_MT_POSITION_Y 300
+SYN_REPORT
+
+ABS_MT_POSITION_X 210    # Still on slot 0
+SYN_REPORT
+
+ABS_MT_POSITION_X 220
+ABS_MT_POSITION_Y 302
+SYN_REPORT
+
+ABS_MT_POSITION_X 225
+ABS_MT SLOT 1            # Second finger goes down
+ABS_MT_TRACKING_ID 46
+ABS_MT_POSITION_X 700
+ABS_MT_POSITION_Y 800
+SYN_REPORT
+
+ABS_MT_SLOT 0
+ABS_MT_POSITION_X 226
+ABS_MT_POSITION_Y 308
+ABS_MT_SLOT 1
+ABS_MT_POSITION_Y 810
+SYN_REPORT
+
+ABS_MT_POSITION_Y 815    # Still on slot 1
+ABS_MT_POSITION_X 720
+SYN_REPORT
+
+ABS_MT_SLOT 0            # First finger lifted
+ABS_MT_TRACKING_ID -1
+ABS_MT_SLOT 1
+ABS_MT_POSITION_X 725
+SYN_REPORT
+
+ABS_MT_POSITION_Y 816    # Still on slot 1
+ABS_MT_POSITION_X 740
+SYN_REPORT
+
+ABS_MT_TRACKING_ID -1    # Second finger is lifted
+ABS_MT_POSITION_X 741
+SYN_REPORT</screen>
+
+<para>As the plug-in reads this stream, it sends the events back to the input server, which directs them to the VM with domain ID 6. Each time the plug-in wishes to direct events to a different VM, it issues another <literal>VM_SEND_TO</literal> command.</para>
+
+</section>
+
+</chapter>
+
+ <chapter id="devguide-vm-event-hooks"><title>VM Event Hooks</title>
+
+
+<para>&PB; supports supplying custom RPC calls that run on the following events instead of the default product behaviour:</para>
+
+<informaltable>
+<tgroup cols="2">
+<colspec colwidth='*'/>
+<colspec colwidth='1in'/>
+<thead>
+<row>
+  <entry>Event</entry>
+  <entry>Type</entry>
+</row>
+</thead>
+
+<tbody>
+<row>
+  <entry><para>run-post-create</para></entry>
+  <entry>String.</entry>
+</row>
+<row>
+  <entry><para>run-pre-delete</para></entry>
+  <entry>String.</entry>
+</row>
+<row>
+  <entry><para>run-pre-boot</para></entry>
+  <entry>String.</entry>
+</row>
+<row>
+  <entry><para>run-insteadof-start</para></entry>
+  <entry>String.</entry>
+</row>
+<row>
+  <entry><para>run-on-state-change</para></entry>
+  <entry>String.</entry>
+</row>
+<row>
+  <entry><para>run-on-acpi-state-change</para></entry>
+  <entry>String.</entry>
+</row>
+
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>To set the custom RPC calls for a VM, set the property on the VM via a comman-line call or using &BACKEND;, for example:</para>
+<screen>xec-vm -n <replaceable>vm_name</replaceable> set run-insteadof-start \
+"rpc:vm=<replaceable>vm_uuid</replaceable>,\
+destination=com.citrix.xenclient.mepd,\
+interface=com.citrix.xenclient.mepd,\
+member=start_vm"</screen>
+<para>This example will cause a dbus call into the vm of UUID <replaceable>vm-uuid</replaceable> and given destination service, interface and member (method name) parameters, instead of starting the VM using the default product behaviour.</para>
+
+ </chapter>
+
+<chapter id="devguide-ovf"><title>&PB; OVF (Open Virtualization Format) Support</title>
+<para>&PB; provides the <command>apptool</command> utility to support the installation, removal, and update of OVF appliances.  An appliance is a set of virtual machine configurations along with other files such as virtual disk images, ISO images, encryption keys, and so on, packaged and managed as an unit. The <command>apptool</command> utility is installed on &PB; by default.</para>
+
+<para><command>apptool</command> supports a subset of the upcoming 2.0 OVF specification, with &PB;-specific extensions. The specification is available at <ulink url="http://www.dmtf.org/standards/ovf">here</ulink><footnote><para>http://www.dmtf.org/standards/ovf</para></footnote>.</para>
+<note><para>All <command>apptool</command> commands must be run in the SELinux <literal>sysadm_r</literal> role. See <olink targetdoc="XTEngineAdministratorGuide" targetptr="selinux_administration_mode" /> for instructions about entering the <literal>sysadm_r</literal> role.
+</para></note>
+<note><para>In this section the use of the directory <filename>/storage/import</filename> is important for the proper functioning of the <command>apptool</command> command with SELinux. Be sure all files needed by your OVF are present in this directory. In order to get SELinux labels on imported files set properly, best practice is to download them onto the platform using the <command>wget</command> or <command>scp</command> command from within this directory. If any <command>apptool</command> commands fail producing SELinux AVC messages in <filename>/var/log/messages</filename> you should manually set the labels on the file tree rooted at <filename>/storage/import</filename> with the following command:</para>
+  <screen>restorecon -r /storage/import</screen>
+</note>
+ 
+<section id="devguide-ovf-basic_apptool_use"><title>Basic apptool Usage</title> 
+
+<itemizedlist>
+<listitem><para>To get some help information:</para>
+<screen>apptool --help</screen>
+</listitem>
+
+
+<listitem><para>To install an appliance from:</para>
+	<itemizedlist>
+		<listitem><para>a directory containing OVF descriptor file and other files required by the appliance such as disks:</para>
+		<screen>apptool --import /storage/import/appliance.ovf</screen>
+		</listitem>
+		<listitem><para>OVA file (which is a tar gzipped directory containing OVF):</para>
+		<screen>apptool --import /storage/import/appliance.ova</screen></listitem>
+	</itemizedlist>
+</listitem>
+
+<listitem><para>To verify/scan the appliance for errors prior to importing (can also be done on any computer if the apptool is copied out of &PB;):</para>
+<screen>apptool --verify /storage/import/appliance.ovf</screen></listitem>
+
+ 
+<listitem><para>To list installed appliance IDs:</para>
+<screen>apptool --list</screen></listitem>
+
+<listitem><para>To remove installed appliance:</para>
+<screen>apptool --remove <replaceable>appliance_ID</replaceable></screen></listitem> 
+
+<listitem><para>To override appliance ID and version number while importing:</para>
+<screen>apptool --import /storage/import/appliance.ova --set-id=example-appliance --set-version=2</screen></listitem>
+ 
+<listitem><para>To remove any partially-installed appliances in case of errors such as power interruption during installation:</para>
+<screen>apptool --cleanup</screen></listitem>
+</itemizedlist>
+ 
+<note><para>The OVF standard has no concept of appliance identifiers or versioning. The &PB; implementation supports appliance ID and version using the &PB; OVF extension (detailed later), or, in case of importing appliances not designed for &PB;, overridden on the command line. Otherwise the appliance will be installed as <literal>unnamed</literal> with version defaulting to <literal>1</literal>. Installation of duplicate-ID appliances is prevented.</para></note>
+</section>
+
+<section id="devguide-ovf-standard_coverage"><title>OVF 2.0 standard coverage</title> 
+ 
+<para>This section lists the parts of the OVF 2.0 standard which are covered by the &PB; implementation and also points out those that are not.</para>
+ 
+<section id="devguide-ovf-standard_coverage-pkg_structure"><title>OVF Package Structure Support</title>
+
+<informaltable>
+<tgroup cols="2">
+<colspec colwidth='*'/>
+<colspec colwidth='1in'/>
+<thead>
+<row>
+  <entry>Feature</entry>
+  <entry>Supported?</entry>
+</row>
+</thead>
+
+<tbody>
+<row>
+  <entry><para>Import of OVA packages or directories containing OVF file descriptors.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para>The manifest file <literal>.mf</literal>. Checksums are verified if present.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para>Disk image files.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para>Extra environment files to be placed on environment ISO.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para>Extra resource files, such as ISO images.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para>Certificate files and manifest signature verification during import.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</section>
+<section id="devguide-ovf-standard_coverage-virtual_disk_formats"><title>Supported Virtual Disk Formats</title> 
+ 
+<para>The OVF specification does not require any specific disk format to be used. The format is given in form of URI string in the ovf package. &PB; supports the following disk URI format strings:</para>
+
+<informaltable>
+<tgroup cols="2">
+<colspec colwidth='*'/>
+<colspec colwidth='1in'/>
+<thead>
+<row>
+  <entry>Feature</entry>
+  <entry>Supported?</entry>
+</row>
+</thead>
+
+<tbody>
+
+<row>
+  <entry><para><emphasis>vhd</emphasis> - virtual hard disk format as used/extended by &PB;</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para><emphasis>cpiobz2</emphasis> - bzipped2 CPIO file archive </para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para><emphasis>rawfilesystem</emphasis> - raw filesystem image </para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+</tbody>
+</tgroup>
+</informaltable>
+
+</section>
+
+<section id="devguide-ovf-standard_coverage-dist_set_of_files"><title>Distribution as a Set of Files</title>
+ <informaltable>
+<tgroup cols="2">
+<colspec colwidth='*'/>
+<colspec colwidth='1in'/>
+<thead>
+<row>
+  <entry>Feature</entry>
+  <entry>Supported?</entry>
+</row>
+</thead>
+
+<tbody>
+
+<row>
+  <entry><para>The distribution of appliance files from a web server (to be automatically downloaded by the import tool).</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+</section>
+ 
+<section id="devguide-ovf-standard_coverage-envelope_element"><title>Envelope element</title> 
+ <informaltable>
+<tgroup cols="2">
+<colspec colwidth='*'/>
+<colspec colwidth='1in'/>
+<thead>
+<row>
+  <entry>Feature</entry>
+  <entry>Supported?</entry>
+</row>
+</thead>
+
+<tbody>
+
+<row>
+  <entry><para>Standard envelope structure</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para>Specification of language using optional <literal>xml:lang</literal> and <literal>Strings</literal> elements.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+</tbody>
+</tgroup>
+</informaltable>
+ 
+</section>
+
+<section id="devguide-ovf-standard_coverage-file_refs"><title>File References</title>
+
+ <informaltable>
+<tgroup cols="2">
+<colspec colwidth='*'/>
+<colspec colwidth='1in'/>
+<thead>
+<row>
+  <entry>Feature</entry>
+  <entry>Supported?</entry>
+</row>
+</thead>
+
+<tbody>
+
+<row>
+  <entry><para>File references which are checked for existence during import.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para>Relative file paths , for example, <emphasis>subdir/disk1.vhd</emphasis>. Such paths cross-reference to the file inside the OVF package.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para>Absolute file path scheme, for example, <emphasis>file:///storage/isos/xc-tools.iso</emphasis>. Such paths cross-reference to the file already on the host (allowing the appliance to reference, for example, the &PV_TOOLS; iso which comes preinstalled with &PB;).</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para>HTTP and HTTPS URL schemes.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para>The <literal>ovf:compression</literal> attribute.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para>The <literal>ovf:chunkSize</literal> attribute and file chunking.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+
+</section>
+
+<section id="devguide-ovf-standard_coverage-content_element"><title>Content Element</title> 
+
+<informaltable>
+<tgroup cols="2">
+<colspec colwidth='*'/>
+<colspec colwidth='1in'/>
+<thead>
+<row>
+  <entry>Feature</entry>
+  <entry>Supported?</entry>
+</row>
+</thead>
+
+<tbody>
+
+<row>
+  <entry><para><literal>VirtualSystem</literal> and <literal>VirtualSystemCollections</literal> with nesting, as detailed by the OVF specification.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para>Hierarchical relationships between systems and collections are not preserved. The hierarchy is flattened to a set of VMs during import.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+
+</section>
+ 
+<section id="devguide-ovf-standard_coverage-extensibility"><title>Extensibility</title>  
+
+<para>The importer will not reject sections which have <command>ovf:required="true"</command>, even if it does not understand them.</para>
+
+</section> 
+
+<section id="devguide-ovf-standard_coverage-virtual_hw_section_and_cim_classes"><title>Virtual Hardware Section and the CIM classes</title> 
+
+
+<informaltable>
+<tgroup cols="2">
+<colspec colwidth='*'/>
+<colspec colwidth='1in'/>
+<thead>
+<row>
+  <entry>Feature</entry>
+  <entry>Supported?</entry>
+</row>
+</thead>
+
+<tbody>
+
+<row>
+  <entry><para>Virtual hardware sections.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para>Virtual hardware descriptors based on the following CIM classes:</para>
+  <itemizedlist>
+    <listitem><para>CIM_ResourceAllocationSettingData</para></listitem>
+    <listitem><para>CIM_EthernetPortAllocationSettingData</para></listitem>
+    <listitem><para>CIM_StorageAllocationSettingData</para></listitem>
+  </itemizedlist>
+  
+  </entry>
+  <entry>
+  <informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para>The virtual hardware descriptor based on CIM class <literal>CIM_VirtualSystemSettingData</literal>. Use VM properties or <literal>ResourceAllocationSettingData</literal> instead where appropriate.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para><literal>ovf:configuration</literal> attributes.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para><literal>ovf:bound</literal> attributes.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+<section id="devguide-ovf-standard_coverage-virtual_hw_section_and_cim_classes-cim_res_alloc_setting_data"><title>CIM_ResourceAllocationSettingData</title>
+  
+<para>&PB; supports setting memory size and number of vCPUs using the <emphasis>CIM_ResourceAllocationSettingData</emphasis> class. <emphasis>VirtualQuantity</emphasis> and <emphasis>VirtualQuantityUnits</emphasis> CIM settings are meaningful.</para>
+
+</section> 
+
+<section id="devguide-ovf-standard_coverage-virtual_hw_section_and_cim_classes-cim_storage_alloc_setting_data"><title>CIM_StorageAllocationSettingData</title>
+
+<para>Can be used in conjunction with the <emphasis>StorageItem</emphasis>  element. Meaningful settings from this CIM class are:</para>
+<itemizedlist>
+	<listitem><para><emphasis>InstanceID</emphasis></para></listitem>
+	<listitem><para><emphasis>ResourceType</emphasis></para></listitem>
+	<listitem><para><emphasis>AllocationUnits</emphasis></para></listitem>
+	<listitem><para><emphasis>HostResource</emphasis></para></listitem>
+	<listitem><para><emphasis>Access</emphasis></para></listitem>
+	<listitem><para><emphasis>AutomaticAllocation</emphasis></para></listitem>
+</itemizedlist>
+
+<para>Resource types supported:</para>
+<itemizedlist>
+	<listitem><para>15 (cd drive)</para></listitem>
+	<listitem><para>16 (dvd drive)</para></listitem>
+	<listitem><para>17 (hard disk)</para></listitem>
+</itemizedlist>
+ 
+<para>Specifying backing using the <emphasis>HostResource</emphasis> element, either via <literal>ovf:/file/<replaceable>id</replaceable></literal> or <literal>ovf:/disk/<replaceable>id</replaceable></literal>, is supported. <literal>ovf:/file/<replaceable>id</replaceable></literal> backing is only meaningful for optical drives in conjunction with ISO images.</para>
+
+</section>
+ 
+<section id="devguide-ovf-standard_coverage-virtual_hw_section_and_cim_classes-cim_eth_alloc_setting_data"><title>CIM_EthernetPortAllocationSettingData</title>  
+<para>Can be used in conjunction with the <emphasis>EthernetPortItem</emphasis> element. Meaningful settings from this CIM class are:</para>
+<itemizedlist>
+	<listitem><para><emphasis>InstanceID</emphasis></para></listitem>
+	<listitem><para><emphasis>ResourceType</emphasis></para></listitem>
+	<listitem><para><emphasis>Connection</emphasis></para></listitem>
+	<listitem><para><emphasis>Address</emphasis></para></listitem>
+	<listitem><para><emphasis>AutomaticAllocation</emphasis></para></listitem>
+</itemizedlist>
+
+</section>
+ 
+<section id="devguide-ovf-standard_coverage-virtual_hw_section_and_cim_classes-core_metadata_sections"><title>Core Metadata Sections in Version 2</title>
+
+<informaltable>
+<tgroup cols="2">
+<colspec colwidth='*'/>
+<colspec colwidth='1in'/>
+<thead>
+<row>
+  <entry>Feature</entry>
+  <entry>Supported?</entry>
+</row>
+</thead>
+
+<tbody>
+
+<row>
+  <entry><para><literal>DiskSection</literal>. Supported except for listed exceptions.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para><literal>DiskSection</literal> - Specification of parent leaf via <literal>ovf:parentRef</literal>.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para><literal>DiskSection</literal> - Specification of capacity (for empty disks) using property <literal>ovf:capacity="${disk.size}"</literal>.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para><literal>SharedDiskSection</literal> - full support only for readonly disk images.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para><literal>NetworkSection</literal>. Supported except for listed exceptions.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para><literal>NetworkSection</literal> - <literal>NetworkPortProfiles</literal>.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para><literal>ProductSection</literal>. Supported except for listed exceptions.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para><literal>ProductSection</literal> - property categories.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para><literal>ProductSection</literal> - icon elements.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para><literal>ProductSection</literal> - type constraints using <literal>ovf:qualifiers</literal>.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para><literal>EulaSection</literal>.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para><literal>InstallSection</literal>.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para><literal>EnvironmentFilesSection</literal>.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/tick.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para><literal>ResourceAllocationSection</literal>. Please use per-VM <emphasis>VirtualHardwareSections</emphasis> instead.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para><literal>BootSection</literal>. Due to qemu limitations, please use per vm "boot" property instead.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para><literal>AnnotationSection</literal>.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para><literal>StartupSection</literal>.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para><literal>DeploymentOptionSection</literal>.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+<row>
+  <entry><para><literal>OperatingSystemSection</literal>.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para><literal>ScaleOutSection</literal>.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para><literal>PlacementSection</literal>.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+<row>
+  <entry><para><literal>EncryptionSection</literal>.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+
+
+</tbody>
+</tgroup>
+</informaltable>
+
+
+</section>
+
+</section>
+
+<section id="devguide-ovf-standard_coverage-internationalization"><title>Internationalization</title>
+
+<informaltable>
+<tgroup cols="2">
+<colspec colwidth='*'/>
+<colspec colwidth='1in'/>
+<thead>
+<row>
+  <entry>Feature</entry>
+  <entry>Supported?</entry>
+</row>
+</thead>
+
+<tbody>
+
+<row>
+  <entry><para>Localizable messages, resource bundles and internationalization.</para></entry>
+  <entry><informalfigure><mediaobject><imageobject><imagedata align="center" contentwidth="24px" fileref="images/cross.png" /></imageobject></mediaobject></informalfigure></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</section>
+
+<section id="devguide-ovf-standard_coverage-ovf-environment"><title>OVF Environment</title>
+<para>Supported. The <emphasis>iso</emphasis> transport method is supported, which creates a virtual CD-ROM device with an ISO containing the product properties and environment files. The product properties are propagated to all service VMs, not just the ones that are part of the imported appliance. This is different from the OVF specification, where properties are propagated only to VMs that are part of the same appliance, but allows for easier inter-appliance interoperability.</para> 
+</section>
+
+</section>
+
+<section id="devguide-ovf-xci_xt_extensions_to_ovf"><title>XCI/XT extensions to OVF</title> 
+
+<para>Compared to vanilla OVF, &PB; appliances may optionally specify the <emphasis>xci:ApplianceSection</emphasis> section element, which contains extra information required to configure &PB;-specific VM behavior. This element and all children thereof use the <emphasis>http://www.citrix.com/xenclient/ovf/1</emphasis> namespace. The XML schema detailing contents of this element can be found in the &PB; control domain at <filename>/usr/share/apptool-1.0/schema/xciovf.xsd</filename>.</para>
+
+<para>The following is a sample <emphasis>xci:ApplianceSection</emphasis> using some of the available extensions:</para>
+<screen><![CDATA[
+<xci:ApplianceSection xci:applianceId="uivm" xci:version="1">
+        <ovf:Info>XenClient appliance section</ovf:Info>
+	<xci:Disk xci:ovfId="uivm-gconf">
+	  <xci:ImportEncryptionKey xci:fileRef="uivm-gconf-key"/>
+	</xci:Disk>
+
+	<xci:Disk xci:ovfId="uivm-swap" xci:filesystem="swap">
+	</xci:Disk>
+	
+	<xci:VirtualMachine xci:ovfId="uivm" xci:uuid="00000000-0000-0000-0000-000000000001">
+	  <xci:V4VFirewall>
+	    <xci:V4VRule>myself -> 0:80</xci:V4VRule>
+	    <xci:V4VRule>myself -> 0:8080</xci:V4VRule>
+	    <xci:V4VRule>myself -> 0:5555</xci:V4VRule>
+	    <xci:V4VRule>myself -> dom-type=ndvm:5555</xci:V4VRule>
+	    <xci:V4VRule>myself -> 0:2222</xci:V4VRule>
+	    <xci:V4VRule>0 -> myself:2222</xci:V4VRule>
+	  </xci:V4VFirewall>
+
+	  <xci:RpcFirewall>
+	    <xci:RpcRule>allow destination org.freedesktop.DBus interface org.freedesktop.DBus</xci:RpcRule>
+	    <xci:RpcRule>allow destination org.freedesktop.ConsoleKit interface 
+		   org.freedesktop.ConsoleKit.Manager member GetSessionForUnixProcess</xci:RpcRule>
+	    <xci:RpcRule>allow destination org.freedesktop.Hal</xci:RpcRule>
+	    <xci:RpcRule>allow destination com.citrix.xenclient.xenmgr</xci:RpcRule>
+	    <xci:RpcRule>allow destination com.citrix.xenclient.input</xci:RpcRule>
+	    <xci:RpcRule>allow destination com.citrix.xenclient.usbdaemon</xci:RpcRule>
+	    <xci:RpcRule>allow destination com.citrix.xenclient.updatemgr</xci:RpcRule>
+	    <xci:RpcRule>allow destination com.citrix.xenclient.surfman interface com.citrix.xenclient.surfman 
+			member increase_brightness</xci:RpcRule>
+	    <xci:RpcRule>allow destination com.citrix.xenclient.surfman interface com.citrix.xenclient.surfman
+			member decrease_brightness</xci:RpcRule>
+	    <xci:RpcRule>allow destination com.citrix.xenclient.surfman interface com.citrix.xenclient.surfman
+			member display_image</xci:RpcRule>
+	    <xci:RpcRule>allow destination com.citrix.xenclient.networkdaemon</xci:RpcRule>
+	  </xci:RpcFirewall>
+
+	  <xci:PropertyOverride>
+	    <xci:Property xci:name="slot" xci:value="0"/>
+	    <xci:Property xci:name="hidden-in-switcher" xci:value="true"/>
+	    <xci:Property xci:name="start-on-boot" xci:value="true"/>
+	    <xci:Property xci:name="start-on-boot-priority" xci:value="9"/>
+	    <xci:Property xci:name="provides-graphics-fallback" xci:value="true"/>
+	    <xci:Property xci:name="shutdown-priority" xci:value="-5"/>
+	    <xci:Property xci:name="hidden-in-ui" xci:value="true"/>
+	    <xci:Property xci:name="policy-modify-vm-settings" xci:value="false"/>
+
+	    <xci:Property xci:name="hvm" xci:value="false"/>
+	    <xci:Property xci:name="kernel-extract" xci:value="/boot/vmlinuz"/>
+	    <xci:Property xci:name="cmd-line" xci:value="root=/dev/hda xencons=xvc0"/>
+	    <xci:Property xci:name="flask-label" xci:value="system_u:system_r:uivm_t"/>
+	    <xci:Property xci:name="qemu-dm-path" xci:value="/usr/sbin/svirt-interpose"/>
+	  </xci:PropertyOverride>
+
+	  <!-- remember to change to true after testing!! -->
+	  <xci:DBEntry xci:key="measured" xci:value="false"/>
+
+	</xci:VirtualMachine>
+    </xci:ApplianceSection>
+]]></screen>
+
+<section id="devguide-ovf-xci_xt_extensions_to_ovf-appliancesection"><title>xci:ApplianceSection element</title>
+
+<para>This is the primary element whose contents (and children) are used for specification of &PB;-specific configuration. Since all extra configuration is contained in this element, and yet it needs to reference virtual machines, disk configurations specified elsewhere in the OVF doc are referenced using <literal>xci:ovfId</literal> attributes.</para>
+
+<para>The <emphasis>xci:ApplianceSection</emphasis> element can optionally specify <emphasis>xci:applianceId</emphasis> and <emphasis>xci:version</emphasis> attributes. Although optional, giving the appliance a unique ID is recommended. If no ID is specified it will be imported as <emphasis>unnamed</emphasis>, or you can specify an unique ID during the import process (using the <command>apptool</command> command line).</para>
+
+<para><emphasis>xci:Disk</emphasis>, <emphasis>xci:Network</emphasis>, and <emphasis>xci:VirtualMachine</emphasis>elements can be child elements.</para>
+
+</section>
+
+<section id="devguide-ovf-xci_xt_extensions_to_ovf-disk"><title>xci:Disk element</title>
+
+<para>This element can be used to attach extra encryption information to the disk image files defined via <emphasis>ovf:Disk</emphasis> elements. This can take a form of a request to import a given encryption key, or request to generate an encryption key during appliance import. The latter is currently only meaningful for empty disks, or when importing raw filesystem disk images or <command>cpio</command> archives.</para>
+
+<para>The following is an example import of an encryption key:</para>
+<screen><![CDATA[
+<xci:Disk xci:ovfId="uivm-gconf">
+	<xci:ImportEncryptionKey xci:fileRef="uivm-gconf-key"/>
+</xci:Disk>
+]]></screen>
+
+<para>The following is an example request to generate an encryption key: </para>
+<screen><![CDATA[
+<xci:Disk xci:ovfId="uivm-extra-runtime-data">
+	<xci:GenerateEncryptionKey xci:keySize="512"/>
+</xci:Disk>
+]]></screen>
+
+<para>Key sizes of 512 and 256 bits are supported, which correspond to AES-256 and AES-128 encryption as the secret is shared.</para>
+
+<para>The <emphasis>xci:Disk</emphasis> element also supports an optional <emphasis>filesystem</emphasis> attribute, which can be useful when trying to add swap space to a VM, or while importing disk images packaged as <command>cpio</command> archives.</para>
+
+<itemizedlist>
+	<listitem><para><literal>xci:filesystem="swap"</literal> makes it easy to request that the import tool create a swap disk during appliance import.</para></listitem>
+    <listitem><para><literal>xci:filesystem="ext3"</literal>, or <literal>ext4</literal>, or <literal>ntfs</literal> hints the import tool to format the created VHD using specified filesystem type. It is useful when creating empty VHDs (avoiding the need to do it from within a VM on first boot), or when importing <command>cpio</command> disk images (which are just a set of files without filesystem information).</para></listitem>
+    <listitem><para>The <literal>xci:filesystem</literal> attribute is ignored when specified on VHD disk images, since these are expected to already have preformatted contents.</para></listitem>
+</itemizedlist>
+
+</section>
+
+<section id="devguide-ovf-xci_xt_extensions_to_ovf-network"><title>xci:Network element</title>
+<para>This element is used to map an OVF logical network onto networks exposed on the &PB; device. For example:</para>
+<screen><![CDATA[
+<xci:Network xci:name="VM network 1" xci:clientNetworkId="/wired/0/bridged"/>
+]]></screen>
+
+<para>The <literal>xci:name</literal> attribute needs to be the same as the network name defined in the <emphasis>ovf:Network</emphasis> element, and the <emphasis>xci:clientNetworkId</emphasis> attribute needs to match a network using its ID as exposed by the network daemon on the &PB; device.</para>
+</section>
+
+<section id="devguide-ovf-xci_xt_extensions_to_ovf-vm"><title>xci:VirtualMachine element</title>
+<para>This element is used to add extra configuration information, such as RPC firewall rules, PCI pass through rules, extra VM properties, and so on, to the VM configuration.</para>
+
+<itemizedlist>
+	<listitem><para>The <emphasis>xci:ovfId</emphasis> attribute is required and must reference the <emphasis>ovf:VirtualSystem</emphasis> element.</para></listitem>
+    <listitem><para><emphasis>xci:templateId</emphasis> is optional and can specify one of the <filename>/usr/share/xenmgr-1.0/templates/kent</filename> VM creation templates to serve as the basic configuration. If omitted, the <emphasis>new-vm-empty</emphasis> template is used.</para></listitem>
+    <listitem><para><emphasis>xci:uuid</emphasis> is optional and can specify a fixed UUID of the imported VM. Importing VMs with duplicate UUIDs will fail during the verification stage. If omitted, a new UUID will be allocated.</para></listitem>
+</itemizedlist>
+
+<para><emphasis>xci:PropertyOverride</emphasis>, <emphasis>xci:V4VFirewall</emphasis>, <emphasis>xci:RpcFirewall</emphasis>, <emphasis>xci:PCIPassthrough</emphasis>, <emphasis>xci:NetworkAdapter</emphasis>, <emphasis>xci:StorageDevice</emphasis>, <emphasis>xci:DBEntry</emphasis>, and <emphasis>xci:DomStoreFile</emphasis> elements can be specified as children.</para> 
+
+</section>
+
+<section id="devguide-ovf-xci_xt_extensions_to_ovf-prop_override"><title>xci:PropertyOverride element</title>
+
+<para><emphasis>xci:PropertyOverride</emphasis> elements can be specified as children of either <emphasis>xci:VirtualMachine</emphasis>, <emphasis>xci:NetworkAdapter</emphasis>, or <emphasis>xci:StorageDevice</emphasis>. These elements can be used to override arbitrary DBUS properties (as given in the &PB; IDL) for virtual machines, virtual network adapters and virtual storage devices (disks and optical devices), respectively.</para>
+
+<para>For example, on a network adapter, this element can be used to specify the <emphasis>backend-name</emphasis> or <emphasis>backend-uuid</emphasis> property, useful for cases when a forced network backend VM is needed.</para>
+
+<screen><![CDATA[
+<xci:PropertyOverride>
+	<xci:Property xci:name="backend-name" xci:value="vpnvm-1"/>
+</xci:PropertyOverride>
+]]></screen>
+
+</section>
+
+<section id="devguide-ovf-xci_xt_extensions_to_ovf-prop_v4vfirewall"><title>xci:V4VFirewall element</title>
+<para>This element allows specifying a list of child <emphasis>xci:V4VRule</emphasis> elements, which detail the v4v firewall rules in the same format as that in VM config files. Refer to the following example:</para>
+
+<screen><![CDATA[
+<xci:V4VFirewall>
+	<xci:V4VRule>myself -> 0:80</xci:V4VRule>
+	<xci:V4VRule>myself -> 0:8080</xci:V4VRule>
+	<xci:V4VRule>myself -> 0:5555</xci:V4VRule>
+	<xci:V4VRule>myself -> dom-type=ndvm:5555</xci:V4VRule>
+	<xci:V4VRule>myself -> 0:2222</xci:V4VRule>
+	<xci:V4VRule>0 -> myself:2222</xci:V4VRule>
+</xci:V4VFirewall>
+]]></screen>
+
+</section>
+
+<section id="devguide-ovf-xci_xt_extensions_to_ovf-prop_pcipassthrough"><title>xci:PCIPassthrough element</title>
+<para>This element allows specifying a list of matching rules which will be evaluated at VM startup. All PCI devices matching the rules will be passed through to the VM. The child elements can be a sequence of:</para>
+
+<itemizedlist>
+	<listitem><para><emphasis>xci:MatchBDF</emphasis> with required attribute <emphasis>xci:bdf</emphasis> to allow specifying the device in the BDF notation.</para></listitem>
+    <listitem><para><emphasis>xci:MatchID</emphasis> with optional attributes <emphasis>xci:class</emphasis>, <emphasis>xci:vendor</emphasis>, and <emphasis>xci:device</emphasis> to allow specifying device using PCI vendor/device IDs and PCI class. Omitted attributes are considered to be always matching.</para></listitem>
+</itemizedlist>
+<para>Refer to the following example:</para>
+
+<screen><![CDATA[
+<xci:PCIPassthrough>
+	<xci:MatchID xci:class="0x403" xci:vendor="0x8086"/>
+	<xci:MatchBDF xci:bdf="0000:00:1a.0"/>
+</xci:PCIPassthrough>
+]]></screen>
+
+</section>
+
+<section id="devguide-ovf-xci_xt_extensions_to_ovf-prop_networkadapter"><title>xci:NetworkAdapter element</title>
+
+<para>This element has the required attribute <emphasis>xci:ovfInstanceId</emphasis>, which refers to the <emphasis>InstanceID</emphasis> attribute of the adapter, as defined in the VM's virtual hardware section. The <emphasis>xc:PropertyOverride</emphasis> child element may be specified.</para>
+
+</section>
+
+<section id="devguide-ovf-xci_xt_extensions_to_ovf-prop_storageitem"><title>xci:StorageItem element</title>
+
+<para>This element has the required attribute <emphasis>xci:ovfInstanceId</emphasis>, which refers to the <emphasis>InstanceID</emphasis> attribute of the storage item, as defined in VM's virtual hardware section. The <emphasis>xc:PropertyOverride</emphasis> child element may be specified.</para>
+ 
+</section>
+
+<section id="devguide-ovf-xci_xt_extensions_to_ovf-prop_dbentry"><title>xci:DBEntry element</title>
+
+<para>This element allows you to insert a value into either a VM's DB tree or domstore (domstore is the part of VM DB tree which can be accessed from that VM).</para>
+
+<para>For example, the <literal>measured</literal> value is exposed as a read-only DBUS property, hence setting it with the <literal>PropertyOverride</literal> mechanism is not possible. But it can still be set via manipulation of VM's DB tree as follows:</para>
+
+<screen><![CDATA[
+<xci:DBEntry xci:key="measured" xci:value="false" />
+]]></screen>
+
+<itemizedlist>
+	<listitem><para>The <emphasis>xci:section</emphasis> attribute can be optionally specified to define whether value is being set in VM DB tree (<literal>vm</literal>, which is the default) or the domstore (<literal>vm-domstore</literal>).</para></listitem>
+    <listitem><para>The <emphasis>xci:key</emphasis> and <emphasis>xci:value</emphasis> attributes are required.</para></listitem>
+</itemizedlist>
+
+</section>
+
+<section id="devguide-ovf-xci_xt_extensions_to_ovf-prop_domstorefile"><title>xci:DomStoreFile element</title>
+
+<para>This element allows you to request the importation of the file into domstore, where it can be subsequently read using a database operation in the VM. Note that these files are imported into the VM's config space, which is of limited size and should be kept small.</para>
+
+<para>The <emphasis>xci:fileRef</emphasis> attribute references the file ID in the OVF <emphasis>File</emphasis> element.</para>
+
+<screen><![CDATA[
+<xci:DomStoreFile xci:fileRef="some-file-id"/>
+]]></screen>
+
+</section>
+
+</section>
+
+<section id="devguide-ovf-example"><title>Example Appliance Import</title> 
+
+<para>The &PB; SDK ISO contains a minimal example of an OVF descriptor file named <filename>squeeze-hvm.ovf</filename>. This creates a VM with a single disk, 512 MB of RAM and 1 vCPU. As the name suggests, it is intended to create a VM running Debian Squeeze, but it is not specific to this and could be adapted to a different operating system.</para>
+		
+<para>This example assumes that you have created a VHD file named <filename>squeeze.vhd</filename> which represents a partitioned disk containing an installation of Debian Squeeze.</para>
+		
+<procedure><title>To Test the Import</title>
+
+<step><para>Ensure that you are running in the SELinux <literal>sysadm_r</literal> role. See <olink targetdoc="XTEngineAdministratorGuide" targetptr="selinux_administration_mode" /> for instructions about entering the <literal>sysadm_r</literal> role.</para></step>
+
+<step><para>Ensure that the directory <filename>/storage/import</filename> exists and has the correct SELinux labels:
+<screen>mkdir -p /storage/import
+restorecon -r /storage/import</screen></para></step>
+
+<step><para>Copy the OVF descriptor file <filename>squeeze-hvm.ovf</filename> into <filename>/storage/import</filename>.</para></step>
+
+<step><para>Copy the VHD file <filename>squeeze.vhd</filename> into <filename>/storage/import</filename>.</para></step>
+
+<step><para>Import the appliance:
+<screen>cd /storage/import
+apptool --import squeeze-hvm.ovf</screen></para></step>
+
+<step><para>Verify that the VM <literal>squeeze-vm</literal> has been created:
+<screen>xec-vm</screen></para></step>
+
+<step><para>Verify that the appliance <literal>squeeze</literal> is installed:
+<screen>apptool --list</screen></para></step>
+
+<step><para>Click on the VM icon in the UI to verify that it can be started.</para></step>
+
+</procedure>
+
+</section>
+
+</chapter>
+
+<chapter><title>API</title>
+		<note><para>The API detailed in this chapter is subject to change without notice. Please contact &COMPANY_NAME_SHORT; if you are integrating with this API. The following table defines the data types used in the API documentation:</para></note>
+			<informaltable>
+				<tgroup cols='3'>
+
+					<colspec colwidth='2in'/>
+					<colspec colwidth='1in'/>
+					<colspec colwidth='*'/>
+					<thead>
+						<row>
+							<entry>type</entry>
+							<entry>symbol</entry>
+							<entry>description</entry>
+						</row>
+					</thead>
+					<tbody>
+<row><entry><para>INVALID</para></entry><entry><para>0 (NUL)</para></entry><entry><para>Not a valid type code, used to terminate signatures</para></entry></row>
+<row><entry><para>BYTE</para></entry><entry><para>y</para></entry><entry><para>8-bit unsigned integer</para></entry></row>
+<row><entry><para>BOOLEAN</para></entry><entry><para>b</para></entry><entry><para>Boolean value, 0 is FALSE and 1 is TRUE. Everything else is invalid.</para></entry></row>
+<row><entry><para>INT16</para></entry><entry><para>n</para></entry><entry><para>16-bit signed integer</para></entry></row>
+<row><entry><para>UINT16</para></entry><entry><para>q</para></entry><entry><para>16-bit unsigned integer</para></entry></row>
+<row><entry><para>INT32</para></entry><entry><para>i</para></entry><entry><para>32-bit signed integer</para></entry></row>
+<row><entry><para>UINT32</para></entry><entry><para>u</para></entry><entry><para>32-bit unsigned integer</para></entry></row>
+<row><entry><para>INT64</para></entry><entry><para>x</para></entry><entry><para>64-bit signed integer</para></entry></row>
+<row><entry><para>UINT64</para></entry><entry><para>t</para></entry><entry><para>64-bit unsigned integer</para></entry></row>
+<row><entry><para>DOUBLE</para></entry><entry><para>d</para></entry><entry><para>IEEE 754 double</para></entry></row>
+<row><entry><para>STRING</para></entry><entry><para>s</para></entry><entry><para>UTF-8 string (must be valid UTF-8). Must be nul terminated and contain no other nul bytes.</para></entry></row>
+<row><entry><para>OBJECT_PATH</para></entry><entry><para>o</para></entry><entry><para>Name of an object instance</para></entry></row>
+<row><entry><para>SIGNATURE</para></entry><entry><para>g</para></entry><entry><para>A type signature</para></entry></row>
+<row><entry><para>ARRAY</para></entry><entry><para>a</para></entry><entry><para>Array</para></entry></row>
+<row><entry><para>STRUCT</para></entry><entry><para>r()</para></entry><entry><para>Struct</para></entry></row>
+<row><entry><para>VARIANT</para></entry><entry><para>v</para></entry><entry><para>Variant type (the type of the value is part of the value itself)</para></entry></row>
+<row><entry><para>DICT_ENTRY</para></entry><entry><para>e{}</para></entry><entry><para>Entry in a dict or map (array of key-value pairs)</para></entry></row>
+<row><entry><para>UNIX_FD</para></entry><entry><para>h</para></entry><entry><para>Unix file descriptor</para></entry></row>
+	</tbody>
+				</tgroup>
+			</informaltable>
+			
+&generated_entity_references;			
+			
+</chapter>
+
+	<chapter>
+		<title>Example &PB; D-Bus Application</title>
+        <para>This example application is a simple script to query the &PB; toolstack for two simple VM properties. It begins by enumerating the object paths of all VMs installed on the platform. It then queries two properties from the <literal>com.citrix.xenclient.xenmgr.vm</literal> interface for each of these VM objects. First the VM <literal>name</literal> property is queried, then the VM <literal>state</literal> property. The output is formatted to display the VM object path, the VM <literal>name</literal> and the current state of the VM.</para>
+	<screen>#!/bin/sh
+
+REGX_OBJ='s&amp;^[[:space:]]\+object[[:space:]]\+path[[:space:]]\+"\(.*\)"[[:space:]]*$&amp;\1&amp;p'
+REGX_STR='s&amp;^[[:space:]]\+variant[[:space:]]\+string[[:space:]]\+\"\(.*\)\"[[:space:]]*$&amp;\1&amp;p'
+
+dbus-send --system --print-reply \ <co id="example_comment_co_1" linkends="example_comment_1" />
+    --dest=com.citrix.xenclient.xenmgr \ <co id="example_comment_co_2" linkends="example_comment_2" />
+    / \ <co id="example_comment_co_3" linkends="example_comment_3" />
+    com.citrix.xenclient.xenmgr.list_vms | \
+    sed -n "${REGX_OBJ}" | \
+    while read VM; do
+        echo -n "The VM object ${VM} named \""
+        dbus-send --system --print-reply \
+            --dest=com.citrix.xenclient.xenmgr \
+            ${VM} \ <co id="example_comment_co_4" linkends="example_comment_4" />
+            org.freedesktop.DBus.Properties.Get \
+            string:'com.citrix.xenclient.xenmgr.vm' \
+            string:'name' | \
+            sed -n "${REGX_STR}" | \
+            tr -d '\n'
+        echo -n "\" is in the \""
+        dbus-send --system --print-reply \
+            --dest=com.citrix.xenclient.xenmgr \
+            ${VM} \
+            org.freedesktop.DBus.Properties.Get \
+            string:'com.citrix.xenclient.xenmgr.vm' \
+            string:'state' | \
+            sed -n "${REGX_STR}" | \
+            tr -d '\n'
+      echo "\" state" <co id="example_comment_co_5" linkends="example_comment_5" />
+done</screen>
+
+<calloutlist>
+  <callout arearefs="example_comment_co_1" id="example_comment_1">
+    <para>Connect to the system bus.</para>
+  </callout>	
+    <callout arearefs="example_comment_co_2" id="example_comment_2">
+    <para>Obtain a reference to the  xenmgr service.</para>
+  </callout>	
+    <callout arearefs="example_comment_co_3" id="example_comment_3">
+    <para>Access and introspect the root object.</para>
+  </callout>	
+    <callout arearefs="example_comment_co_4" id="example_comment_4">
+    <para>Access and introspect VM objects.</para>
+  </callout>	
+    <callout arearefs="example_comment_co_5" id="example_comment_5">
+    <para>Print the name and current state of all VMs.</para>
+  </callout>	
+</calloutlist>  
+<para>The script above assumes that it is being run from within the control domain. It is possible for the script to be run from a service VM but its environment must be set up to cause the DBus client to connect to the bus over V4V. Assuming the script above is named <filename>list-vms.sh</filename> we can simply wrap it in another script which sets the necessary environment variables.</para>
+<screen>#!/bin/sh
+
+DBUS_SYSTEM_BUS_ADDRESS='tcp:host=1.0.0.0,port=5556' \
+LD_PRELOAD='/usr/lib/libv4v-1.0.so.0' \
+INET_IS_V4V='1' \
+list-vms.sh</screen>
+<para>For this script to function properly your service VM must be configured according to the instructions in <olink targetdoc="XTEngineDeveloperGuide" targetptr="service_vms_creating" />. Further, your must have the <filename>dbus-bouncer</filename> configured and running. By default, &PB; allows guests to query for basic VM properties over DBUS to support the in-guest switcher. Additional DBUS functionality requires the administrator to explicitly allow the service VM access to the appropriate objects and methods.</para>
+</chapter>
+<chapter><title>VM Database Configuration File Syntax</title>
+
+<para>The properties associated with each virtual machine are defined in a human-readable text file. This file is managed by the &PB; tool stack and is not typically edited by hand. If you edit this file manually, run the command <literal>killall HUP dbd</literal> in the control domain console window to signal the <literal>dbd</literal> process to reload the database. The following sections explain the syntax of an example VM database file.</para>
+
+<section><title>VM Identity and General Configuration</title>
+<programlisting>{
+  "uuid": "3a9ecb37-a563-45ca-ad06-f4f313e202f4", <co id="uuid_co" linkends="uuid"/>
+  "type": "svm", <co id="type_co" linkends="type"/>
+  "image_path": "images\/vms\/001_ComputerWin7_h32bit_120.png", <co id="image_path_co" linkends="image_path"/>
+  "config": { <co id="config_co" linkends="config"/>
+    "notify": "dbus", <co id="notify_co" linkends="notify"/>
+    "hvm": "true", <co id="hvm_co" linkends="hvm"/>
+    "pae": "true", <co id="pae_co" linkends="pae"/>
+    "acpi": "true", <co id="acpi_co" linkends="acpi"/>
+    "apic": "true", <co id="apic_co" linkends="apic"/>
+    "viridian": "true",
+    "hap": "true",
+    "nx": "true",
+    "sound": "ac97", <co id="sound_co" linkends="sound"/>
+    "memory": "1024", <co id="memory_co" linkends="memory"/>
+    "display": "none", <co id="display_co" linkends="display"/>
+    "boot": "cd", <co id="boot_co" linkends="boot"/> 
+    "extra-xenvm": { <co id="extra-xenvm_co" linkends="extra-xenvm"/>
+      "0": "flask-label=system_u:system_r:domU_t" <co id="extra_vm_0_co" linkends="extra_vm_0"/>
+    },</programlisting>
+<calloutlist>
+  <callout arearefs="uuid_co" id="uuid">
+    <para>&PB; ID of the VM.</para>
+  </callout>	
+  <callout arearefs="type_co" id="type">
+    <para>The VM type (svm|pvm). pvm indicates that the VM has &HDX; enabled</para>
+  </callout>	
+  <callout arearefs="image_path_co" id="image_path">
+    <para>The path to the VM icon file.</para>
+  </callout>
+  <callout arearefs="config_co" id="config">
+    <para>VM configuration section.</para>
+  </callout>
+  <callout arearefs="notify_co" id="notify">
+    <para>VM configuration section.</para>
+  </callout>
+  
+  <callout arearefs="hvm_co" id="hvm">
+    <para>Is the VM an HVM? (true/false)</para>
+  </callout>
+  <callout arearefs="pae_co" id="pae">
+    <para>Use PAE? (true/false)</para>
+  </callout>
+   <callout arearefs="acpi_co" id="acpi">
+    <para>Use ACPI? (true/false)</para>
+  </callout>
+  <callout arearefs="apic_co" id="apic">
+    <para>Use APIC? (true/false)</para>
+  </callout>
+  <callout arearefs="sound_co" id="sound">
+    <para>Sound card to emulate in the VM</para>
+  </callout>
+  <callout arearefs="memory_co" id="memory">
+    <para>Quantity of RAM allocated to the VM</para>
+  </callout>
+  <callout arearefs="display_co" id="display">
+    <para>Display type to use</para>
+  </callout>
+  <callout arearefs="boot_co" id="boot">
+    <para>Boot order (c for hard drive, d for cd and n for network)</para>
+  </callout>
+  <callout arearefs="extra-xenvm_co" id="extra-xenvm">
+    <para>Extra options</para>
+  </callout>
+  <callout arearefs="extra_vm_0_co" id="extra_vm_0">
+    <para>VM label</para>
+  </callout>
+   </calloutlist>
+</section>
+
+<section><title>VM Networking</title>
+   <programlisting>    "nic": { <co id="nic_co" linkend="nic"/>
+      "0": { <co id="nic_0_co" linkend="nic_0"/>
+        "id": "0", <co id="nic_0_id_co" linkend="nic_0_id"/>
+        "bridge": "brbridged", <co id="nic_0_bridged_co" linkend="nic_0_bridged"/>
+        "firewall-rules": { <co id="firewall-rules_co" linkend="firewall-rules"/>
+          "0": { <co id="firewall-rules_0_co" linkend="firewall-rules_0"/>
+            "type": "output", <co id="firewall-rules_0_type_co" linkend="firewall-rules_0_type"/>
+            "protocol": "tcp", <co id="firewall-rules_0_protocol_co" linkend="firewall-rules_0_protocol"/>
+            "ip": "10.80.248.206", <co id="firewall-rules_0_ip_co" linkend="firewall-rules_0_ip"/>
+            "port": "80", <co id="firewall-rules_0_port_co" linkend="firewall-rules_0_port"/>
+            "cmd": "drop" <co id="firewall-rules_0_cmd_co" linkend="firewall-rules_0_cmd"/>
+          },
+          "1": { <co id="firewall-rules_1_co" linkend="firewall-rules_1"/>
+            "type": "output", 
+            "cmd": "reject" 
+          }
+        }
+      },
+      "1": { <co id="nic_1_co" linkend="nic_1"/>
+        "id": "1", 
+        "bridge": "brwireless" 
+      }
+    },</programlisting>
+<calloutlist>
+  <callout arearefs="nic_co" id="nic">
+	<para>Emulated network cards section begins</para>
+  </callout>
+	
+  <callout arearefs="nic_0_co" id="nic_0">
+	<para>First NIC details begin</para>
+  </callout>
+<callout arearefs="nic_0_id_co" id="nic_0_id">
+  <para>Card ID</para>
+</callout>
+<callout arearefs="nic_0_bridged_co" id="nic_0_bridged">
+  <para>Card bridge</para>
+</callout>
+<callout arearefs="firewall-rules_co" id="firewall-rules">
+  <para>VM-specific firewall rules</para>
+</callout>
+<callout arearefs="firewall-rules_0_co" id="firewall-rules_0">
+  <para>Rule ID</para>
+</callout>
+<callout arearefs="firewall-rules_0_type_co" id="firewall-rules_0_type">
+  <para>Rule type (input/output)</para>
+</callout>
+<callout arearefs="firewall-rules_0_protocol_co" id="firewall-rules_0_protocol">
+  <para>Rule protocol (tcp/udp etc.)</para>
+</callout>
+<callout arearefs="firewall-rules_0_ip_co" id="firewall-rules_0_ip">
+  <para>IP address</para>
+</callout>
+<callout arearefs="firewall-rules_0_port_co" id="firewall-rules_0_port">
+  <para>Port</para>
+</callout>
+<callout arearefs="firewall-rules_0_cmd_co" id="firewall-rules_0_cmd">
+  <para>Command (accept|drop|reject)</para>
+</callout>
+<callout arearefs="firewall-rules_1_co" id="firewall-rules_1">
+  <para>Another VM-specific firewall rule</para>
+</callout>
+<callout arearefs="nic_1_co" id="nic_1">
+  <para>Another emulated network card</para>
+</callout>
+
+</calloutlist>
+</section>
+
+<section><title>VM Disks and VCPUs</title>
+<programlisting>    "disk": { <co id="disk_co" linkend="disk"/>
+      "0": { <co id="disk_0_co" linkend="disk_0"/>
+        "path": "\/storage\/isos\/xc-tools.iso", <co id="disk_0_path_co" linkend="disk_0_path"/>
+        "type": "file", <co id="disk_0_type_co" linkend="disk_0_type"/>
+        "mode": "r", <co id="disk_0_mode_co" linkend="disk_0_mode"/>
+        "device": "hdc", <co id="disk_0_device_co" linkend="disk_0_device"/>
+        "devtype": "cdrom", <co id="disk_0_devtype_co" linkend="disk_0_devtype"/>
+        "snapshot": "" <co id="disk_0_snapshot_co" linkend="disk_0_shapshot"/>
+      },
+      "1": { <co id="disk_1_co" linkend="disk_1"/>
+        "path": "\/storage\/disks\/d1cb870c-7cf5-46c9-a002-c00542b11b64.vhd", 
+        "type": "vhd", 
+        "mode": "w", 
+        "device": "hda",
+        "devtype": "disk",
+        "snapshot": ""
+      }
+    },
+    "vcpus": "1" <co id="vcpus_co" linkend="vcpus"/>
+  },</programlisting>
+<calloutlist>
+<callout arearefs="disk_co" id="disk">
+  <para>VM disks</para>
+</callout>
+
+<callout arearefs="disk_0_co" id="disk_0">
+  <para>First disk</para>
+</callout>
+
+<callout arearefs="disk_0_path_co" id="disk_0_path">
+  <para>Path to the virtual disk ISO, VHD file, or physical partition</para>
+</callout>
+
+<callout arearefs="disk_0_type_co" id="disk_0_type">
+  <para>Virtual disk type (file|phys)</para>
+</callout>
+
+<callout arearefs="disk_0_mode_co" id="disk_0_mode">
+  <para>Access rights (r|w)</para>
+</callout>
+
+<callout arearefs="disk_0_device_co" id="disk_0_device">
+  <para>Device identifier</para>
+</callout>
+
+<callout arearefs="disk_0_devtype_co" id="disk_0_devtype">
+  <para>Disk type (disk|cdrom)</para>
+</callout>
+
+<callout arearefs="disk_0_snapshot_co" id="disk_0_snapshot">
+  <para>Path to disk snapshot</para>
+</callout>
+
+<callout arearefs="disk_1_co" id="disk_1">
+  <para>Second virtual disk</para>
+</callout>
+
+<callout arearefs="vcpus_co" id="vcpus">
+  <para>The number of VCPUs assigned to the VM</para>
+</callout>
+
+
+</calloutlist>
+</section>
+
+<section><title>VM Identity and Further Settings</title>
+<programlisting>  "name": "Win7", <co id="name_co" linkend="name"/>
+  "slot": "1", <co id="slot_co" linkend="slot"/>
+  "description": "", <co id="description_co" linkend="description"/>
+  "start_on_boot": "false", <co id="start_on_boot_co" linkend="start_on_boot"/>
+  "hibernated": "false", <co id="hibernated_co" linkend="hibernated"/>
+  "time-offset": "0", <co id="time-offset_co" linkend="time-offset"/>
+  "pv-addons-installed": "true" <co id="pv-addons-installed_co" linkend="pv-addons-installed"/>
+}</programlisting>
+<calloutlist>
+
+<callout arearefs="name_co" id="name">
+  <para>The name of the VM as displayed in &BC;</para>
+</callout>
+
+<callout arearefs="slot_co" id="slot">
+  <para>The slot number of the VM</para>
+</callout>
+
+<callout arearefs="description_co" id="description">
+  <para>VM description</para>
+</callout>
+
+<callout arearefs="start_on_boot_co" id="start_on_boot">
+  <para>Boot the VM when booting the platform? (true|false)</para>
+</callout>
+
+<callout arearefs="hibernated_co" id="hibernated">
+  <para>Is the VM hibernating? (true|false)</para>
+</callout>
+
+<callout arearefs="time-offset_co" id="time-offset">
+  <para>Number of seconds to offset the VM clock</para>
+</callout>
+
+<callout arearefs="pv-addons-installed_co" id="pv-addons-installed">
+  <para>Are the &PV_TOOLS; installed? (true|false)</para>
+</callout>
+
+</calloutlist>
+</section>
+
+</chapter>
+
+<appendix id="sdk-contents"><title>Where Can I Find ...</title>
+
+
+
+<informaltable align="left" frame="none" width="6.5in">
+	<tgroup cols="3">
+		<colspec colname="c1" colwidth="2.2in"/>
+		<colspec colname="c2" colwidth="2.7in"/>
+		<colspec colname="c3"/>
+		<thead>
+			<row>
+				<entry><para>Item</para></entry>
+				<entry><para>Location</para></entry>				
+				<entry><para>Description</para></entry>
+			</row>
+		</thead>
+		<tbody>
+			<row>
+				<entry><para>API and Developer Documentation</para></entry>
+				<entry><para><filename>XTEngineDeveloper_Guide.pdf</filename></para></entry>			
+				<entry><para>How to extend &PB;, create a Service VM, alter the &PB; UI, communicate between domains, details of OVF support and full API documentation.</para></entry>
+			</row>
+
+			<row>
+				<entry><para>Sample OVF files</para></entry>
+				<entry><para>In <filename>xenclient-sdk.tar.gz</filename> at <filename>Citrix/XenClient_XT_SDK/Service_VM/Packaging/sample.ovf</filename> and <filename>squeeze-hvm.ovf</filename></para></entry>				
+				<entry><para>Sample VM appliance definition</para></entry>
+			</row>
+			
+			<row>
+				<entry><para>V4V for Windows Guests</para></entry>
+				<entry><para>In <filename>xenclient-sdk.tar.gz</filename> at <filename>Citrix/XenClient_XT_SDK/Service_VM/MS_Windows/Samples</filename></para></entry>			
+				<entry><para>Sample code to use V4V from Windows</para></entry>
+			</row>
+			
+			<row>
+				<entry><para>V4V for Linux Guests</para></entry>
+				<entry><para>In <filename>xenclient-sdk.tar.gz</filename> at <filename>Citrix/XenClient_XT_SDK/Service_VM/Linux/Samples</filename></para></entry>			
+				<entry><para>Sample code to use V4V from Linux</para></entry>
+			</row>
+			
+			<row>
+				<entry><para>Debian &PV_TOOLS;</para></entry>
+				<entry><para><filename>xctools-debian-repo-ia32.tar.gz</filename></para></entry>				
+				<entry><para>Debian 32-bit binary packages for XC Tools</para></entry>
+			</row>
+			
+			<row>
+				<entry><para>Code to access Xen platform functionality from kernel mode in Windows</para></entry>
+				<entry><para>In <filename>xenclient-sdk.tar.gz</filename> at <filename>Citrix/XenClient_XT_SDK/Service_VM/Linux/Samples</filename></para></entry>			
+				<entry><para>See <filename>Citrix/XenClient_XT_SDK/Service_VM/Linux/Samples/README.txt</filename></para></entry>
+			</row>
+			
+			<row>
+				<entry><para>Debian &PV_TOOLS; Source</para></entry>
+				<entry><para><filename>xctools-debian-repo-noarch.tar.gz</filename></para></entry>				
+				<entry><para>Debian source packages for XC Tools</para></entry>
+			</row>
+			
+			<row>
+				<entry><para><filename>gen-packages.sh</filename></para></entry>
+				<entry><para>In <filename>xenclient-sdk.tar.gz</filename> at <filename>Citrix/XenClient_XT_SDK/Custom_OTA_Update</filename></para></entry>				
+				<entry><para>See <olink linkend="XTEngineDevloperGuide" targetptr="devguide-adding_extension_packs" /></para></entry>
+			</row>
+			<row>
+				<entry><para><filename>gen-repository.sh</filename></para></entry>
+				<entry><para>In <filename>xenclient-sdk.tar.gz</filename> at <filename>Citrix/XenClient_XT_SDK/Custom_OTA_Update</filename></para></entry>				
+				<entry><para>See <olink linkend="XTEngineDevloperGuide" targetptr="devguide-adding_extension_packs" /></para></entry>
+			</row>
+			
+			<row>
+				<entry><para><filename>gen-signature.sh</filename></para></entry>	
+				<entry><para>In <filename>xenclient-sdk.tar.gz</filename> at <filename>Citrix/XenClient_XT_SDK/Custom_OTA_Update</filename></para></entry>				
+				<entry><para>See <olink linkend="XTEngineDevloperGuide" targetptr="devguide-adding_extension_packs" /></para></entry>
+			</row>
+			
+			<row>
+				<entry><para>User Interface Extension Files</para></entry>
+<entry><para>In <filename>xenclient-sdk.tar.gz</filename> at <filename>Citrix/XenClient_XT_SDK/User_Interface/assets.zip</filename> and <filename>plugin_example.zip</filename></para></entry>				<entry><para>Sample logo, wallpaper, VM icon</para></entry>
+			</row>
+		</tbody>
+	</tgroup>				
+</informaltable>
+
+
+
+
+</appendix>
+
+&colophon;
+
+
+</book>

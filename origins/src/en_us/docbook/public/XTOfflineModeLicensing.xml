@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+
+<!--
+  Copyright 2014 by Citrix Systems, Inc.  Created by Gordon Stretch <Gordon.Stretch@citrix.com>. This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+-->
+
+
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+<!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+<!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+<!ENTITY % local PUBLIC "local" "../shared/local.ent">
+
+  %local;
+]><article lang="en" id="XTOfflineModeLicensing"><?dbhtml dir="XTOfflineModeLicensing"?>
+	<articleinfo id="bookinfo_titlestuff" role="die">
+		<title>&COMPANY_NAME_SHORT;<trademark class="registered"/> &PB;<trademark class="trade"/> &PRODUCT_VERSION; Offline Licensing Mode Guide</title>
+		<pubdate><?dbtimestamp format="d B Y"?></pubdate>
+		<releaseinfo>High-assurance isolation &amp; security for virtual environments</releaseinfo>  
+		&legal;
+	</articleinfo>
+<?hard-pagebreak?>
+<section><title>Offline Licensing Mode Guide</title>
+
+<para>Information contained in this document supercedes some of the information in: <olink targetdoc="XTSynchronizerAdministratorGuide" targetptr="sync-intro_db-access" />, <olink targetdoc="XTSynchronizerAdministratorGuide" targetptr="sync-installation_requirements" />, <olink targetdoc="XTSynchronizerAdministratorGuide" targetptr="installation_components_licensing_server" />, <olink targetdoc="XTSynchronizerAdministratorGuide" targetptr="proc-license-server-daemon-installation" />, <olink targetdoc="XTSynchronizerAdministratorGuide" targetptr="sync-config__licensing" />.</para>
+
+<para>Offline licensing mode changes the licensing scheme so that a license is required to manage a &PB; device. The &PB; device will under no circumstances display a banner indicating that it is not licenced. There is no requirement for a &COMPANY_NAME_SHORT; licensing server in your infrastructure when using offline licensing mode.</para>
+<important><para>Offline licensing mode is not part of the standard &PB; product. Using offline licensing mode is strictly allowed only by explicit agreement with &COMPANY_NAME_SHORT;.</para></important>
+
+
+<warning><para>Do not run the <literal>xclicd</literal> d&aelig;mon when using offline licensing mode.</para></warning>
+
+<para>Install <filename>xclicimp-&PRODUCT_RELEASE;-1.el6.x86_64.rpm</filename>.</para>
+<para>To use offline licensing mode, start by copying your &PB; licenses to your &BACKEND; server. Then use the <command>xclicimp</command> command to import license information into the &BACKEND; database, connecting as the <literal><replaceable>&BACKEND;_name</replaceable>_license</literal> user. Specifying the port is optional if you are using the default port <literal>1521</literal>:</para>
+<screen>xclicimp -d <replaceable>directory_containing_licenses</replaceable> -s <replaceable>db_server_host</replaceable>:<replaceable>db_server_port</replaceable> -u <replaceable>db_license_user</replaceable> \
+-p <replaceable>db_license_user_password</replaceable></screen>
+<note><para>Run this command again should you acquire additional &PB; licenses at any time.</para></note>
+<para>You can now run the following command to get information about the available licenses:</para>
+<screen>sync-admin show-licensing</screen>
+<para>The number of available licenses will be decremented by one whenever you run the <command>sync-admin add-device</command> command to add a new device. If you run out of licenses, the <command>sync-admin add-device</command> will fail until further licenses are purchased and imported.</para>
+</section>
+</article>

@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+  Copyright 2014 by Citrix Systems, Inc.  Created by Gordon Stretch <Gordon.Stretch@citrix.com>. This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+-->
+
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+<!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+<!ENTITY % generated_entity_declarations PUBLIC "generated_entity_declarations" "../shared/generated_entity_declarations.ent">
+  %generated_entity_declarations;
+<!ENTITY generated_entity_references PUBLIC "generated_entity_references" "../shared/generated_entity_references.ent">
+  <!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+<!ENTITY % local PUBLIC "local" "../shared/local.ent">
+  %local;
+]>
+<book lang="en" id="user_guide">
+	<?dbhtml dir="XenClientDevelopersGuide"?>
+
+	<bookinfo id="bookinfo_titlestuff" role="die">
+		<title>&COMPANY_NAME_SHORT;<trademark class="registered" role="die"/> &PB;<trademark class="trade" role="die" /> &PRODUCT_VERSION; Developers Guide</title>
+
+		<pubdate>
+			<?dbtimestamp format="d B Y"?>
+		</pubdate>
+
+  &legal;
+		<releaseinfo>This document is a guide for developers to the &COMPANY_NAME_SHORT;<trademark class="registered" role="die"/> &PB;<trademark class="trade" role="die"/> &PRODUCT_VERSION; release.</releaseinfo>
+	
+	</bookinfo>
+
+	<chapter>
+		<title>&PB; architecture</title>
+		<para>To be completed.</para>
+
+
+	</chapter>
+
+	
+	<chapter>
+		<title>&PB; command-line tools</title>
+		<para></para>
+			<informaltable>
+				<tgroup cols='3'>
+
+					<colspec colwidth='2in'/>
+					<colspec colwidth='1in'/>
+					<colspec colwidth='*'/>
+					<thead>
+						<row>
+							<entry>type</entry>
+							<entry>symbol</entry>
+							<entry>description</entry>
+						</row>
+					</thead>
+					<tbody>
+<row><entry><para>INVALID</para></entry><entry><para>0 (NUL)</para></entry><entry><para>Not a valid type code, used to terminate signatures</para></entry></row>
+<row><entry><para>BYTE</para></entry><entry><para>y</para></entry><entry><para>8-bit unsigned integer</para></entry></row>
+<row><entry><para>BOOLEAN</para></entry><entry><para>b</para></entry><entry><para>Boolean value, 0 is FALSE and 1 is TRUE. Everything else is invalid.</para></entry></row>
+<row><entry><para>INT16</para></entry><entry><para>n</para></entry><entry><para>16-bit signed integer</para></entry></row>
+<row><entry><para>UINT16</para></entry><entry><para>q</para></entry><entry><para>16-bit unsigned integer</para></entry></row>
+<row><entry><para>INT32</para></entry><entry><para>i</para></entry><entry><para>32-bit signed integer</para></entry></row>
+<row><entry><para>UINT32</para></entry><entry><para>u</para></entry><entry><para>32-bit unsigned integer</para></entry></row>
+<row><entry><para>INT64</para></entry><entry><para>x</para></entry><entry><para>64-bit signed integer</para></entry></row>
+<row><entry><para>UINT64</para></entry><entry><para>t</para></entry><entry><para>64-bit unsigned integer</para></entry></row>
+<row><entry><para>DOUBLE</para></entry><entry><para>d</para></entry><entry><para>IEEE 754 double</para></entry></row>
+<row><entry><para>STRING</para></entry><entry><para>s</para></entry><entry><para>UTF-8 string (must be valid UTF-8). Must be nul terminated and contain no other nul bytes.</para></entry></row>
+<row><entry><para>OBJECT_PATH</para></entry><entry><para>o</para></entry><entry><para>Name of an object instance</para></entry></row>
+<row><entry><para>SIGNATURE</para></entry><entry><para>g</para></entry><entry><para>A type signature</para></entry></row>
+<row><entry><para>ARRAY</para></entry><entry><para>a</para></entry><entry><para>Array</para></entry></row>
+<row><entry><para>STRUCT</para></entry><entry><para>r()</para></entry><entry><para>Struct</para></entry></row>
+<row><entry><para>VARIANT</para></entry><entry><para>v</para></entry><entry><para>Variant type (the type of the value is part of the value itself)</para></entry></row>
+<row><entry><para>DICT_ENTRY</para></entry><entry><para>e{}</para></entry><entry><para>Entry in a dict or map (array of key-value pairs)</para></entry></row>
+<row><entry><para>UNIX_FD</para></entry><entry><para>h</para></entry><entry><para>Unix file descriptor</para></entry></row>
+	</tbody>
+				</tgroup>
+			</informaltable>
+	
+&generated_entity_references;
+
+	</chapter>
+
+
+	<chapter>
+		<title>Example &PB; D-Bus Ruby Application</title>
+	<screen>#!/usr/bin/ruby
+require 'dbus'
+
+bus = DBus::SystemBus.instance <co id="example_comment_co_1" linkends="example_comment_1"/>
+service = bus.service("com.citrix.xenclient.xenmgr") <co id="example_comment_co_2" linkends="example_comment_2"/>
+
+xenmgr_obj = service.object("/") <co id="example_comment_co_3" linkends="example_comment_3"/>
+xenmgr_obj.introspect()
+
+vm_obj_paths = xenmgr_obj["com.citrix.xenclient.xenmgr"].list_vms() [0] <co id="example_comment_co_4" linkends="example_comment_4"/>
+vms = vm_obj_paths.map { |path|
+  vm = service.object(path.to_s)
+  vm.introspect
+  vm
+}
+
+vms.each { |vm| <co id="example_comment_co_5" linkends="example_comment_5"/>
+  vm_properties = vm["org.freedesktop.DBus.Properties"]
+  name = vm_properties.Get("com.citrix.xenclient.xenmgr.vm", "name") [0]
+  state = vm_properties.Get("com.citrix.xenclient.xenmgr.vm", "state") [0]
+  puts "VM NAME: #{name}: STATE = #{state}"
+}</screen>
+
+<calloutlist>
+  <callout arearefs="example_comment_co_1" id="example_comment_1">
+    <para>Connect to the system bus.</para>
+  </callout>	
+    <callout arearefs="example_comment_co_2" id="example_comment_2">
+    <para>Obtain a reference to the  xenmgr service.</para>
+  </callout>	
+    <callout arearefs="example_comment_co_3" id="example_comment_3">
+    <para>Access and introspect the root object.</para>
+  </callout>	
+    <callout arearefs="example_comment_co_4" id="example_comment_4">
+    <para>Access and introspect VM objects.</para>
+  </callout>	
+    <callout arearefs="example_comment_co_5" id="example_comment_5">
+    <para>Print the name and current state of all VMs.</para>
+  </callout>	
+</calloutlist>  
+	</chapter>
+<chapter><title>VM Database Configuration File Syntax</title>
+
+<para>The properties associated with each virtual machine are defined in a human-readable text file. This file is managed by the &PB; tool stack and is not typically edited by hand. If you edit this file manually, run the command <literal>killall HUP dbd</literal> in the control domain console window to signal the <literal>dbd</literal> process to reload the database. The following sections explain the syntax of an example VM database file.</para>
+
+<section><title>VM Identity and General Configuration</title>
+<programlisting>{
+  "uuid": "3a9ecb37-a563-45ca-ad06-f4f313e202f4", <co id="uuid_co" linkends="uuid"/>
+  "type": "svm", <co id="type_co" linkends="type"/>
+  "image_path": "images\/vms\/001_ComputerWin7_h32bit_120.png", <co id="image_path_co" linkends="image_path"/>
+  "config": { <co id="config_co" linkends="config"/>
+    "notify": "dbus", <co id="notify_co" linkends="notify"/>
+    "hvm": "true", <co id="hvm_co" linkends="hvm"/>
+    "pae": "true", <co id="pae_co" linkends="pae"/>
+    "acpi": "true", <co id="acpi_co" linkends="acpi"/>
+    "apic": "true", <co id="apic_co" linkends="apic"/>
+    "viridian": "true",
+    "hap": "true",
+    "nx": "true",
+    "sound": "ac97", <co id="sound_co" linkends="sound"/>
+    "memory": "1024", <co id="memory_co" linkends="memory"/>
+    "display": "none", <co id="display_co" linkends="display"/>
+    "boot": "cd", <co id="boot_co" linkends="boot"/> 
+    "extra-xenvm": { <co id="extra-xenvm_co" linkends="extra-xenvm"/>
+      "0": "flask-label=system_u:system_r:domU_t" <co id="extra_vm_0_co" linkends="extra_vm_0"/>
+    },</programlisting>
+<calloutlist>
+  <callout arearefs="uuid_co" id="uuid">
+    <para>&PB; ID of the VM.</para>
+  </callout>	
+  <callout arearefs="type_co" id="type">
+    <para>The VM type (svm|pvm). pvm indicates that the VM has &HDX; enabled</para>
+  </callout>	
+  <callout arearefs="image_path_co" id="image_path">
+    <para>The path to the VM icon file.</para>
+  </callout>
+  <callout arearefs="config_co" id="config">
+    <para>VM configuration section.</para>
+  </callout>
+  <callout arearefs="notify_co" id="notify">
+    <para>VM configuration section.</para>
+  </callout>
+  
+  <callout arearefs="hvm_co" id="hvm">
+    <para>Is the VM an HVM? (true/false)</para>
+  </callout>
+  <callout arearefs="pae_co" id="pae">
+    <para>Use PAE? (true/false)</para>
+  </callout>
+   <callout arearefs="acpi_co" id="acpi">
+    <para>Use ACPI? (true/false)</para>
+  </callout>
+  <callout arearefs="apic_co" id="apic">
+    <para>Use APIC? (true/false)</para>
+  </callout>
+  <callout arearefs="sound_co" id="sound">
+    <para>Sound card to emulate in the VM</para>
+  </callout>
+  <callout arearefs="memory_co" id="memory">
+    <para>Quantity of ram allocated to the VM</para>
+  </callout>
+  <callout arearefs="display_co" id="display">
+    <para>Display type to use</para>
+  </callout>
+  <callout arearefs="boot_co" id="boot">
+    <para>Boot order (c for hard drive, d for cd and n for network)</para>
+  </callout>
+  <callout arearefs="extra-xenvm_co" id="extra-xenvm">
+    <para>Extra options</para>
+  </callout>
+  <callout arearefs="extra_vm_0_co" id="extra_vm_0">
+    <para>VM label</para>
+  </callout>
+   </calloutlist>
+</section>
+
+<section><title>VM Networking</title>
+   <programlisting>    "nic": { <co id="nic_co" linkend="nic"/>
+      "0": { <co id="nic_0_co" linkend="nic_0"/>
+        "id": "0", <co id="nic_0_id_co" linkend="nic_0_id"/>
+        "bridge": "brbridged", <co id="nic_0_bridged_co" linkend="nic_0_bridged"/>
+        "firewall-rules": { <co id="firewall-rules_co" linkend="firewall-rules"/>
+          "0": { <co id="firewall-rules_0_co" linkend="firewall-rules_0"/>
+            "type": "output", <co id="firewall-rules_0_type_co" linkend="firewall-rules_0_type"/>
+            "protocol": "tcp", <co id="firewall-rules_0_protocol_co" linkend="firewall-rules_0_protocol"/>
+            "ip": "10.80.248.206", <co id="firewall-rules_0_ip_co" linkend="firewall-rules_0_ip"/>
+            "port": "80", <co id="firewall-rules_0_port_co" linkend="firewall-rules_0_port"/>
+            "cmd": "drop" <co id="firewall-rules_0_cmd_co" linkend="firewall-rules_0_cmd"/>
+          },
+          "1": { <co id="firewall-rules_1_co" linkend="firewall-rules_1"/>
+            "type": "output", 
+            "cmd": "reject" 
+          }
+        }
+      },
+      "1": { <co id="nic_1_co" linkend="nic_1"/>
+        "id": "1", 
+        "bridge": "brwireless" 
+      }
+    },</programlisting>
+<calloutlist>
+  <callout arearefs="nic_co" id="nic">
+	<para>Emulated network cards section begins</para>
+  </callout>
+	
+  <callout arearefs="nic_0_co" id="nic_0">
+	<para>First NIC details begin</para>
+  </callout>
+<callout arearefs="nic_0_id_co" id="nic_0_id">
+  <para>Card ID</para>
+</callout>
+<callout arearefs="nic_0_bridged_co" id="nic_0_bridged">
+  <para>Card bridge</para>
+</callout>
+<callout arearefs="firewall-rules_co" id="firewall-rules">
+  <para>VM-specific firewall rules</para>
+</callout>
+<callout arearefs="firewall-rules_0_co" id="firewall-rules_0">
+  <para>Rule ID</para>
+</callout>
+<callout arearefs="firewall-rules_0_type_co" id="firewall-rules_0_type">
+  <para>Rule type (input/output)</para>
+</callout>
+<callout arearefs="firewall-rules_0_protocol_co" id="firewall-rules_0_protocol">
+  <para>Rule protocol (tcp/udp etc.)</para>
+</callout>
+<callout arearefs="firewall-rules_0_ip_co" id="firewall-rules_0_ip">
+  <para>IP address</para>
+</callout>
+<callout arearefs="firewall-rules_0_port_co" id="firewall-rules_0_port">
+  <para>Port</para>
+</callout>
+<callout arearefs="firewall-rules_0_cmd_co" id="firewall-rules_0_cmd">
+  <para>Command (accept|drop|reject)</para>
+</callout>
+<callout arearefs="firewall-rules_1_co" id="firewall-rules_1">
+  <para>Another VM-specific firewall rule</para>
+</callout>
+<callout arearefs="nic_1_co" id="nic_1">
+  <para>Another emulated network card</para>
+</callout>
+
+</calloutlist>
+</section>
+
+<section><title>VM Disks and VCPUs</title>
+<programlisting>    "disk": { <co id="disk_co" linkend="disk"/>
+      "0": { <co id="disk_0_co" linkend="disk_0"/>
+        "path": "\/storage\/isos\/xc-tools.iso", <co id="disk_0_path_co" linkend="disk_0_path"/>
+        "type": "file", <co id="disk_0_type_co" linkend="disk_0_type"/>
+        "mode": "r", <co id="disk_0_mode_co" linkend="disk_0_mode"/>
+        "device": "hdc", <co id="disk_0_device_co" linkend="disk_0_device"/>
+        "devtype": "cdrom", <co id="disk_0_devtype_co" linkend="disk_0_devtype"/>
+        "snapshot": "" <co id="disk_0_snapshot_co" linkend="disk_0_shapshot"/>
+      },
+      "1": { <co id="disk_1_co" linkend="disk_1"/>
+        "path": "\/storage\/disks\/d1cb870c-7cf5-46c9-a002-c00542b11b64.vhd", 
+        "type": "vhd", 
+        "mode": "w", 
+        "device": "hda",
+        "devtype": "disk",
+        "snapshot": ""
+      }
+    },
+    "vcpus": "1" <co id="vcpus_co" linkend="vcpus"/>
+  },</programlisting>
+<calloutlist>
+<callout arearefs="disk_co" id="disk">
+  <para>VM disks</para>
+</callout>
+
+<callout arearefs="disk_0_co" id="disk_0">
+  <para>First disk</para>
+</callout>
+
+<callout arearefs="disk_0_path_co" id="disk_0_path">
+  <para>Path to the virtual disk ISO, VHD file, or physical partition</para>
+</callout>
+
+<callout arearefs="disk_0_type_co" id="disk_0_type">
+  <para>Virtual disk type (file|phys)</para>
+</callout>
+
+<callout arearefs="disk_0_mode_co" id="disk_0_mode">
+  <para>Access rights (r|w)</para>
+</callout>
+
+<callout arearefs="disk_0_device_co" id="disk_0_device">
+  <para>Device identifier</para>
+</callout>
+
+<callout arearefs="disk_0_devtype_co" id="disk_0_devtype">
+  <para>Disk type (disk|cdrom)</para>
+</callout>
+
+<callout arearefs="disk_0_snapshot_co" id="disk_0_snapshot">
+  <para>Path to disk snapshot</para>
+</callout>
+
+<callout arearefs="disk_1_co" id="disk_1">
+  <para>Second virtual disk</para>
+</callout>
+
+<callout arearefs="vcpus_co" id="vcpus">
+  <para>The number of VCPUs assigned to the VM</para>
+</callout>
+
+
+</calloutlist>
+</section>
+
+<section><title>VM Identity and Further Settings</title>
+<programlisting>  "name": "Win7", <co id="name_co" linkend="name"/>
+  "slot": "1", <co id="slot_co" linkend="slot"/>
+  "description": "", <co id="description_co" linkend="description"/>
+  "start_on_boot": "false", <co id="start_on_boot_co" linkend="start_on_boot"/>
+  "hibernated": "false", <co id="hibernated_co" linkend="hibernated"/>
+  "time-offset": "0", <co id="time-offset_co" linkend="time-offset"/>
+  "pv-addons-installed": "true" <co id="pv-addons-installed_co" linkend="pv-addons-installed"/>
+}</programlisting>
+<calloutlist>
+
+<callout arearefs="name_co" id="name">
+  <para>The name of the VM as displayed in &BC;</para>
+</callout>
+
+<callout arearefs="slot_co" id="slot">
+  <para>The slot number of the VM</para>
+</callout>
+
+<callout arearefs="description_co" id="description">
+  <para>VM description</para>
+</callout>
+
+<callout arearefs="start_on_boot_co" id="start_on_boot">
+  <para>Boot the VM when booting the platform? (true|false)</para>
+</callout>
+
+<callout arearefs="hibernated_co" id="hibernated">
+  <para>Is the VM hibernating? (true|false)</para>
+</callout>
+
+<callout arearefs="time-offset_co" id="time-offset">
+  <para>Number of seconds to offset the VM clock</para>
+</callout>
+
+<callout arearefs="pv-addons-installed_co" id="pv-addons-installed">
+  <para>Are the &PV_TOOLS; installed? (true|false)</para>
+</callout>
+
+</calloutlist>
+</section>
+
+</chapter>
+&colophon;
+
+</book>	

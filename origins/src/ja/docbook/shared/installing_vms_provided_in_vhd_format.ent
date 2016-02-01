@@ -1,0 +1,48 @@
+<procedure><title>Installing VMs provided in VHD format</title>
+
+<step><para>Download the provided VHD and configuration files from <ulink url="ftp.vmd.citrix.com" />.</para></step>
+<step><para>Reboot &PB;. From the GRUB bootloader menu, select <guilabel>Maintenance mode</guilabel>. Select a console and log in, using the username <literal>root</literal> and no password.</para></step>
+<step><para>Determine the IP address of the &PB; host by running <command>ifconfig</command>.</para></step>
+<step><para>Using <command>scp</command>, copy the following VM configuration files over your network to <filename>/config/vms</filename> on the &PB; host:</para>
+<itemizedlist> 
+<listitem><para>pvm</para></listitem>
+<listitem><para>svm</para></listitem> 
+<listitem><para>asvm</para></listitem>
+</itemizedlist>
+</step>
+<step>
+<para>Using <command>scp</command>, copy the following VM configuration files over your network to <filename>/storage/disk</filename> on the &PB; host:
+</para>  
+<itemizedlist>
+<listitem><para><filename>appserver1.vhd</filename></para></listitem>
+<listitem><para><filename>corporate1.vhd</filename></para></listitem>
+<listitem><para><filename>vista.vhd</filename></para></listitem>
+</itemizedlist>
+<warning><para>The Windows disk image is not to be redistributed outside of the partner programme.</para></warning>
+</step>
+<step><para>Reboot the &PB; host.</para>
+</step>
+<step><para>Use The &PB; web-based UI to create a new VM. See <xref linkend="installing_secondary_vms" /> and <xref linkend="installing_primary_vms" /> for more information. Note the UUID of the new VM.</para>
+<note><para>Please allow some time for the UI to load.</para></note>
+</step>
+<step><para>Reboot into Maintenance Mode.</para></step>
+<step><para>Navigate to <filename>/storage/disk</filename> on the control domain. Find the VHD file that has a UUID that matches the UUID of the VM you have just created. This VHD file will be approximately 30Kb.</para></step>
+<step><para>Replace the VHD file with the VHD file of the operating system you want to install on your new VM, ensuring that the UUID name of the file is preserved.</para></step>
+<step><para>Reboot. Your new VM can now be started using the UI.</para></step>
+<step><para>For Windows VMs you must now install the required drivers. Copy the following files from &PB; files from the installation media:</para>
+<itemizedlist>
+<listitem><para><filename><replaceable>cd_drive</replaceable>:\drivers\intel\graphics\winvista15134.exe</filename></para></listitem>
+<listitem><para><filename><replaceable>cd_drive</replaceable>:\drivers\intel\wireless\ICS_Dv32.exe</filename></para></listitem>
+<listitem><para><filename><replaceable>cd_drive</replaceable>:\drivers\xen\pvdrivers-xensetup-unsigned.exe</filename></para></listitem>
+<listitem><para><filename><replaceable>cd_drive</replaceable>:\drivers\xen\blanker\Blanker.exe</filename></para></listitem>
+<listitem><para><filename><replaceable>cd_drive</replaceable>:\drivers\xen\blanker\BlankerHook.dll</filename></para></listitem>
+<listitem><para><filename><replaceable>cd_drive</replaceable>:\drivers\xen\switcher\Switcher.exe</filename></para></listitem>
+</itemizedlist>
+</step> 
+<step><para>Install the first 3 executables and reboot. This will cause machine performance to improve to bare-metal levels.</para></step>
+<step><para>Add <filename>Blanker.exe</filename> to your start menu items (<filename><replaceable>root_disk</replaceable>:\Documents and Settings\<replaceable>username</replaceable>\Start Menu\Programs\Startup</filename>) and ensure that the <filename>Blanker.exe</filename> is run as <literal>administrator</literal>.</para> 
+
+</step>
+<step><para>Ensure that Windows Defender or any other software is configured so that it does not prevent <filename>blanker.exe</filename> from running.</para></step>
+<step><para>Reboot your host.</para><warning><para>If you are running Windows Vista, disable User Account Control (UAC) before rebooting.</para></warning></step>
+</procedure>

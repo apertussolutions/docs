@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+
+<!--
+  Copyright 2014 by Citrix Systems, Inc.  Created by Gordon Stretch <Gordon.Stretch@citrix.com>. This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+-->
+
+
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+<!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+<!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+<!ENTITY xc_relnotes_shared PUBLIC "xc_relnotes_shared" "../shared/xc_relnotes_shared.ent">
+<!ENTITY % local PUBLIC "local" "../shared/local.ent">
+
+  %local;
+]><article lang="en"><?dbhtml dir="XTReleaseNotes"?>
+	<articleinfo id="bookinfo_titlestuff" role="die">
+		<title>&COMPANY_NAME_SHORT;<trademark class="registered"/> &PB; &XT;<trademark class="trade"/> &PRODUCT_VERSION; Release Notes</title>
+		<pubdate><?dbtimestamp format="d B Y"?></pubdate>
+  &legal;
+		<releaseinfo>This document serves as a list of known issues for the &COMPANY_NAME_SHORT;<trademark class="registered"/> &PB; EIP <trademark class="trade"/> &PRODUCT_VERSION; release.</releaseinfo>
+
+	</articleinfo>
+<?hard-pagebreak?>
+	<section id="known_issues"><title>Known Issues</title>
+	
+		<para>This document details known issues with this release and any
+    workarounds that can be applied. Please report any other issues to
+    your &COMPANY_NAME_SHORT; support representative.
+		</para>
+		<informaltable frame="none" width="6.5in">
+			<tgroup cols="1">
+
+				<colspec colwidth="6.5in"/>
+				<colspec colwidth="5.50in"/>
+
+			<tbody>
+				<row>
+
+						<entry>
+							<para role="horrible-release-note-hack">Debian Squeeze Requires Workaround when Installing</para><para>
+								<emphasis role="bold">Issue:</emphasis> The default graphics mode for Squeeze installation is not supported by &PB;.</para>
+							<para>
+								<emphasis role="bold">Workaround:</emphasis> Follow <xref linkend="squeeze_workaround" />.</para>
+						</entry>
+					</row>
+					
+				<row>
+ 
+						<entry>
+							<para role="horrible-release-note-hack">ATI Graphics VM Hangs when Attempting to Resume from Hibernation</para><para>
+								<emphasis role="bold">Issue:</emphasis> The <guilabel>Resuming Windows</guilabel> screen hangs when an ATI graphics enabled VM is resumed from hibernation.</para>
+							<para>
+								<emphasis role="bold">Workaround:</emphasis> Do not hibernate a VM that is using ATI graphics.</para>
+						</entry>
+					</row>					
+					
+					
+&xc_relnotes_shared;
+	
+					</tbody>   
+			</tgroup>
+		</informaltable>
+
+	</section>
+	<section id="workarounds"><title>Workarounds</title>
+		<procedure id="manual_graphics_driver_install_vista"><title>To Manually Install Graphics Drivers on a Vista VM</title>
+
+			<step><para>Navigate to <ulink url="http://downloadcenter.intel.com/default.aspx"/>.</para></step>
+			<step><para>Select <guilabel>Graphics</guilabel> from the <guilabel>Select a product family</guilabel> list.</para></step>
+			<step><para>Select <guilabel>Laptop graphics controllers</guilabel> from the <guilabel>Select a product line</guilabel> list.</para></step>
+			<step><para>Select <guilabel>Mobile Intel 4 Series Express Chipset Family</guilabel> from the <guilabel>Select a product name</guilabel> list.</para></step>
+			<step><para>Select your operating system from the <guilabel>Select an Operating System</guilabel> list.</para></step>
+			<step><para>The required graphics drivers are displayed in the search results. Download and install the latest graphics driver. The name of the driver you need is Intel<trademark class="registered"/> Graphics Driver for Windows 7 and Windows Vista (exe), version <literal>15.17.3.2104 (8.15.10.2104)</literal>. The filename of the download is <filename>WinVista7_15173.exe</filename>.</para></step>
+		</procedure>
+		
+		<procedure id="to_disable_usb_legacy_support">
+			<title>To Disable USB Legacy Support on an HP 8440p</title>
+			<step><para>While the device is booting, press <keycap>Esc</keycap>.</para></step>
+			<step><para>Navigate to <guilabel>System Configuration &gt; Device Configurations</guilabel>.</para></step>
+		<step><para>Uncheck the <literal>USB legacy support</literal> checkbox.</para></step>
+	</procedure>
+	
+	<procedure id="recovering_a_full_disk">
+	<title>To Recover from a Full Disk</title>
+	<step><para>Reboot the &PB; host.</para></step>
+	<step><para>While the &PB; boot screen is displayed, press <keycap>Esc</keycap>.</para></step>
+	<step><para>Boot into the <guilabel>console access</guilabel> option.</para></step>
+	<step><para>When a console is available, log in as <literal>root</literal>.</para></step>
+	<step><para>Delete the file <filename>/storage/xc_reserved</filename>:</para>
+	<screen>rm /storage/xc_reserved</screen>
+	<para>This will free up sufficient disk space to allow you to boot into &PB; and backup your VMs to &BACKEND;.</para></step>
+	</procedure>
+
+  <procedure id="squeeze_workaround"><title>To Install Debian Squeeze</title>
+  
+  <step><para>Boot into the installation media.</para></step>
+<step><para>The <guilabel>Installer boot menu</guilabel> screen is displayed. Select the type of installation you require (<guilabel>Install</guilabel> or <guilabel>Graphical Install</guilabel>).</para></step>
+<step><para>Press <keycap>Tab</keycap>. The installer command line is displayed.</para></step>
+<step><para>Remove all <literal>vga=</literal> arguments from the command line, or change the value of the argument to <literal>792</literal> or <literal>798</literal>.</para></step>
+<step><para>Press <keycap>Enter</keycap>.</para></step>
+  </procedure>
+
+	</section>
+	<!--
+
+<procedure id="amt_workaround"><title>To enable AMT</title>
+	<step><para>In &BC;, press <keycap>Shift + Ctrl + t</keycap> to bring up the control domain terminal window.</para></step>
+	<step><para>Enter the user name and password your entered during &PB; installation.</para></step>
+	<step><para>Run the following commands:</para>
+	<screen>mv /lib/modules/*/extra/e1000e.ko /lib/modules/
+cd /lib/modules/*
+depmod -a</screen></step>
+	<step><para>Close the terminal window.</para></step>
+	<step><para>In &PB;, click <guilabel>Power</guilabel> and select <guilabel>Restart</guilabel>.</para></step>
+	<step><para>When your device has rebooted, switch to VM detail view.</para></step>
+	<step><para>On the VM you want to enable AMT on, click <guilabel>View Details</guilabel>.</para></step>
+	<step><para>Click the <guilabel>Advanced</guilabel> tab.</para></step>
+	<step><para>Click <guilabel>Edit</guilabel>.</para></step>
+	<step><para>From the <guilabel>Intel AMT ME Pass-through</guilabel> dropdown list, select  <guilabel>Enabled</guilabel>.</para></step>
+	<step><para>In &PB;, click <guilabel>Power</guilabel> and select <guilabel>Restart</guilabel>.</para></step>
+	
+	</procedure> 
+&colophon;
+	-->
+
+</article>

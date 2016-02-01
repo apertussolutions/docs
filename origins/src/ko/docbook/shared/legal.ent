@@ -1,0 +1,15 @@
+  <legalnotice><para role="adress-line-one">Copyright <trademark class="copyright" role="die" /> 2011 &COMPANY_NAME_SHORT; All Rights Reserved.</para>
+  <para role="adress-subsequent-lines">Version: &PRODUCT_VERSION;</para>
+  <para role="adress-line-one">Citrix, Inc.</para>
+<para role="adress-subsequent-lines">851 West Cypress Creek Road</para>
+<para role="adress-subsequent-lines">Fort Lauderdale, FL 33309</para>
+<para role="adress-subsequent-lines">United States of America</para>
+<formalpara><title>Disclaimers</title>
+<para>This document is furnished "AS IS." Citrix, Inc. disclaims all warranties regarding the contents of this document, including, but not limited to, implied warranties of merchantability and fitness for any particular purpose. This document may contain technical or other inaccuracies or typographical errors. Citrix, Inc. reserves the right to revise the information in this document at any time without notice. This document and the software described in this document constitute confidential information of Citrix, Inc. and its licensors, and are furnished under a license from Citrix, Inc.</para></formalpara>
+<para>Citrix Systems, Inc., the Citrix logo, Citrix XenClient, are trademarks of Citrix Systems, Inc. in the United States and other countries. All other products or services mentioned in this document are trademarks or registered trademarks of their respective companies.</para>
+<para>Citrix Systems, Inc. acknowledges all trademarks used in this document. Linux is a registered trademark of Linus Torvalds and Ubuntu is registered trademark of Canonical Ltd. Windows is a registered trademarks of Microsoft Corporation. All trademarks are the property of their respective owners.</para>
+<formalpara><title>Trademarks</title>
+<para>Citrix <trademark class="registered" role="die"></trademark></para>
+</formalpara>
+<para role="adress-subsequent-lines">XenClient <trademark class="trademark" role="die"></trademark></para>
+</legalnotice>

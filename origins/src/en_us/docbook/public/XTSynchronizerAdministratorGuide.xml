@@ -1,0 +1,1007 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+  Copyright 2014 by Citrix Systems, Inc.  Created by Gordon Stretch <Gordon.Stretch@citrix.com>. This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+-->
+
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+  <!ENTITY colophon PUBLIC "colophon" "../../../../shared/xml/colophon.ent">
+  <!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+  <!ENTITY view_details PUBLIC "view_details" "../shared/view_details.ent">
+  <!ENTITY shared_upgrade_and_install_steps PUBLIC "shared_upgrade_and_install_steps" "../shared/shared_upgrade_and_install_steps.ent">
+  <!ENTITY choose_xt_installation_medium PUBLIC "choose_xt_installation_medium" "../shared/choose_xt_installation_medium.ent">
+  <!ENTITY % local PUBLIC "local" "../shared/local.ent">
+  %local;
+]><book id="XTSynchronizerAdministratorGuide" lang="en"><?dbhtml dir="XTSynchronizerAdministratorGuide"?>
+ <bookinfo id="bookinfo_titlestuff" role="die">
+  <title>&COMPANY_NAME_SHORT;<trademark class="registered" role="die"/> &PRODUCT_BRAND;<trademark class="trade"/> &BACKEND; &PRODUCT_VERSION; Administrator Guide</title>
+  <pubdate><?dbtimestamp format="d B Y"?></pubdate>
+  <releaseinfo>High-assurance isolation &amp; security for virtual environments</releaseinfo>  
+  &legal;
+  
+ </bookinfo>
+
+<chapter id="sync-intro">
+<title>Introduction</title>
+<para>&BACKEND; XT is a management center for the &PB; product, allowing IT administrators to manage and update &PB; devices, deploy and update virtual machines to them, perform auditing, and take action if the devices become lost or compromised. &BACKEND; is a scalable web application, designed to support up to several thousand clients depending on your configuration. Security is paramount for a management application and &BACKEND; uses industry-standard techniques to ensure that your devices and management servers remain robust against compromise.</para>
+
+<section id="sync-intro_basic-operation"><title>Basic Operation</title>
+<para>&BACKEND; XT operates by allowing the administrator to define a target state for a device. This target state consists of configuration, disk data, keys, and upgrade repositories. &PB; implements the target state defined by the administrator by determining what the desired state is, then taking action to achieve it. The &PB; device reports its current state to &BACKEND; so that the administrator can identify anomalies, view progress, or diagnose problems.</para>
+</section>
+
+<section id="sync-intro_components"><title>Components</title>
+<para>The interaction between &BACKEND; and a managed &PB; client device is handled by two main components:</para>
+<itemizedlist>
+	<listitem><para><emphasis>The &BACKEND; client service VM</emphasis> is a VM that runs on the &PB; client device, responsible for a single &BACKEND; connection.</para></listitem>
+	<listitem><para><emphasis>The &BACKEND; server side</emphasis> consists of an Oracle database, a web application that uses the WSGI within Apache, a &COMPANY_NAME_SHORT; License Server, and two command-line tools - one to administer the database, the other providing the primary interface to the system.</para></listitem>
+</itemizedlist>
+ 
+</section>
+
+<section id="sync-intro_devices-users-vms"><title>Devices, Users and VMs</title>
+<para>&PB; devices can be registered with &BACKEND; and configured to connect using a &BACKEND; service VM. For a device to connect, it first needs to be authorized on the server. Doing so generates a shared secret that the administrator must place onto the device. This enables mutual authentication between the client and server using HTTP digest authentication over an SSL connection. The client verifies the server certificate prior to initiating communication using standard SSL setup.</para>
+
+<para>&PB; devices are set up with non-user-specific platform level authentication. Typically user authentication is only handled by the login and lock screens of each virtual machine on the device. The VMs that the &BACKEND; downloads will be made available anyone who can unlock the device level authentication.</para>
+
+
+<para>It is up to the administrator to provide appropriate server-side storage for the VHD files that are the virtual hard disks for the managed VMs. These files can be large in size. The administrator needs to make the storage available to the &BACKEND; server at locations that are specified in the database for each virtual disk. The storage may be either local, or mounted from a remote source such as an NFS (this configuration is recommended for higher-volume installations).</para>
+
+<para>If the administrator requires the &BACKEND; to operate even when the device is not connected to their local network, then either a port will need to be opened to the Internet so the device can connect when it is roaming, or a VPN VM may be used to provide networking services to the &BACKEND; VM and the device configured to route &BACKEND; traffic over the VPN.</para>
+</section>
+
+<section id="sync-intro_db-access"><title>Database Access</title>
+
+<para>Different functions of the &BACKEND; access the database using different Oracle users to improve the security of the system.  There are four Oracle users that would normally be configured:</para>
+
+<itemizedlist>
+ <listitem><para><replaceable>name</replaceable>_owner</para></listitem>
+ <listitem><para><replaceable>name</replaceable>_admin</para></listitem>
+ <listitem><para><replaceable>name</replaceable>_license</para></listitem>
+ <listitem><para><replaceable>name</replaceable>_server</para></listitem>
+</itemizedlist>
+<para>The owner role is for the administrator to get access to the database and has full privilege.  The admin role is used by the CLI.  The server role is used by the web server and has much more limited privileges. The licensing role is used by the licensing integration d&aelig;mon.</para>
+<!-- RICK: Should we make it more clear that the "multiple users" are database users? Also suggest we name them sync_owner, sync_admin and sync_server rather than <name>_*. (The reason for being able to change the prefix is so that different engineers and testers can share the same Oracle database, but I think we may as well suggest a standard name for the production environment.) -->
+
+<para>You will initially require an appropriate level of access to the database to create the users and schema.</para>
+</section>
+
+<section id="sync-intro_virtual-disk-storage"><title>Virtual disk storage and encryption</title>
+<para>&BACKEND; stores writes to deployed disks made on devices as a local differences VHD node, separately from the image created by the administrator.  The 'base disk' node and the local differences VHD node would normally be stored encrypted, each with its own key. VHD node encryption can be disabled if not required. </para>
+</section>
+
+</chapter>
+
+<chapter id="sync-installation"><title>Installing &BACKEND;</title>
+
+<para>This chapter describes how to plan, install, and configure the &BACKEND; server-side components.</para>
+
+<section id="sync-installation_requirements"><title>System requirements</title>
+<para>For the client device, hardware supporting &PB; is required, and &PB; installed on it, as documented in the <citetitle>&PB; Engine Administrator Guide</citetitle>.</para>
+<para>For the server side components, the following needs to be provided:</para>
+
+<itemizedlist>
+	<listitem>
+		<para><emphasis>For the database:</emphasis> An Oracle 11g database needs to be provided. Please see the system requirements described in the Oracle user guide for information on appropriate systems to run this. For many deployments, the free Oracle Express edition will be suitable.</para>
+	</listitem>
+	<listitem>
+		<para><emphasis>For the &COMPANY_NAME_SHORT; License Server:</emphasis> You can install the license server on a physical server or a VM running the following Microsoft operating systems:</para>
+		<itemizedlist>
+			<listitem><para>Windows Server 2003 family</para></listitem>
+			<listitem><para>Windows Server 2008 family</para></listitem>
+			<listitem><para>Windows Server 2008 R2 family</para></listitem>
+			<listitem><para>Windows 7, 32-bit and 64-bit editions</para></listitem>
+		</itemizedlist>
+		<para>Microsoft .NET Framework 3.5 is required. Disk space of 50MB for the licensing components and 2GB for user/device licensing is required.</para>
+		<para>Alternatively, you can import a License Server VPX virtual appliance into a &COMPANY_NAME_SHORT; XenServer deployment.</para>
+	</listitem>
+
+	<listitem>
+		<para><emphasis>For the web server and WSGI scripts:</emphasis> Red Hat Enterprise Linux 6.3 is recommended to achieve a supported configuration. Although it may be possible to make the system work on other Linux distributions, this is not tested by Citrix. A 64-bit installation is recommended.</para>
+	</listitem>
+
+	<listitem>
+		<para><emphasis>For the CLI host:</emphasis>  Red Hat Enterprise Linux 6.3 is recommended.</para>
+	</listitem>
+</itemizedlist>
+
+<para>Any hardware or VM capable of running the above operating systems should be suitable, with a recommended minimum of 4GB of RAM for the server components and a 64-bit server processor.</para>
+
+<note><para>In a small deployment, it is feasible to run the database, CLI tools, License Server, and &BACKEND; server all on a single host.</para></note>
+</section>
+
+<section id="sync-installation_components"><title>Installing the Components</title>
+
+<para>The &BACKEND; server-side components are available at the &COMPANY_NAME_SHORT; website along with the &PB; client software. They are RPM packages:</para>
+
+<itemizedlist>
+	<listitem><para><filename>sync-database-&PRODUCT_RELEASE;-1.el6.noarch.rpm</filename> - the &BACKEND; database schema</para></listitem>
+	<listitem><para><filename>sync-admin-&PRODUCT_RELEASE;-1.el6.noarch.rpm</filename> - the &BACKEND; CLI administration tool</para></listitem>
+	<listitem><para><filename>sync-server-&PRODUCT_RELEASE;-1.el6.noarch.rpm</filename> - the &BACKEND; web server components</para></listitem>
+	<listitem><para><filename>xclicd-&PRODUCT_RELEASE;-1.el6.x86_64.rpm</filename> - the &BACKEND; License Server d&aelig;mon</para></listitem>
+</itemizedlist>
+
+<para>Also required is the Oracle Python bindings RPM from SourceForge. The link is given below in the installation procedure.</para>
+	
+<note><para>In this version, the RPMs do not have appropriate SELinux labels, so disable SELinux on the database, &BACKEND;, and CLI servers, or set the appropriate labels. This is configured in <filename>/etc/sysconfig/selinux</filename>. You will need to reboot after editing this file.</para></note>
+
+<para>Start by installing the <emphasis>argparse</emphasis> Python module on each &BACKEND; server that will run the server, admin tool, or database tool, by executing the following command:</para>
+<screen>easy_install argparse</screen>
+<note><para>You may need to run the command:</para>
+<screen>yum install python-setuptools</screen>
+<para>to install <command>easy_install</command></para></note>
+<section id="installation_components_licensing_server"><title>License Server</title>
+	<para>For information on &COMPANY_NAME_SHORT; Licensing and details on setting up a License Server, click <ulink url="http://support.citrix.com/proddocs/topic/technologies/lic-library-node-wrapper.html">here</ulink><footnote><para>http://support.citrix.com/proddocs/topic/technologies/lic-library-node-wrapper.html</para></footnote>.</para>
+    <para>Information on installing the License Server connector is available later in this chapter.</para>
+</section>
+
+<section id="sync-installation_components-oracledb"><title>Oracle Database Server</title>
+
+<para>Install and configure Oracle on the database server. Follow the instructions in the Oracle documentation. If you want to use the free Oracle Express edition, you can download it <ulink url="http://www.oracle.com/technetwork/products/express-edition/downloads/index.html">here</ulink><footnote><para>http://www.oracle.com/technetwork/products/express-edition/downloads/index.html</para></footnote>. Accept the license agreement, then follow the link for the Linux x64 download.</para>
+<note><para>You will need to log in to your Oracle account, or create one if you do not already have one.</para></note>
+
+<procedure id="proc-installing_oracle_xe"><title>To install and configure Oracle Express edition</title>
+	<step>
+		<para>Unzip the rpm:</para>
+		<screen>unzip oracle-xe-11.2.0-1.0.x86_64.rpm.zip</screen>
+	</step>
+	<step>
+		<para>Install the RPM in the standard way:</para>
+		<screen>rpm -ivh oracle-xe-11.2.0-1.0.x86_64.rpm</screen>
+	</step>
+	<step>
+		<para>Configure the database:</para>
+		<screen>/etc/init.d/oracle-xe configure</screen>
+		<para>following the prompts.</para>
+		<note><para>The server's hostname needs to be resolvable in order for this to work. This can be done by ensuring that DNS and the hostname for the machine are configured correctly.</para></note>
+	</step>
+</procedure>
+
+<para>Once the database is installed and configured on the host, install the Oracle Python bindings and the &BACKEND; database schema and prepare the database for use with &BACKEND;.</para>
+
+<procedure><title>To install the Oracle Python bindings</title>
+	<step>
+		<para>Download the Oracle Python bindings from SourceForge <ulink url="http://prdownloads.sourceforge.net/cx-oracle/cx_Oracle-5.1.2-11g-py26-1.x86_64.rpm">here</ulink><footnote><para>http://prdownloads.sourceforge.net/cx-oracle/cx_Oracle-5.1.2-11g-py26-1.x86_64.rpm</para></footnote>.</para>
+	</step>
+	<step>
+		<para>On the database server, install the RPM in the standard way:</para>
+		<screen>rpm -ivh cx_Oracle-5.1.2-11g-py26-1.x86_64.rpm</screen>
+	</step>
+	<step>
+		<para>When the installation is complete, execute the following command to ensure that the library paths are correct for Oracle to use them:</para>
+		<screen><![CDATA[echo /u01/app/oracle/product/11.2.0/xe/lib > /etc/ld.so.conf.d/oracle.conf && ldconfig]]></screen> 
+	</step>
+</procedure>
+
+<procedure><title>To install the &BACKEND; database schema</title>
+	<step>
+		<para>Download the &BACKEND; database schema.</para>
+	</step>
+	<step>
+		<para>On the database server, install the RPM in the standard way:</para>
+		<screen>rpm -ivh sync-database-&PRODUCT_RELEASE;-1.el6.noarch.rpm</screen>
+	</step>
+</procedure>
+
+<para>Next, you need to prepare the database by configuring the <command>sync-database</command> tool and installing the &BACKEND; database schema.</para>
+
+<procedure><title>To prepare the database</title>
+	<step>
+		<para>Ensure that the path to the Oracle binary is in your path by sourcing the <filename>oracle_env.sh</filename> script in your bash profile. For example, create a script called <filename>syncxt.sh</filename> in <filename>/etc/profile.d</filename> with the following contents:</para>
+		<screen>. /u01/app/oracle/product/11.2.0/xe/bin/oracle_env.sh</screen>
+	</step>
+	<step>
+		<para>Run the command:</para>
+		<screen>sync-database generate-config ~/.sync-database.conf</screen>
+	</step>
+	<step>
+		<para>You will be prompted for several parameters, including passwords for the various database users that will be accessing the database. The following is an example; set your <emphasis>Oracle server</emphasis> name as appropriate to your environment (if you are running the Oracle database on the same host as the &BACKEND;, localhost is the default if you leave it blank) and provide your own passwords at each prompt.</para>
+		<screen>Oracle server (blank for localhost): carter.cam.xci-test.com
+Password for user 'sys': rootpw
+Unique prefix for user names (default sync): sync
+Password for user 'sync_owner' (default sync_owner): rootpw1
+Password for user 'sync_admin' (default sync_admin): rootpw2
+Password for user 'sync_license' (default sync_license): rootpw3
+Password for user 'sync_server' (default sync_server): rootpw4
+
+Configuration written to '/home/hsimpson/.sync-database.conf'.</screen>
+	</step>
+	<step>
+		<para>Once the database configuration has been created, the schema can be installed as follows:</para>
+		<screen>sync-database install</screen>
+	</step>
+	<step>
+		<para>Since many objects used by &BACKEND; are identified by UUIDs, it can be cumbersome to use without assistance, so it is best to enable tab completion. Although support for the <filename>/etc/bash_completion.d</filename> directory is not standard in Red Hat Enterprise Linux 6, sourcing the installed completion file either in the terminal or in your <filename>.bashrc</filename> file will enable you to complete UUIDs and commands using the <keycap>Tab</keycap> key:</para>
+		<screen>. /etc/bash_completion.d/sync-database</screen>
+	</step>
+</procedure>
+
+</section>
+
+<section id="sync-installation_components-sync_server"><title>&BACKEND; Server</title>
+
+<para>You need to install and configure the sync-admin CLI tool and the license d&aelig;mon on the &BACKEND; server.</para>
+
+<procedure id="proc-sync-admin-installation"><title>To install and configure the sync-admin tool</title>
+	<step>
+		<para>On the &BACKEND; server, install the RPM in the standard way:</para>
+		<screen>rpm -ivh sync-admin-&PRODUCT_RELEASE;-1.el6.noarch.rpm</screen>
+	</step>
+	<step>
+		<para>The sync-admin tool connects to the database for most of its operation. It is possible to pass in details of the database connection on each invocation using the <literal>-d</literal> option, or a configuration file can be used to persist these details. The configuration file for sync-admin is <filename>~/.sync-admin.conf</filename> and would have contents similar to the following example:</para>
+		<warning><para>Be certain to supply the correct password for the <literal>sync_admin</literal> user.</para></warning>
+		<screen>[database]
+login = sync_admin/rootpw</screen>
+	</step>
+	<step>
+		<para>Enable tab completion for the sync-admin tool:</para>
+		<screen>. /etc/bash_completion.d/sync-admin</screen>
+		<para>Also add this to your bach profile.</para>
+	</step>
+</procedure>
+
+	<para>The &BACKEND; server also needs to have the license d&aelig;mon installed.</para>
+	<procedure id="proc-license-server-daemon-installation"><title>To install and configure the license server d&aelig;mon</title>
+		<step>
+			<para>On the &BACKEND; server, install the RPM in the standard way:</para>
+			<screen>rpm -ivh xclicd-&PRODUCT_RELEASE;-1.el6.x86_64.rpm</screen>
+		</step>
+		<step>
+			<para>Create a config file <filename>/etc/xclicensing.conf</filename>. Here is a sample config file:</para>
+			<screen>#
+# XenClient Licensing Daemon Config
+#
+
+# License server and port this daemon is communicating with.
+# lserver.addr = &lt;ip&gt;|&lt;host-name&gt;
+# lserver.port = &lt;27000 default&gt;
+lserver.addr = 10.80.251.119
+lserver.port = 27000
+
+# SyncXT Database server and port this daemon is communicating with.
+# dbserver.addr = &lt;ip&gt;|&lt;host-name&gt;
+# dbserver.port = &lt;1521 default&gt;
+dbserver.addr = mysyndb.mydomain.com
+dbserver.port = 1521
+dbserver.user = sync_license
+dbserver.passwd = pwpwpw
+
+# License Daemon settings. The cachedir is for storing LPE
+# local information. The checkinterval is the interval for
+# license checks in seconds. This can range from 10 - 6000
+# with a default of 60.
+ldaemon.cachedir = /var/xclicd
+ldaemon.checkinterval = 60</screen>
+		<para>Edit the <emphasis>lserver</emphasis> and <emphasis>dbserver</emphasis> properties as necessary for your particular environment.</para>
+		</step>
+		<step>
+			<para>Run the d&aelig;mon. Ensure that the d&aelig;mon is always running using whatever method is appropriate for your environment.</para>
+			<screen>xclicd &amp;</screen>
+		</step>
+	</procedure>
+</section>
+
+<section id="sync-installation_components-web_server"><title>Web Server</title>
+<para>Next, install the Apache web server (if needed) and its components on the &BACKEND; server. If you installed Red Hat Enterprise Linux 6.3 or higher on the &BACKEND; server with the web server option selected, Apache is already installed. If required you can install Apache using the yum command:</para>
+<screen>yum install httpd</screen>
+
+<procedure><title>To prepare the web server and install the web server components</title>
+	<step>
+	<!-- TODO: Make a little procedure here -->
+		<para>Run <command>system-config-firewall-tui</command> and enable <literal>Secure WWW (HTTPS)</literal> to be passed through the firewall. You may need to run the command <command>yum install system-config-firewall-tui</command> first.</para>
+	</step>
+	<step>
+		<para>Configure Apache to start at boot:</para>
+		<screen>chkconfig httpd on</screen>
+	</step>
+	<step>
+		<para>Install the Apache modules <literal>mod_ssl</literal> and <literal>mod_wsgi</literal>:</para>
+		<screen>yum install httpd mod_ssl mod_wsgi</screen>
+	</step>
+	<step>
+		<para>Install the sync-server RPM onto the &BACKEND; server:</para>
+		<screen>rpm -ivh sync-server-&PRODUCT_RELEASE;-1.el6.noarch.rpm</screen>
+	</step>
+	<step><!-- TODO: This is naughty, I should paraphrase the instructions -->
+		<para>Install certificates onto the host according to the SSL configuration in your configuration file. For testing purposes you may choose to rely on a self-signed certificate. Click <ulink url="http://www.akadia.com/services/ssh_test_certificate.html">here</ulink><footnote><para>http://www.akadia.com/services/ssh_test_certificate.html</para></footnote> for comprehensive instructions.</para>
+	</step>
+	
+
+	<step>
+		<para>Create an Apache configuration file. You may choose to modify and use the example given at the end of this step for a proof-of-concept installation. This configuration will need to:</para>
+			<itemizedlist>
+				<listitem><para>Load the WSGI module. The relevant lines in the configuration file are:</para>
+				<screen>WSGIPythonPath /usr/lib/python2.6/site-packages/sync_server/scripts</screen>
+				</listitem>
+				<listitem><para>Use SSL and point to the certificate and key file created in the previous step. Ensure that <literal>SSLCertificateFile</literal> and <literal>SSLCertificateKeyfile</literal> contain the correct paths to the installed certificates. The relevant lines in the configuration file are:</para>
+				<screen>SSLEngine on</screen>
+				<para>and</para>
+				<screen>SSLCertificateFile /etc/httpd/conf/sync.crt
+SSLCertificateKeyfile /etc/httpd/conf/sync.key</screen></listitem>
+				<listitem><para>Listen on port 443 (unless you intend to override this on the client):</para>
+				<screen>Listen 443</screen></listitem>
+				<listitem><para>Set the <emphasis>WSGIPythonPath</emphasis> to <filename>/usr/lib/python2.6/site-packages/sync_server/scripts</filename>:</para>
+				<screen>WSGIPythonPath /usr/lib/python2.6/site-packages/sync_server/scripts</screen></listitem>
+				<listitem><para>Configure digest authentication:</para>
+				<screen>&lt;Location /&gt;
+  AuthType Digest
+  AuthName "Synchronizer"
+  AuthDigestProvider wsgi
+  WSGIAuthUserScript /usr/lib/python2.6/site-packages/sync_server/scripts/auth_wsgi.py
+  Require valid-user
+&lt;/Location&gt;</screen></listitem>
+				<listitem><para>Have <emphasis>WSGIScriptAlias</emphasis> statements so that 			
+				<emphasis role="bold">/disk</emphasis> is provided by the script <filename>/usr/lib/python2.6/site-packages/sync_server/scripts/disk_wsgi.py</filename>, <emphasis role="bold">/repo</emphasis> by the script <filename>/usr/lib/python2.6/site-packages/sync_server/scripts/repo_wsgi.py</filename>, and <emphasis role="bold">/</emphasis> by the script <filename>/usr/lib/python2.6/site-packages/sync_server/scripts/server_wsgi.py</filename>:</para>
+				<screen>WSGIScriptAlias /disk /usr/lib/python2.6/site-packages/sync_server/scripts/disk_wsgi.py
+WSGIScriptAlias /repo /usr/lib/python2.6/site-packages/sync_server/scripts/repo_wsgi.py
+WSGIScriptAlias / /usr/lib/python2.6/site-packages/sync_server/scripts/server_wsgi.py</screen></listitem>
+			</itemizedlist>
+			<para>The following is an example Apache configuration for the purpose of illustration only. It might be insecure or inappropriate for your environment, and should not be used unmodified or without proper review against local security and configuration policies. It will however suffice to modify this example according to the instructions above and use it in its entirety for a proof-of-concept &BACKEND; installation.</para>
+
+<para>Your Apache config file needs to be in <filename>/etc/httpd/conf</filename> and be named <filename>httpd.conf</filename>. Be sure to save a copy of the default configuration file with another name.</para>
+<important><itemizedlist>
+<listitem><para>Ensure that the modules specified in the <literal>LoadModule</literal> lines are present and install them if not.</para></listitem>
+<listitem><para>Ensure that your firewall is correctly configured.</para></listitem>
+</itemizedlist></important>
+<screen>ErrorLog logs/sync_error_log
+LogLevel warn
+PidFile run/httpd.pid
+DefaultType text/plain 
+
+User apache
+Group apache
+
+WSGIPythonPath /usr/lib/python2.6/site-packages/sync_server/scripts
+LoadModule wsgi_module modules/mod_wsgi.so
+LoadModule env_module modules/mod_env.so
+LoadModule auth_digest_module modules/mod_auth_digest.so
+LoadModule authz_user_module modules/mod_authz_user.so
+LoadModule ssl_module modules/mod_ssl.so
+LoadModule alias_module modules/mod_alias.so
+
+SSLCertificateFile /etc/httpd/conf/sync.crt
+SSLCertificateKeyfile /etc/httpd/conf/sync.key
+
+SSLEngine on
+&lt;Location /&gt;
+  AuthType Digest
+  AuthName "Synchronizer"
+  AuthDigestProvider wsgi
+  WSGIAuthUserScript /usr/lib/python2.6/site-packages/sync_server/scripts/auth_wsgi.py
+  Require valid-user
+&lt;/Location&gt;
+
+WSGIScriptAlias /disk /usr/lib/python2.6/site-packages/sync_server/scripts/disk_wsgi.py
+WSGIScriptAlias /repo /usr/lib/python2.6/site-packages/sync_server/scripts/repo_wsgi.py
+WSGIScriptAlias / /usr/lib/python2.6/site-packages/sync_server/scripts/server_wsgi.py
+
+Listen 443</screen>
+		</step>
+		<step>
+			<para>Create the &BACKEND; configuration file. This should be named <filename>/etc/sync2/sync-<replaceable>port</replaceable>.conf</filename>, where <replaceable>port</replaceable> is the port that the WSGI scripts are responding on. This port is the one specified in the Apache configuration, for example in the line:</para>
+			<screen>Listen 443</screen>
+			<para>The file contains ini-file style configuration statements. It has a database section with a login key that contains the login credentials to be used when connecting to the database, and an environment section that defines the environment variables required for the Oracle connection. This is an example of a configuration file:</para>
+			<warning><para>Be certain to supply the correct password for the <literal>sync_server</literal> user.</para></warning>
+			<screen>[database]
+login = sync_server/rootpw
+
+[environment]
+ORACLE_HOME = /u01/app/oracle/product/11.2.0/xe
+ORACLE_SID = XE
+NLS_LANG = ENGLISH_UNITED KINGDOM.AL32UTF8
+PATH = /u01/app/oracle/product/11.2.0/xe/bin:$PATH</screen>
+		</step>
+</procedure>
+
+
+
+</section>
+</section>
+
+<section><title>Upgrading from a previous version of &BACKEND;</title>
+<para>If you have a previous &BACKEND; version, the recommended upgrade order is:</para>
+ <itemizedlist>
+ <listitem><para>Temporarily shut down the Apache server</para></listitem>
+<listitem><para>Upgrade the RPMs</para></listitem>
+<listitem><para>Upgrade the database</para></listitem>
+<listitem><para>Restart the Apache server</para></listitem>
+
+ </itemizedlist>
+
+<note><para>Run the <command>. /etc/bash_completion.d/sync-admin</command> and <command>. /etc/bash_completion.d/sync-database</command> commands to update tab completion for any new or altered commands, or start a new shell.</para></note>
+
+ <para>The new server version can be used to deploy an over-the-air upgrade to the clients with new software. Do not use new &BACKEND; features such as deploying ISOs until after the upgrade of the clients has completed as these features are not compatible with the older client software.</para>
+
+<procedure><title>Upgrading the database</title>
+<step><para>Assuming that the web servers have been stopped, and new RPMs have been installed, use the <command>sync-database version</command> to see the state of the database:</para>
+<screen>sync-database version
+Target schema version: 2
+Database schema version: 1
+
+To upgrade database to schema version 2, use the 'upgrade' command.</screen></step>
+<step><para>Before upgrading the database, ensure that you have an up-to-date backup of the existing version, as the procedure is not reversible and the new database schema is incompatible with the older &BACKEND; software.</para></step>
+<step><para>To upgrade the database, run the following command:</para>
+<screen>sync-database upgrade</screen></step>
+<step><para>You may now restart other services.</para></step>
+</procedure>
+
+<note><para>Schema versions 1 and 2 had the concept of users which were removed in schema version 3. The database upgrade
+will fail if multiple instances of the same VM owned by different users are assigned to the same device. In such cases it is necessary
+to edit the database to resolve such conflicts, for instance by deleting all VM instances.</para></note>
+</section>
+
+</chapter>
+
+<chapter id="sync-config"><title>Managing &PB; Devices and VMs With &BACKEND;</title>
+
+<para>This chapter describes how to configure &PB; devices to interact with &BACKEND;, use its remote management features and deploy VMs.</para>
+
+<!-- missing: get current host state back -->
+ 
+<section id="sync-config__licensing"><title>Licensing</title>
+
+<para>The &BACKEND; administrator must host a &COMPANY_NAME_SHORT; License Server. This deploys user-device licenses for &PB;. There is a single license type, <emphasis>XT</emphasis>, representing a managed client. The administrator runs a license d&aelig;mon that interacts between &BACKEND; and the License Server.</para>
+
+<!--
+We will generally be cautious to ensure that a system (a &BACKEND; and a number of client devices) without new devices added for a period of time will be in an appropriate licensing state. When the number of licenses available is below the number required, some of the clients will enter an unlicensed state. The design does not dictate which clients would be in such a state, and this may vary over time until the license shortage is rectified by the administrator installing additional licenses on the server.
+
+A client can move between a licensed and unlicensed state at the polling interval with &BACKEND;.
+-->
+
+<para>When a particular &PB; device is unlicensed, it displays a warning banner to indicate that it is in an unlicensed state.</para>
+
+<para>When a new &PB; device is added, it makes an asynchronous request for a license. Until that request is completed, the device is considered unlicensed for a period of time. This is a temporary state, and the device will return to normal when the device next communicates with &BACKEND; after a license has been checked out for it.</para>
+
+<para>When a &PB; device is deleted, the license for the device will be checked back into the license server when the next license update occurs.</para>
+
+
+<para>If a &PB; device becomes dormant (that is, it has stopped contacting &BACKEND;), at some point its license will be checked back into the license server. This is because licenses are chosen at random periodically. This ensures that the state recorded in the database about the currently-licensed devices (which could easily be edited by an administrator) is consistent with the available licenses. When the &PB; device next contacts &BACKEND;, a license is re-acquired. However, if the device never contacts &BACKEND; again, it is assumed to have been removed and its license will be returned to the license server.</para> 
+</section>
+
+ 
+<section id="sync-config_prepping_client"><title>Preparing a &PB; device to be managed by &BACKEND;</title>
+<para>The &PB; platform can be managed by a &BACKEND; service VM. The software required to do this is made available when the platform is installed, however in order to use the facility a service VM must be instantiated for each &BACKEND; deployment that is to manage the device or VMs on the device.</para>
+
+<procedure><title>To configure a &PB; device to be used with &BACKEND;</title>
+<step><para>Create an identifier for the device on the server with the following command. It will return the UUID of the added device:</para>
+<screen>sync-admin add-device mydev
+device_uuid: 9145c4c5-5ab1-4068-8fbf-408eca0660c2</screen>
+</step>
+<step><para>Using this UUID, get the device secret:</para>
+<screen>sync-admin show-device-secret 9145c4c5-5ab1-4068-8fbf-408eca0660c2 
+shared_secret: 1b5f6826e082ad3cae0256db3b067e18</screen>
+</step>
+<step><para>On the client device, create a &BACKEND; service VM. To do this, you will need to use the command-line. Press <keycap>Ctrl + Shift + T</keycap> to open a terminal. You might also need to assume appropriate privileges using the <command>newrole</command> command:</para>
+<screen>newrole -r sysadm_r
+Password: ************
+xec create-vm-with-template new-vm-sync</screen>
+<para>The return value of the <command>create-vm-with-template</command> is the VM object path, which is a long string that looks like <command>/vm/bf7ab6f6_5c65_43a9_a936_032dcd37256c</command>.</para>
+</step>
+<step><para>Using this object path, assign a short name to the VM so that it's easier to refer to in later commands.</para>
+<screen>xec -o <replaceable>vm_object</replaceable> set name <replaceable>vm_name</replaceable></screen>
+<para>This allows you to execute the xec commands that follow with the syntax <command>xec -n <replaceable>vm_name</replaceable></command> rather than <command>xec -0 <replaceable>vm_object</replaceable></command></para>
+</step>
+
+<step><para>Create the following directories:</para>
+<screen>mkdir -p /storage/sync/<replaceable>synchronizer_name</replaceable>
+mkdir -p /storage/sync/<replaceable>synchronizer_name</replaceable>/disks
+mkdir -p /storage/sync/<replaceable>synchronizer_name</replaceable>/repo
+mkdir -p /storage/sync/<replaceable>synchronizer_name</replaceable>/repo-download
+mkdir -p /config/sync/<replaceable>synchronizer_name</replaceable></screen>
+</step>
+
+<step><para>Configure the Synchronizer service VM to have access to these two directories:</para>
+<screen>xec-vm -n syncvm set icbinn-path /storage/sync/<replaceable>synchronizer_name</replaceable>\
+,/config/sync/<replaceable>synchronizer_name</replaceable></screen>
+</step>
+
+<step><para>Create the following symlink to prepare the Synchronizer service VM for future upgrades:</para>
+<screen>ln -s /storage/sync/<replaceable>synchronizer_name</replaceable>/repo /storage/update-staging</screen>
+</step>
+
+<step>
+<para>Ensure the directories created above get the right file context:</para>
+<screen>restorecon -r /config/sync
+restorecon -r /storage</screen>
+</step>
+
+<step><para>Configuration of the &BACKEND; client code is done through domstore. See the configuration values in the table below. Set these using</para> 
+<screen>xec-vm -n <replaceable>synchronizer_service_vm_name</replaceable> set-domstore-key <replaceable>key</replaceable> <replaceable>value</replaceable></screen>
+<informaltable>
+    <tgroup cols="2">
+    <colspec colwidth="4cm" />
+    <colspec colwidth="12cm" />
+	<thead>
+		<row>
+			<entry>Key</entry>
+			<entry>Value</entry>
+		</row>
+	</thead>
+    <tbody>
+    <row>
+        <entry>name</entry>
+        <entry>A name for the &BACKEND;. Use the name <replaceable>synchronizer_name</replaceable> used for creating directories on the client device earlier.</entry>
+    </row>
+    <row>
+        <entry>url</entry>
+        <entry>Location of the &BACKEND;. Usually uses https://. </entry>
+    </row>
+    <row>
+        <entry>cacert</entry>
+        <entry>The CA certificate or bundle to validate the server certificate against. This needs to be the contents of the certificate file, not a path. To accomplish this, copy the CA certificate to <filename>/tmp/cacert</filename> (the <filename>/tmp</filename> directory is one of the few directories in the control domain filesystem that is not readonly), and set the key's value with <screen>xec-vm -n syncvm set-domstore-key cacert "`cat /tmp/cacert/<replaceable>certname.crt</replaceable>`"</screen></entry>
+    </row>
+    <row>
+        <entry>device-uuid</entry>
+        <entry>The UUID of this device in the &BACKEND; database on the Synchronizer server. You can list the devices that exist in the database by runing the <command>sync-admin list-devices</command> command.</entry>
+    </row>
+    <row>
+        <entry>secret</entry>
+        <entry>The shared secret for the device. Use <screen>sync-admin show-device-secret <replaceable>uuid</replaceable></screen> on the Synchronizer server to get this.</entry>
+    </row>
+    <row>
+        <entry>interval</entry>
+        <entry>Polling interval in seconds. An interval of 15 minutes (900 s) is a reasonable setting. An interval of 24 hours (86400 s) would not be unreasonable if you want to reduce load or network traffic. The shorter the interval, the faster synchronization will start after changes on the server. But be sure to set it no shorter than 1 minute (60 s).</entry>
+    </row>
+    <row>
+        <entry>timeout</entry>
+        <entry>Time in seconds after which an attempt to reach target state will be aborted ready to retry at the next polling interval (doesn't restart from the beginning). A timeout of 60 minutes (3600 s) with a reliable network and server is a reasonable value. Decreasing for use with an unreliable server is a good idea, if the interval is of comparable length. 1 minute (60 s) or less will slow performance and increase server load.</entry>
+    </row>
+	
+	<row>
+        <entry>role</entry>
+        <entry>(Optional) Whether the &BACKEND; takes the role of a <emphasis>platform</emphasis> or a <emphasis>realm</emphasis> &BACKEND;. A realm synchronizer can create VMs and modify or delete its own VMs. A platform synchronizer can do the same but can also modify the configuration of the devices. If not set, it defaults to <emphasis>platform</emphasis>. See <xref linkend="sync-config_realm-sync" /> for more on platform and realm &BACKEND;s.</entry>
+	</row>
+	
+	<row>
+        <entry>network/mode</entry>
+        <entry>(Optional) Either <emphasis>dhcp</emphasis> or <emphasis>static</emphasis>. If not set, defaults to <emphasis>dhcp</emphasis>. If set to <emphasis>static</emphasis>, the following keys are required.</entry>
+	</row>
+
+	<row>
+        <entry>network/address</entry>
+        <entry>IP address; required if <emphasis>network/mode</emphasis> has been set to <emphasis>static</emphasis>.</entry>
+	</row>
+	
+	<row>
+        <entry>network/netmask</entry>
+        <entry>Netmask; required if <emphasis>network/mode</emphasis> has been set to <emphasis>static</emphasis>.</entry>
+	</row>
+	
+	<row>
+        <entry>network/gateway</entry>
+        <entry>IP address of gateway; required if <emphasis>network/mode</emphasis> has been set to <emphasis>static</emphasis>.</entry>
+	</row>
+	
+	<row>
+        <entry>network/dns</entry>
+        <entry>IP address of DNS server; required if <emphasis>network/mode</emphasis> has been set to <emphasis>static</emphasis>.</entry>
+	</row>
+    </tbody>
+    </tgroup>
+</informaltable>
+</step>
+
+<step><para>Ensure that the clock is set correctly on the client.</para></step>
+
+<step><para>Start the Synchronizer service vm using</para>
+<screen>xec-vm -n <replaceable>vm_name</replaceable> start</screen>
+<para>Note that once you manually start it after the initial setup and configuration as described here, the Sync service VM will be started automatically on reboots.</para></step>
+
+</procedure>
+</section>
+
+<section id="sync-config_deploying-host-config"><title>Deploying host configuration</title>
+<para>Host configuration is set per-device, either when the device is initially added to the database, or subsequently if modified. The <command>modify-device-config</command> command is used to change device configuration subsequently. Typically in this case the configuration is added to, although it can be replaced (that is, the old configuration removed, and new configuration added) if the <command>-r</command> or <command>--replace</command> options are passed to the CLI.</para>
+
+<para>Configuration is set as three-tuples: <emphasis>d&aelig;mon</emphasis>, <emphasis>key</emphasis>, and <emphasis>value</emphasis>. <literal>D&aelig;mon</literal> is an identifier that helps the &BACKEND; service on the client device modify configuration for the correct part of the system or object, <literal>Key</literal> is the name of the property to change, and <literal>Value</literal> is the new value of the property. Refer to <olink targetdoc="XTSynchronizerSetupAndUsageGuide" targetptr="sync-admin-cli-tool" /> for more details.</para>
+
+<warning><para>If configuration is set incorrectly, the &BACKEND; service VM may fail to reach target state. This will be reported in the current device state, so it is prudent to verify that changes are successfully deployed, or do a trial run on a test device first.</para></warning>
+<!-- TODO: link to relevant section -->
+<para>Please refer to the 'Platform configuration options' for a list of commonly-needed configuration options that can be set. As an example, the following command would disable local VM creation for the device:</para>
+<screen>sync-admin modify-device-config 02d5930e-7622-4f1f-8702-f847e184ce8b -c xenmgr:vm-creation-allowed:false</screen>
+<para>Configuration options not set by &BACKEND; will either remain at their default value, or (if not disabled by policy) may be configured by the user.</para>
+<para>To see what configuration options are set on a device, the <command>show-device-config</command> command can be used:</para>
+<screen>sync-admin show-device-config 02d5930e-7622-4f1f-8702-f847e184ce8b
+daemon: xenmgr
+key:    vm-creation-allowed
+value:  false</screen>
+</section>
+
+<section id="sync-config-authoring-vhd-files"><title>Authoring VHD files</title>
+<para>Virtual Hard Disks (VHDs) are used similarly on both the client and server as the on-disk storage format for disk images. A VHD file can be encrypted or unencrypted, and if it is encrypted then a separate key file is used, the hash of which is stored in the VHD file.</para>
+
+<warning><para>VHD files contain metadata that help the system locate them when needed by other files, such as delta disks. One should be careful copying around VHD files and using an existing VHD file as the basis for a new base disk, as this may lead to multiple VHDs with the same "identity" being deployed to a client. &BACKEND; will ensure that these conflicts are avoided, but when manually handling VHD files, this must be taken into consideration.</para></warning>
+
+<para>Once a disk has been placed onto the &BACKEND; store and referenced from the database (typically by calling the <command>add-disk</command> command), the administrator should not change its contents. If an updated version of the VHD file is needed for deployment, a new disk row should be created, referring to a new on-disk file.</para>
+
+<para>Typically, authoring a VHD file is done on &PB;. The appropriate operating system should be installed, along with &PV_TOOLS;, and any applications and configuration that the user requires.</para>
+
+<procedure><title>To author a VHD file</title>
+<step><para>Create a local VM using the <guilabel>Install VM</guilabel>  button in the &PB; user interface.</para></step>
+<step><para>Select the appropriate VM type, memory size, disk size, etc., entering appropriate values for fields in this wizard. For more information on this process, please refer to the <citetitle>&PB; Engine Administrator Guide</citetitle>.</para></step>
+<step><para>Install the VM operating system, either using a DVD or CD, or using a local ISO file.</para></step>
+<step><para>Install the &PV_TOOLS;.</para></step>
+<step><para>Install any configuration or applications that you wish to deploy to the virtual machine.</para></step>
+<step><para>Shut down the virtual machine.</para></step>
+<step><para>Identify any disks that were used with the VM. This requires an operation at the command line:</para>
+<substeps>
+    <step><para>Press <keycap>Ctrl + Shift + T</keycap> to open a command terminal. You may have to assume an appropriate SELinux role to proceed, using the <command>newrole</command> command.  This is to enhance security.</para>
+<screen>newrole -r sysadm_r
+Password: ***********</screen>
+</step>
+<step><para>To identify the VM, use the <command>xec-vm</command> command:</para>
+<screen>xec-vm
+ ID  | Name               | UUID                                 | State     
+-----+--------------------+--------------------------------------+--------
+   1 | ndvm               | 00000000-0000-0000-0000-000000000002 | running   
+   2 | uivm               | 00000000-0000-0000-0000-000000000001 | running   
+     | win7               | 74f90830-40a8-4f38-8138-142dbe4f4b13 | stopped   
+     | syncvm             | 1171ceb1-cd74-413e-ac3f-0e76a1d374f9 | stopped   
+     | xp                 | 45fd1628-0829-4b4a-8776-0d007d89932e | stopped</screen>
+    </step>
+    <step><para>In this case, we may wish to, for example, upload the VM named <emphasis>win7</emphasis>. We can then get a list of disks that are used by that VM as follows:</para>
+<screen>xec-vm -n win7 list-disks
+/vm/74f90830_40a8_4f38_8138_142dbe4f4b13/disk/0
+/vm/74f90830_40a8_4f38_8138_142dbe4f4b13/disk/1</screen>
+    </step>
+    <step><para>In this example the VM has two disks, one of which is its virtual hard drive, the other the tools CD. To identify the location on storage of the VHD file required, use the <command>get phys-path</command> command for each disk:</para>
+<screen>xec-vm -n win7 --disk 0 get phys-path
+/storage/isos/xc-tools.iso
+xec-vm -n win7 --disk 1 get phys-path
+/storage/disks/f7d8b266-2a67-4348-9461-a1ff2a61ae31.vhd</screen>
+<para>In this case we want to copy the VHD file corresponding to disk 1.</para>
+</step>
+<step><para> Use the <command>scp</command> command (or an alternative method) to copy the VHD file from the host to the server, for example:</para>
+<screen>scp /storage/disks/f7d8b266-2a67-4348-9461-a1ff2a61ae31.vhd user@sync:/storage/disks/</screen>
+<note><para>The directory <filename>/storage/disks</filename> does not exist by default and must be created. Any directory can be used for disk storage.</para></note> 
+<note><para>The location on the server will vary. <replaceable>user</replaceable> is the username of an appropriate user on the server, and <replaceable>sync</replaceable> is the hostname of a server with access to the VHD storage you have provisioned for &BACKEND;. In a simple configuration, this may be one of the &BACKEND; web servers.</para></note>
+
+    </step>
+    <step><para>If the disk is encrypted, you will need to use the key later as a parameter to the <command>sync-admin</command> command to add the disk to the database.  To determine if the VHD is encrypted, use the <command> vhd-util key -p -n</command> command on the client device.  Note that the <command>vhd-util</command> command can destroy data if used incorrectly.</para>
+<screen>vhd-util key -p -n <replaceable>filename</replaceable></screen>
+<para>If a hash is returned, then the key file would be in the directory <filename>/config/platform-crypto-keys</filename> with a similar filename to the VHD. Copy this file to your &BACKEND;.</para>
+    </step></substeps>
+</step>
+<step><para>Close the terminal once the operation is complete. Note that leaving a system unattended with an open terminal is a security risk.</para></step>
+</procedure>
+
+</section>
+
+<section id="sync-config_authoring-based-on-existing-vm"><title>Authoring based on an existing VM</title>
+<para>To author based on an existing VM, the same steps as above can be followed assuming that the VM already exists.  If the VM was previously provisioned by &BACKEND;, or snapshotting had been used, it may be necessary to coalesce the disk image to a single VHD file first.</para>
+
+</section>
+
+<!-- 
+<section id="sync-config_authoring-based-on-vm-deployed-by-sync"><title>Authoring based on a VM deployed by &BACKEND;</title> 
+</section>
+-->
+
+<!-- 
+<section id="sync-config_authoring-based-on-vm-deployed-by-legacy-sync"><title>Authoring based on a VM deployed by legacy &BACKEND;</title> 
+</section>
+-->
+
+<section id="sync-config_creating-vms"><title>Adding VMs to &BACKEND;</title>
+
+<para>This section describes how to add VMs to &BACKEND; for deployment to clients.</para>
+
+<section id="sync-config_adding-disk-to-sync"><title>Adding the Disk to &BACKEND;</title>
+<para>On the &BACKEND; CLI host, you can use the <command>add-disk</command> command to add a reference to the new VHD file to the server.  A hash of the disk is computed unless you specify one manually using the <command>--hash</command> option.</para>
+
+<para>To add a reference to the disk so you can use it when deploying a virtual machine later, use the following command on the server:</para>
+
+<screen>sync-admin add-disk <replaceable>name</replaceable> <replaceable>file-path</replaceable></screen>
+
+<para><replaceable>name</replaceable> is a helpful name that you can use to help identify the disk later. If the disk was encrypted and you would like &BACKEND; to deploy the key material to devices when the disk is downloaded, the <command>--key-file</command> option must be specified and the encryption key given. Alternatively, the raw key can be passed using the <command>-k</command> option, although this takes a hex-encoded string and may result in sensitive data being written to the shell history file.</para>
+
+<para><replaceable>file-path</replaceable> is the location of the file that the web server will deploy.</para>
+
+<para>Each of these commands, when completed successfully, will return the UUID (i.e. identifier) of the disk in the database. You can use this later to refer to the disk.</para>
+
+<note><para>The disk can be of either VHD or ISO format.  ISOs may be attached to VMs in order to install an operating system or other software.  If a blank VHD is used as the first or system disk, then the default boot order will cause the VM to fall back to booting from the ISO until an OS is installed.  This feature can be used alongside an OS installer configured to auto-install to the disk.</para></note>
+</section>
+
+<section id="sync-config_shared-vs-nonshared-disks"><title>Shared vs. Non-shared Disks</title>
+<para>It is possible to "upgrade" a VM on a client device by creating a new VM instance with a new version of the base disk. In the case the local changes are stored on a separate disk, through manual configuration or by using a tool such as Personal vDisk (this is not yet supported for use on &BACKEND; XT), it may be desirable for these local changes to be migrated to the new virtual machine. The <command>shared</command> flag causes the existing local changes on the device to be used for the disk attached to the new VM instance, rather than creating a separate empty local-changes file.</para>  
+<para>The <command>shared</command> flag is configured on the &BACKEND; when the disk is created, and is specified using the <command>-s</command> option:</para>
+<screen>sync-admin add-disk -s <replaceable>name</replaceable> <replaceable>file-path</replaceable></screen>
+<para>The value of the shared flag is shown in the output of the <command>list-disks</command> command.</para>
+
+</section>
+
+<section id="sync-config_disk-encryption"><title>Disk Encryption</title>
+<para>The local changes to a base disk are stored in encrypted form on the client. The encryption key used will be generated on the client and is unique to that device's changes. If you prefer, you can instead opt not to use encryption by setting the <command>disk:encrypt_snapshots:false</command> configuration parameter for the VM.</para>
+</section>
+
+<section id="sync-config_creating-vm-on-sync"><title>Creating a VM on &BACKEND; and Deploying it to a Client</title>
+<para>Once the disks have been recorded in the &BACKEND; database, a VM object needs to be created that collects them and the configuration for the target VM instances together. There is a single VM object for all VM instances. To deploy a VM to a device, an instance of that VM needs to be created.</para>
+
+<procedure><title>Deploying a VM to a Device</title>
+<step><para>Create a VM using the <command>add-vm</command> command:</para>
+<screen>sync-admin add-vm -d <replaceable>disk1-uuid</replaceable> -d <replaceable>disk2-uuid</replaceable> ... \
+     -c <replaceable>config-item</replaceable> ... \
+     <replaceable>vm-name</replaceable></screen>
+<para>Either specify a built in VM template with for instance <command>-c vmparam:template:new-vm</command> or include all necessary VM properties including v4v rules. </para>
+<para>This will return the UUID of the VM that is created.</para>
+</step>
+<step><para>Deploy the VM to device:</para>
+<screen>sync-admin add-vm-instance <replaceable>device-uuid</replaceable> <replaceable>vm-uuid</replaceable> <replaceable>name</replaceable></screen>
+</step>
+</procedure>
+
+<para>When the above procedure is followed, the device should start downloading and installing the VM when it next checks in with &BACKEND; according to its polling interval.</para>
+
+<para>Although &BACKEND; does not track versions of VMs, often a VM may be intended to replace a previous VM, if security or application updates are added and the administrator wishes to deploy these. Using the VM name field to represent the contents and relationships between VMs is therefore useful for later reference.</para>
+
+</section>
+
+<section id="sync-config_deploy-using-sccm"><title>Deployment using SCCM or other tools</title>
+<para>In order to provide ongoing in-guest management, it may be best in some cases to use &BACKEND; to deploy VMs that are subsequently installed and managed using an external tool such as SCCM. In this case, the above steps can be followed, except instead of preparing a VM for execution by installing an OS, only the disk configuration and encryption setup must be done. This will generate empty base disks that can be used alongside a configuration to boot the deployed VM from the network (possibly through a configured VPN VM).</para>
+<!-- TODO: provide a link -->
+<para>Please refer to the configuration options relating to VM boot order.</para>
+</section>
+
+</section>
+
+<section><title>Modifying and Removing Deployed VMs</title>
+<para>This section lists commands that can be used to change VM instances that have already been deployed to devices from the &BACKEND; command-line.</para>
+
+<procedure>
+<title>To Force-Shutdown and Delete a VM</title>
+<step><para>Run the command:</para>
+<screen>sync-admin purge-vm-instance <replaceable>vm_instance_uuid</replaceable></screen>
+<warning><para>This is a disruptive operation. Where appropriate use the <command>remove-vm-instance</command> command to allow the user to take steps to salvage data from the device or seek assistance. This command also removes all records of the VM being on the device from the &BACKEND; database.</para></warning>
+</step>
+</procedure>
+
+<procedure>
+<title>To Delete a VM allowing Graceful Shutdown First</title>
+
+<step><para>Run the command:</para>
+<screen>sync-admin remove-vm-instance <replaceable>vm_instance_uuid</replaceable></screen>
+<para>This command does not forcibly shut down the target VM. The VM is removed when the client polls the &BACKEND_SERVER; and the VM is shutdown. The VM icon in &BC; will be greyed out as soon as the client polls the &BACKEND_SERVER; if the VM is not shutdown. Once shutdown, the VM will be listed as locked in &BC; and will not be able to be started. The shutdown VM will be deleted the next time that the client polls the &BACKEND_SERVER;. To fully remove the VM at a later date, including all records of it in the &BACKEND; database, use the <command>purge-vm-instance</command> command</para>
+<para>The intention is that the administrator can use some out of band mechanism (e.g. email or SCCM) to ensure VM shutdown.</para>
+<note><para>Specify the <literal>--hard</literal> to forcefully shutdown the VM.</para></note>
+</step>
+</procedure>
+
+<procedure>
+<title>To Change the Name of a Deployed VM</title>
+<step><para>Run the command:</para>
+<screen>sync-admin modify-vm-instance-name <replaceable>vm_instance_uuid</replaceable> <replaceable>new_vm_name</replaceable></screen>
+<para>The new name will be applied when the client polls the &BACKEND_SERVER;. It is safe to do this to a running VM.</para>
+</step>
+</procedure>
+
+<procedure>
+<title>To Modify a Configuration Item of a Deployed VM</title>
+<step><para>Run the command:</para>
+<screen>sync-admin modify-vm-config <replaceable>vm_uuid</replaceable> -c <replaceable>config_tuple</replaceable></screen>
+<para>This command affects changes of all VMs with the specified <literal>vm_uuid</literal>. Changes will not generally take effect until after the client polls the &BACKEND_SERVER; and then VM has been restarted. It is safe to do this to a running VM.</para>
+</step>
+</procedure>
+
+<procedure>
+<title>To Remove all Configuration from a Deployed VM</title>
+<step><para>Run the command:</para>
+<screen>sync-admin modify-vm-config <replaceable>vm_uuid</replaceable> -r</screen>
+<para>This command affects changes of all VMs with the specified <literal>vm_uuid</literal>. Changes will not generally take effect until after the client polls the &BACKEND_SERVER; and then VM has been restarted. It is safe to do this to a running VM.</para>
+</step>
+</procedure>
+
+<procedure>
+<title>To Specify New Configuration from a Deployed VM</title>
+<step><para>Run the command:</para>
+<screen>sync-admin modify-vm-config <replaceable>vm_uuid</replaceable> -f <replaceable>configuration_file_location</replaceable></screen>
+<para>This command affects changes of all VMs with the specified <literal>vm_uuid</literal>. Changes will not generally take effect until after the client polls the &BACKEND_SERVER; and then VM has been restarted. It is safe to do this to a running VM.</para>
+</step>
+</procedure>
+
+</section>
+
+
+<section id="sync-config_ota"><title>Configuring Over-the-Air upgrade</title>
+
+<para>&BACKEND; can be used to keep your client devices up-to-date by deploying platform updates to them.  This functionality will only take effect if &BACKEND; is in platform mode, otherwise the configuration will be ignored.  Each release of the client software comes with an update image that can be used with over-the-air upgrade.</para>
+
+<procedure><title>Adding a repository to &BACKEND;</title>
+<step><para>Place the upgrade image in a location accessible to the &BACKEND; servers, as would be done for a VHD file as discussed above.</para></step>
+<step><para>Add a reference to the repository to the database:</para>
+<screen>sync-admin add-repo <replaceable>path-to-file</replaceable></screen>
+<para>The update repository is a file ending in .tar that stores the installation files for the software.</para></step>
+</procedure>
+
+<procedure><title>Upgrading a device remotely</title>
+<step><para>Identify the UUID of the repository containing the software version to be installed on the device.  You can use the <command>list-repos</command> command to get a list of repositories that are available, e.g.:</para>
+<screen>sync-admin list-repos 
+repo_uuid: c9f82084-8b68-4dc8-a07e-b2874b209fe4
+release:   3.1.0
+build:     130503
+file_path: /storage/ota/ota-update.tar</screen>
+</step>
+<step><para>Use the <command>sync-admin modify-device-repo</command> command to set the device to upgrade to the software version provided by the selected repository. The repository UUID is specified using the <command>-r</command> option.</para></step>
+</procedure>
+
+<para>When using the <command>modify-device-repo</command> command, if the <command>-r</command> option is omitted, the repository to be used for the device is cleared, and the device will not attempt to perform an upgrade.</para>
+
+<para>The device will upgrade to the software packaged in the specified repository if the repository contains a version that is newer and that the device can upgrade to from its current version.  Some versions of the device software can only be upgraded to from a set of starting versions, so please check the user guide for the version you intend to install to ensure it can be upgraded to from the base version of the device.</para>
+
+</section>
+
+<section id="sync-config_realm-sync"><title>Multiple &BACKEND;s and realms</title>
+
+<para>A device can be connected to multiple &BACKEND;s.  This feature can be used to provide multiple management domains.  The <command>role</command> option in the &BACKEND; client configuration allows the administrator to configure a &BACKEND; with the capability to modify all platform configuration, or only to deploy new VMs.  Each &BACKEND; can only modify or remove the VMs that it placed onto the system.</para>
+
+</section>
+
+
+<section><title>Synchronizer Service VM Networking</title>
+<para>There are two aspects to the networking configuration of a &BACKEND_VM;:</para>
+<orderedlist>
+<listitem><para>Which network the &BACKEND_VM; network interface card is connected to.</para></listitem>
+<listitem><para>Whether the &BACKEND_VM; should contact a DHCP server or use a static IP address.</para></listitem>
+</orderedlist>
+<para>&PB; provides several networks as standard, including:</para>
+<itemizedlist>
+<listitem><para><literal>/wired/0/bridged</literal>: bridged access to the wired network</para></listitem>
+<listitem><para><literal>/wired/0/shared</literal>: NATted access to the wired network</para></listitem>
+<listitem><para><literal>/wifi/0/shared</literal>: NATted access to the wireless network</para></listitem>
+<listitem><para><literal>/any/0</literal>: NATted access to either the wired or wireless network - whichever is available</para></listitem>
+</itemizedlist>
+<para>By default, a &BACKEND_VM; is attached to the <literal>/any/0</literal> network and obtains an IP address from the DHCP server running in the &NDVM;, allowing it to contact the &BACKEND; server whenever a network connection is available. To view the current network configuration run the following command in the &BACKEND_VM;</para>
+<screen>xec-vm -n <replaceable>syncvm_name</replaceable> --nic 0 getall</screen>
+<para>To change the network that a &BACKEND_VM; attaches to:</para>
+<screen>xec-vm -n <replaceable>syncvm_name</replaceable> --nic 0 set network <replaceable>network_name</replaceable></screen>
+<para>These domstore keys are optional and should only be set when connecting a &BACKEND_VM; to a different network where it makes sense to use a static IP address.</para>
+
+</section>
+
+<section id="sync-config_troubleshooting"><title>Troubleshooting</title>
+<para>Logs from the &BACKEND; client VM are written to the domain 0 log files. Check <filename>/var/log/messages</filename>.</para>
+<procedure>
+<title>Troubleshooting</title>
+<step><para>Check the validity of the domstore entries on the &BACKEND; Service VM.</para></step>
+<step><para>Check that all required RPMs are installed. (<command>rpm -q <replaceable>part_of_package_name</replaceable></command>).</para></step>
+<step><para>Check that all required Apache modules are installed (<command>ls /etc/httpd/modules</command>).</para></step>
+<step><para>Check that the &BACKEND; Service VM can communicate with the server over <literal>HTTPS</literal>. On the server run:</para>
+<screen>sync-admin list-devices
+sync-admin show-device-secret <replaceable>device_uuid</replaceable>
+</screen>
+<para>On the client device run:</para>
+<screen>xec-vm -n <replaceable>sync_service_vm_name</replaceable> get-domstore-key device-uuid
+xec-vm -n <replaceable>sync_service_vm_name</replaceable> get-domstore-key secret</screen>
+<para>Verify that the device-uuid and secret match the values shown on the &BACKEND; server.</para>
+<para>On the client device run:</para>
+<screen>sshv4v <replaceable>sync_service_vm_name</replaceable>
+scp <replaceable>user</replaceable>@<replaceable>synchronizer_host</replaceable>:<replaceable>path_to_server_certificate</replaceable> /tmp
+curl --cacert /tmp/<replaceable>certificate_name</replaceable> --digest -u <replaceable>device_uuid</replaceable>:<replaceable>secret</replaceable> \
+https://<replaceable>synchronizer_host_fqdn</replaceable>/hello/1
+</screen>
+<para>View the Apache logs should you encounter an error.</para>
+</step>
+<step><para><para>Ensure that the time and date are set appropriately on both the client and the server.</para></para></step>
+<step><para><para>Verify that the start date of the server certificate is reasonable.</para></para></step>
+</procedure>
+
+
+
+</section>
+</chapter>
+
+<chapter id="sync-admin-cli-tool"><title>Using the sync-admin CLI tool</title>
+
+<para>The <command>sync-admin</command> CLI tool is the primary method of interacting with &BACKEND;. It has many subcommands, which are listed by running it with the <command>-h</command> option.</para>
+
+<section id="sync-admin-cli-tool_basic-usage"><title>Basic Usage</title>
+
+<para>The basic syntax of <command>sync-admin</command> is as follows:</para>
+
+<screen>sync-admin <replaceable>command</replaceable> <replaceable>options to command</replaceable></screen>
+
+<para>All commands support the <command>-h</command> option, which provides help for the command.  This would describe the required arguments for the command, a description of its behavior, and any options available.</para>
+
+<para>The <command>sync-admin</command> tool reads database connection details from its configuration file in <command>~/.sync-admin.conf</command> (as described in the setup procedure).  You can override database login details using the <command>-d</command>, by specifying a string in the format of <command>-d <replaceable>username</replaceable>/<replaceable>password</replaceable>@<replaceable>hostname</replaceable></command>.</para>
+
+<section><title>Configuration item files</title>
+
+<para>Many commands allow <emphasis>configuration items</emphasis> to be specified: these are typically specified using the <command>-c</command> option.  See below for further details on the format of configuration items and the possible values that may be used.</para>
+
+<para>In cases where many configuration items are required, most commands will also take a parameter specifying a file containing a list of these items.  This can be useful to store standard VM configurations out-of-band for use either manually or in scripts.  Such a file specifying configuration items would be one or more lines in length, and each line would contain a string that would normally be passed as a single configuration item to the <command>-c</command> option. For example:</para>
+
+<screen>vm:name-description:Linux VM including updated kernel
+nic/0:network:/wired/0/shared</screen>
+
+</section>
+</section>
+
+<section id="sync-admin-cli-tool_config"><title>Configuration Items</title>
+<para>A configuration item is used to configure a global or object-specific property on &PB;. These are used to set specific behaviors such as the wallpaper, policies, VM name, and so on. Configuration items are specified as a three-tuple, consisting of d&aelig;mon, key, and value. The key is the name of a property to set, and value is the target value for the property. The value of the d&aelig;mon field determines which object the key will operate on, and these are &BACKEND;-specific values, whereas the key is simply a property exposed by the client on the object that is identified.</para>
+
+<section><title>D&aelig;mon Values and Their Effect for Device Properties</title>
+
+<informaltable>
+    <tgroup cols="2">
+    <colspec colwidth="4cm" />
+    <colspec colwidth="12cm" />
+
+    <tbody>
+
+    <row>
+        <entry>xenmgr</entry>
+        <entry>Properties of the com.citrix.xenclient.xenmgr.config interface. Examples include: <command>autostart</command> (whether VM autostart is enabled), <command>vm-creation-allowed</command> (whether the user can create local VMs), <command>vm-deletion-allowed</command> (whether the user can delete VMs), <command>ota-upgrades-allowed</command> (whether the user can initiate an over-the-air upgrade of the device software), <command>measure-fail-action</command>, <command>enable-ssh</command>, <command>enable-dom0-networking</command>, <command>switcher-enabled</command>, <command>switcher-keyboard-follows-mouse</command>, <command>switcher-resistance</command>, <command>language</command>.</entry>
+    </row>
+    <row>
+        <entry>ui</entry>
+        <entry>Properties of the com.citrix.xenclient.xenmgr.config.ui interface.  Examples include: <command>wallpaper</command>, which is a path to the wallpaper to use.</entry>
+    </row>
+
+    </tbody>
+    </tgroup>
+</informaltable>
+
+</section>
+
+<section id="sync-admin-cli-tool_daemon-values"><title>D&aelig;mon Values and Their Effect on VM Properties</title>
+
+<informaltable>
+    <tgroup cols="2">
+    <colspec colwidth="4cm" />
+    <colspec colwidth="12cm" />
+
+    <tbody>
+
+    <row>
+        <entry>vm</entry>
+        <entry><para>Properties of the <literal>com.citrix.xenclient.xenmgr.vm</literal> interface for the VM object on the client, corresponding to the VM instance that the VM configuration belongs to. There are many settings and policies available here, which can be listed on a client using a command such as the following, for the UIVM, and looking at the appropriate section.</para>
+        <screen>xec-vm -n uivm getall</screen>
+        <para>This interface also has the key <command>encrypted_disks</command> that specifies if VM user data is stored in encrypted form on the client.</para>
+        </entry>
+    </row>
+    <row>
+        <entry>vmparam</entry>
+	<entry>VM parameters which can be set in the VM template but are not properties of the VM interface, such as <command>ui-selectable</command>. Also, a VM template can be specified this way using the key <command>template</command> with a value such as <command>new-vm</command>. </entry>
+    </row>
+    <row>
+        <entry>disk</entry>
+        <entry>Properties of the <literal>com.citrix.xenclient.vmdisk</literal> interface for the disk object.</entry>
+    </row>
+    <row>
+        <entry>nic/0, nic/1 etc</entry>
+        <entry>Properties of a virtual network interface for the VM. Use key <command>network</command> to set the &PRODUCT_BRAND; network that the virtual network interface should be connected to.</entry>
+    </row>
+    <row>
+        <entry>domstore</entry>
+        <entry>Set domstore entries for the VM.</entry>
+    </row>
+    <row>
+        <entry>rpc</entry>
+	<entry>Allows a RPC firewall rule to be set. The key should be the RPC firewall rule with colon replaced by comma, and the value should be <command>true</command>.
+           For example <command>rpc:allow,destination,org.freedesktop.Dbus, interface,org.freedesktop.Dbus.Properties,member, Get:true</command> allows access to DBus properties. </entry>
+    </row>
+    <row>
+        <entry>v4v</entry>
+	<entry>Allows a V4V firewall rule to be set. The value should be <command>true</command>. For example <command>v4v:myself->0,80:true</command> allows access to V4V port 80
+        in the control domain. </entry>
+    </row>
+    <row>
+        <entry>pci</entry>
+        <entry>Experimental feature to allow PCI passthrough rules to be specified for the VM. The key specifies the PCI passthrough rule, and the value should be <command>true</command>.
+          For example <command>pci:class=0x200:true</command> passes through NICs to a VM.</entry>
+    </row>
+    </tbody>   
+    </tgroup>
+</informaltable>
+</section>   
+</section> 
+
+<!-- Configuration items -->
+
+<section id="sync-admin-cli-tool_command-ref"><title>Command reference</title>
+<para>Please see the help built into the <command>sync-admin</command> tool for comprehensive command-line reference.</para>
+</section>
+
+</chapter>
+</book>

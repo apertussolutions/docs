@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+  Copyright 2014 by Citrix Systems, Inc.  Created by Gordon Stretch <Gordon.Stretch@citrix.com>. This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+-->
+
+
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+<!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+<!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+<!ENTITY % local PUBLIC "local" "../shared/local.ent">
+  %local;
+]><article lang="en"><?dbhtml dir="SynchronizerReleaseNotes"?>
+	<articleinfo id="bookinfo_titlestuff" role="die">
+		<title>&COMPANY_NAME_SHORT;<trademark class="registered"/> &PB;<trademark class="trade"/> &PRODUCT_VERSION; &BACKEND;<trademark class="trade"/> Release Notes</title>
+		<pubdate><?dbtimestamp format="d B Y"?></pubdate>
+  &legal;
+		<releaseinfo>This document serves as a list of known &BACKEND; issues for the &COMPANY_NAME_SHORT; &PB; &PRODUCT_VERSION; release.</releaseinfo>
+
+	</articleinfo>
+<?hard-pagebreak?>
+	<section id="known_issues"><title>Known Issues</title>
+
+   <para>This document details known issues with this release and any workarounds that can be applied. Please report any other issues to your &COMPANY_NAME_SHORT; support representative.</para>
+   <informaltable frame="none" width="6.5in">
+    <tgroup cols="1">
+     <colspec colwidth="6.5in"/>
+
+     <tbody>
+	<!--   <row>
+
+   <entry>
+        <para role="horrible-release-note-hack">After Upgrade &BACKEND; Private Key Still Protected by Passphrase</para>
+        <para><emphasis role="bold">Issue:</emphasis> &BACKEND; 1.0 allowed the option of protecting the &BACKEND; private key with a passphrase. This option has been removed in &BACKEND; &PRODUCT_VERSION;. However, if you performed an upgrade from a passphrase-protected &BACKEND; 1.0 installation to &BACKEND; &PRODUCT_VERSION; the private key remains protected and you will be prompted for the passphrase every time that you reboot your &BACKEND; appliance.</para>
+		
+		<para>Should you wish to remove password protection from your private key, run the following command in a control domain console:</para>
+<screen>openssl rsa -in  /xt/config/ssl/server_key.pem \
+-out /xt/config/ssl/server_key.pem</screen>		
+		 </entry>
+     
+      </row> -->
+	
+        <row>
+          <entry>
+            <para role="horrible-release-note-hack">Users of the First Version of a Dynamic Desktop Image Will Be Prompted to Restart Each Time Their VM Boots</para>
+            <para><emphasis role="bold">Issue:</emphasis> Due to new hardware being made available to the VM when a dynamic desktop is created, a reboot is required to ensure the proper device drivers are installed and configured.</para>
+            <para><emphasis role="bold">Workaround:</emphasis> The author of the dynamic image should publish a second version after they have completed a clean reboot and the prompt to restart no longer appears.  This ensures all required device drivers are properly configured in the VM before it is made available to users.</para>
+          </entry>
+        </row>
+
+    
+        <row>
+                <entry>
+                        <para role="horrible-release-note-hack">&BACKEND; Hostname has Naming Restrictions</para>
+						
+						<para><emphasis role="bold">Issue:</emphasis> The &BACKEND; hostname must be fifteen characters or shorter and may not start with a digit due to functional restrictions in 3rd-party software used by &BACKEND;.</para>
+
+						
+                </entry>
+        </row>
+									
+					<row>
+						<entry>
+							<para role="horrible-release-note-hack">Users with Names Containing Non-ASCII Characters Cannot Connect to &BACKEND; (Japanese and Simplified Chinese versions)</para>
+							<para><emphasis role="bold">Issue:</emphasis> It is possible to set up a user on the &BACKEND; with double-byte characters in the username, but these cannot be input on the secure authentication screen. This issue is due to a limitation in third-party software used by &BACKEND; which &COMPANY_NAME_SHORT; is actively trying to address.</para>
+							<para><emphasis role="bold">Issue:</emphasis> Use only ASCII characters in setting user names with &BACKEND;.</para>
+						</entry>
+                    </row>			
+									
+				    <row>
+						<entry>
+                        <para role="horrible-release-note-hack">&PB; Devices Running Versions Other Than 2.0 Cannot Connect to &BACKEND; &PRODUCT_VERSION; if Registration PIN Feature is Enabled</para>
+						<para><emphasis role="bold">Issue:</emphasis> The registration PIN feature introduced in &BACKEND; 2.0 is not supported in &PB; versions less than 2.0.</para>
+                                            </entry>
+                                    </row>    
+
+					    <row>
+                                            <entry>
+                        <para role="horrible-release-note-hack">VM Boot Can Get Progressively Slower the Higher the Version Number Gets</para>
+						<para><emphasis role="bold">Issue:</emphasis> When you create a new version of a VM the difference between the disk of the previous version and the new version is stored in a file and the file containing the disk information of the previous version is retained. At VM boot time these differences are resolved to form the VM disk image. The greater the number of files of differences that need to be resolved, the longer the VM can take to boot.</para>
+                                            </entry>
+                                    </row>    
+						
+									
+
+    <row>
+                <entry>
+                        <para role="horrible-release-note-hack">Incorrect Error Message Displayed if an Upload Fails Due to Lack of Network Connectivity</para>
+                        <para>If a VM upload fails because no network is available, the incorrect error message is displayed.  If an unexpected error message appears when attempting to perform an upload, please check that you are properly connected to a network and can access the Synchronizer.</para>
+                </entry>
+        </row>
+        		<row>
+       <entry>
+        <para role="horrible-release-note-hack">&PB; Installer Can Take up to Three Minutes to Recognize an Invalid &BACKEND; Address</para>
+        <para><emphasis role="bold">Issue:</emphasis> When using the Advanced Install of &PB; it can take up to three minutes for the installer to recognize that a &BACKEND; IP address is invalid. During this time the installer is unresponsive.</para>
+<para><emphasis role="bold">Workaround:</emphasis> Be careful to enter the correct address of the desired &BACKEND; server.</para>
+</entry>
+          </row>  
+		  			<row>
+						<entry>
+							<para role="horrible-release-note-hack">USB Webcam Policy May Not Always Be Enforced on Dell E4300</para>
+							<para>
+								<emphasis role="bold">Issue:</emphasis> Some USB webcams are not recognized as such on a Dell E4300 device, resulting in unexpected behavior with regard to USB device policy.</para>
+						</entry>
+					</row>
+		  
+		    <row>
+                <entry>
+                        <para role="horrible-release-note-hack">Missing Source Code Packages in &BACKEND; Source ISO</para>
+                        <para><emphasis role="bold">Issue:</emphasis> The following packages are used in the &BACKEND; codebase and are not included in the &BACKEND; source ISO. Please obtain the source code from the listed URL.</para>
+						<variablelist>
+						
+						    <varlistentry><term>decorator (BSD license)</term><listitem><para><ulink url="http://pypi.python.org/pypi/decorator" />.</para></listitem></varlistentry>
+							<varlistentry><term>Tempita (MIT license)</term><listitem><para><ulink url="http://pythonpaste.org/tempita/" />.</para></listitem></varlistentry>
+							<varlistentry><term>sqlalchemy-migrate (MIT license)</term><listitem><para><ulink url="http://code.google.com/p/sqlalchemy-migrate/" />.</para></listitem></varlistentry>
+
+						</variablelist>
+                </entry>
+        </row>  
+		
+
+		  
+
+     </tbody>   
+    </tgroup>
+   </informaltable>
+ </section>
+<!-- &colophon; -->
+</article>

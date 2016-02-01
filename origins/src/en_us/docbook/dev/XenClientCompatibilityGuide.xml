@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+  Copyright 2014 by Citrix Systems, Inc.  Created by Gordon Stretch <Gordon.Stretch@citrix.com>. This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.
+-->
+
+
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../../../../doctools/docbook-xml/docbookx.dtd"[
+<!ENTITY % xinclude PUBLIC "xinclude" "../../../../doctools/docbook-xml/xinclude.mod">
+%xinclude;
+  <!ENTITY colophon PUBLIC "colophon" "../shared/colophon.ent">
+  <!ENTITY legal PUBLIC "legal" "../shared/legal.ent">
+  <!ENTITY shared_upgrade_and_install_steps PUBLIC "shared_upgrade_and_install_steps" "../shared/shared_upgrade_and_install_steps.ent">
+  <!ENTITY view_details PUBLIC "view_details" "../shared/view_details.ent">
+  <!ENTITY % local PUBLIC "local" "../shared/local.ent">
+  %local;
+]><article id="user_guide" lang="en"><?dbhtml dir="XenClientCompatibility"?>
+
+ <articleinfo id="bookinfo_titlestuff" role="die">
+  <title>&COMPANY_NAME_SHORT;<trademark class="registered" role="die"/> &PB;<trademark class="trade" role="die"/> Compatibility Guide</title>
+
+<pubdate><?dbtimestamp format="d B Y"?></pubdate>
+    &legal;
+ </articleinfo>
+<?hard-pagebreak?>
+<section>
+<title>Introduction</title>
+<para>With the release of XenClient 1.0 SP1, Citrix and their partners identified a few platform features that are not yet supported. Citrix will work with the partners to address those missing features in future releases. The intent of this compatibility guide document is to highlight those features.</para>
+
+<section><title>Unsupported Features in XenClient 1.0 SP 1</title>
+<itemizedlist><listitem><para>External eSATA Port</para></listitem>
+<listitem><para>FireWire (IEEE 1394) Port</para></listitem>
+<listitem><para>PCI express-based internal and expansion slot I/O cards</para></listitem> 
+<listitem><para>Full Disk Encryption (FDE) (while FDE drives are transparent to the operating systems, the OEM partners will provide management support in a future version of XenClient)</para></listitem>
+<listitem><para>Network Access Protection (NAP)</para></listitem>
+<listitem><para>Display Port (DP)</para></listitem>
+<listitem><para>SD/MMC cards and modems</para></listitem>
+<listitem><para>Intel IRRT disk configuration and tools</para></listitem>
+<listitem><para>Extended secondary monitor support for non-3D Graphics (HDX) virtual machines</para></listitem>
+<listitem><para>Multi-monitor support via docking station</para></listitem>
+<listitem><para>In-guest virtual Trusted Platform Module (iTPM) support</para></listitem>
+<listitem><para>BIOS upgrade inside virtual guests. The BIOS must be upgraded using other vendor-specific methods (e.g. bootable USB or CD where applicable)</para></listitem>
+</itemizedlist>
+</section>
+
+<section><title>OEM Feature Compatibility</title> 
+<para>The following section provides a support status of partner-specific value-add features. Citrix and their partners are currently collaborating to improve the value-add support on future XenClient releases.</para>
+<section><title>HP and Citrix XenClient</title>
+
+<para>HP supports the following platforms with Citrix XenClient SP1:</para> 
+<itemizedlist>
+<listitem><para>EliteBook 6930p</para></listitem>
+<listitem><para>EliteBook 2530p</para></listitem>
+<listitem><para>EliteBook 2540p</para></listitem>
+<listitem><para>EliteBook 2740P</para></listitem>
+<listitem><para>ProBook 6550b</para></listitem>
+<listitem><para>Elite Desktop 8000</para></listitem>
+<listitem><para>Elite Desktop 8100</para></listitem>
+</itemizedlist>
+<para>For more information and more detailed specifications of supported platforms see <ulink url="http://www.citrix.com/ready/list/products?page=1&amp;partnerPage=1&amp;currentTab=product&amp;rss=false&amp;currentComparison=&amp;h_Product_Citrix+Products=XenClient&amp;h_Product_XenClient=XenClient_(1.0+SP1)&amp;h_0Categories_Categories=Notebooks+and+Desktops&amp;h_zzPartners_Partner=&amp;sortBy=Alpha&amp;showGridExists=&amp;gridOn=1">Citrix Ready Products for XenClient</ulink>.</para>
+<note><para>Citrix and HP evaluated all value-add software tools that are currently available on the listed notebook platforms</para></note>
+
+<section><title>Supported HP value-add software</title> 
+<itemizedlist><listitem><para>HP Quick Launch Buttons</para></listitem>
+<listitem><para>HP Connection Manager (with the Erickson WWAN Mobile Internet modules only)</para></listitem>
+<listitem><para>HP Wireless Assistant  (with the Erickson WWAN Mobile Internet modules only)</para></listitem>
+<listitem><para>HP Protect Tools (selected components)</para>
+<itemizedlist><listitem><para>Device Access Manager</para></listitem>
+<listitem><para>Disk Sanitizer </para></listitem>
+<listitem><para>Privacy Manager</para></listitem>
+<listitem><para>Finger Print</para></listitem></itemizedlist>
+</listitem></itemizedlist>
+</section> 
+<section><title>Unsupported HP value-add software</title>
+<itemizedlist><listitem><para>HP 3D Drive Guard</para></listitem>  
+<listitem><para>HP Power Assistant</para></listitem> 
+<listitem><para>HP Fast Look</para></listitem>
+<listitem><para>HP System Software Manager (SSM)</para></listitem> 
+<listitem><para>HP Light Scribe Software</para></listitem>
+<listitem><para>HP Protect Tools (selected components)</para>
+<itemizedlist><listitem><para>Java Card Security</para></listitem> 
+<listitem><para>Drive Encryption</para></listitem>
+<listitem><para>Embedded Security</para></listitem>
+<listitem><para>HP LoJack for Notebooks</para></listitem>
+<listitem><para>Pre-boot authentication</para></listitem></itemizedlist></listitem></itemizedlist>
+</section> 
+</section>
+<?hard-pagebreak?>
+<section><title>Dell and Citrix XenClient</title> 
+
+
+<para>Dell supports the following  platforms with Citrix XenClient SP1:</para>
+
+<itemizedlist><listitem><para>Latitude E4200</para></listitem>
+<listitem><para>Latitude E4300</para></listitem>
+<listitem><para>Latitude E4310</para></listitem>
+<listitem><para>Latitude E6400</para></listitem>
+<listitem><para>Latitude E6410</para></listitem>
+<listitem><para>Latitude E6500</para></listitem>
+<listitem><para>Latitude E6510</para></listitem>
+<listitem><para>OptiPlex 780</para></listitem>
+<listitem><para>OptiPlex 980</para></listitem></itemizedlist>
+
+<para>For more information and more detailed specifications of supported platforms see <ulink url="http://www.citrix.com/ready/list/products?page=1&amp;partnerPage=1&amp;currentTab=product&amp;rss=false&amp;currentComparison=&amp;h_Product_Citrix+Products=XenClient&amp;h_Product_XenClient=XenClient_(1.0+SP1)&amp;h_0Categories_Categories=Notebooks+and+Desktops&amp;h_zzPartners_Partner=&amp;sortBy=Alpha&amp;showGridExists=&amp;gridOn=1">Citrix Ready Products for XenClient</ulink>.</para>
+<note><para>Citrix and Dell evaluated some of the value-add software tools that are currently available on the listed notebook platforms.</para></note>
+
+<section><title>Unsupported Dell features</title>
+<itemizedlist><listitem><para>On-Demand Desktop Streaming (ODDS) solution with Dell EasyConnect technology </para></listitem>
+<listitem><para>Dell PC Suite</para></listitem> 
+<listitem><para>Dell Control Point Software (DCP)</para>
+<itemizedlist>
+<listitem><para>Management of fingerprint reader and ambient light sensor</para></listitem></itemizedlist>
+</listitem>
+</itemizedlist>
+</section>
+</section>
+</section>
+</section>
+</article>
